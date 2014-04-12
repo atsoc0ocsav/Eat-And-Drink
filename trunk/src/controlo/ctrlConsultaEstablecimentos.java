@@ -1,5 +1,5 @@
 package controlo;
 
-public class ctrlConsultaEstablecimentos {
+public class CtrlConsultaEstablecimentos {
 
 }
