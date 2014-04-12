@@ -7,11 +7,13 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controlo.CtrlDetalhesEstabelecimento;
+import dados.Estabelecimento;
 
 public class DetalhesEstabelecimento extends JFrame {
 
 	private static final long serialVersionUID = -4354922814029833393L;
-	private CtrlDetalhesEstabelecimento establishmentDetails;
+	private CtrlDetalhesEstabelecimento controladorDetalherEstabelecimento;
+	private Estabelecimento estabelecimento;
 	private JPanel contentPane;
 
 	/**
@@ -36,15 +38,21 @@ public class DetalhesEstabelecimento extends JFrame {
 	 *            ID
 	 */
 	public DetalhesEstabelecimento(int establishmentID) {
-		
-		initialize();
+		controladorDetalherEstabelecimento = new CtrlDetalhesEstabelecimento(
+				establishmentID);
+		estabelecimento = controladorDetalherEstabelecimento
+				.consultarDetalhes();
+
+		buildGUI();
+
+		// TODO Display Method ;P
 		setVisible(true);
 	}
 
 	/**
 	 * Build GUI
 	 */
-	private void initialize() {
+	private void buildGUI() {
 		setTitle("Eat & Drink Estabelecimentos - Estabelecimento");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 816, 523);
