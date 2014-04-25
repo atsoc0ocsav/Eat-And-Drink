@@ -8,58 +8,75 @@ import java.util.ArrayList;
  
 
 public class DBConnection {
+	private static final String db = "eatdrink";
+	private static final String user = "dba";
+	private static final String password = "sql";
+	private static final String url = "jdbc:sqlanywhere:Tds:localhost:2638?eng=" + db; 
+	
 	private Connection conn = null;
-	private PreparedStatement statement = null;
-	private ResultSet resultSet = null;
 	
 	// Acho q tou a ter problemas com o porto!
 	public DBConnection(){
 		try {
-		conn = DriverManager.getConnection("jdbc:sqlanywhere:Tds:localhost:2638?eng=eatdrink","dba","sql");
+		conn = DriverManager.getConnection(url,user,password);
 		} catch (SQLException e) {
-			System.out.println("Erro ao estabelecer a ligação");
+			System.out.println("Erro ao estabelecer a ligação.");
+			System.out.println("SQL Exception: " + e.getMessage());
+            System.out.println("SQL State: " + e.getSQLState());
+            System.out.println("Error Code: " + e.getErrorCode());
 		}
 	}
+	
 
+	//  Metodos estavam começados com maiuscula no relatorio
+	// Coloquei os métodos a receberem uma string mas se calhar podiam so receber os argumentos necesarios
 	
-	// Modelos de interação com a base de dados
+	public ResultSet select(String sql) {
+		// possível chamada a uma função que prepara o commando select apenas recebendo os seus argumentos
+		
+		ResultSet resultSet = null;
+		
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			resultSet = statement.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return resultSet;
+		
+	}
 	
-//	public boolean inserirZona(Zona zona) {
-//		try {
-//			statement = conn
-//					.prepareStatement("INSERT INTO Zona VALUES (?,?,?)");
-//			statement.setInt(1, zona.getIdZona());
-//			statement.setString(2, zona.getCidade());
-//			statement.setString(3, zona.getDesignacao());
-//			int result = statement.executeUpdate();
-//			if (result == 1)
-//				return true;
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		return false;
-//	}
-//	
-//	public ArrayList<Zona> verZonas() {
-//		ArrayList<Zona> lista = new ArrayList<Zona>();
-//		try {
-//			statement = conn.prepareStatement("SELECT * FROM Zona");
-//			resultSet = statement.executeQuery();
-//			while(resultSet.next()){
-//				int idZona = resultSet.getInt("idZona");
-//				String cidade = resultSet.getString("cidade");
-//				String designacao = resultSet.getString("designacao");
-//				Zona zona = new Zona(idZona, cidade, designacao);
-//				lista.add(zona);
-//			}
-//			
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		
-//		return lista;
-//	}
+	// No relatorio e void mas devia retornar um int...
+	public void insert(String sql){
+		// possível chamada a uma função que prepara o commando insert apenas recebendo os seus argumentos
+		
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("SQL Exception: " + e.getMessage());
+            System.out.println("SQL State: " + e.getSQLState());
+            System.out.println("Error Code: " + e.getErrorCode());
+		}
+		
+	}
+	
+	// No relatorio e void mas devia retornar um int...
+	public void delete(String sql){
+		// possível chamada a uma função que prepara o commando delect apenas recebendo os seus argumentos
+		
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("SQL Exception: " + e.getMessage());
+            System.out.println("SQL State: " + e.getSQLState());
+            System.out.println("Error Code: " + e.getErrorCode());
+		}	
+		
+	}
 
 }
