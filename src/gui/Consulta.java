@@ -3,12 +3,15 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.Panel;
 import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -22,6 +25,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import com.jgoodies.forms.factories.DefaultComponentFactory;
+
+import controlo.CtrConsultarEstabelecimentos;
+import dados.Estabelecimento;
 
 public class Consulta extends JFrame {
 
@@ -46,24 +52,14 @@ public class Consulta extends JFrame {
 	private JPanel panel_resultadoPesquisa;
 	private JScrollPane scrollPaneResultadosPesquisa;
 	private JPanel panel_resultadosDivisoes;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Consulta frame = new Consulta();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	public Consulta() {
+	private Button buttonFiltroTodos;
+	
+	private CtrConsultarEstabelecimentos ctrControlador;
+	
+	public Consulta(CtrConsultarEstabelecimentos ctrControlador) {
+		
+		this.ctrControlador = ctrControlador;
+		
 		setTitle("Eat & Drink Estabelecimentos - Consulta");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(180, 35, 1050, 674);
@@ -169,7 +165,7 @@ public class Consulta extends JFrame {
 		buttonAplicarFiltro.setBounds(32, 367, 91, 22);
 		contentPane.add(buttonAplicarFiltro);
 
-		Button buttonFiltroTodos = new Button("Todos");
+		buttonFiltroTodos = new Button("Todos");
 		buttonFiltroTodos.setBounds(141, 367, 60, 22);
 		contentPane.add(buttonFiltroTodos);
 
@@ -229,6 +225,31 @@ public class Consulta extends JFrame {
 		JLabel lblAvaliao = new JLabel("AVALIA\u00C7\u00C3O");
 		lblAvaliao.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_resultadosDivisoes.add(lblAvaliao);
+		
+		this.setVisible(true);
 
+		addListeners();
+	}
+
+	private void addListeners() {
+
+		buttonFiltroTodos.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// System.out.println("Carreguei no botãoTodos!");
+				List<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
+
+				listaEstabelecimentos = ctrControlador
+						.consultarEstabelecimentos(null, null, null, 0.0, null,
+								0.0, null, false, null);
+
+				for (int i = 0; i < listaEstabelecimentos.size(); i++) {
+					// System.out.println("Estou aqui!");
+					// .. mete na interface todos os estabelecimentos recebidos
+				}
+
+			}
+		});
 	}
 }
