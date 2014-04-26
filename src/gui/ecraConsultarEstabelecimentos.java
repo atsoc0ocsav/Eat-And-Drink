@@ -52,17 +52,14 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	private JPanel panel_resultadosDivisoes;
 	private Button buttonFiltroTodos;
 	private Button buttonAplicarFiltro;
-
-	private ctrlConsultarEstabelecimentos ctrControlador;
+	
+	private ctrlConsultarEstabelecimentos ctrConsulta;
 	private JComboBox comboBoxTipoPratos;
 	private JList listEventos;
 	private JList listTipoDePratos;
-
-	public ecraConsultarEstabelecimentos(
-			ctrlConsultarEstabelecimentos ctrControlador) {
-
-		this.ctrControlador = ctrControlador;
-
+	
+	public ecraConsultarEstabelecimentos(ctrlConsultarEstabelecimentos consulta) {
+		
 		setTitle("Eat & Drink Estabelecimentos - Consulta");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(180, 35, 1050, 674);
@@ -123,14 +120,14 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		panel_TipoEventosBotoes = new JPanel();
 		panelTipoEventos.add(panel_TipoEventosBotoes, BorderLayout.SOUTH);
 		panel_TipoEventosBotoes.setLayout(new GridLayout(0, 3, 0, 0));
-
+		
 		JComboBox comboBoxTipoEventos = new JComboBox();
 		comboBoxTipoEventos.setToolTipText("Tipo de Eventos");
 		panel_TipoEventosBotoes.add(comboBoxTipoEventos);
 
 		Button buttonAddEventos = new Button("Adicionar");
 		panel_TipoEventosBotoes.add(buttonAddEventos);
-
+		
 		Button buttonRemoveEventos = new Button("Remover");
 		panel_TipoEventosBotoes.add(buttonRemoveEventos);
 
@@ -141,7 +138,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		panel_InScrollPaneEventos = new JPanel();
 		scrollPaneEventos.setViewportView(panel_InScrollPaneEventos);
 		panel_InScrollPaneEventos.setLayout(new BorderLayout(0, 0));
-
+		
 		listEventos = new JList();
 		panel_InScrollPaneEventos.add(listEventos);
 
@@ -156,13 +153,13 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		panel_TipoPratosBotoes = new JPanel();
 		panelTipoPratos.add(panel_TipoPratosBotoes, BorderLayout.SOUTH);
 		panel_TipoPratosBotoes.setLayout(new GridLayout(0, 3, 0, 0));
-
+		
 		comboBoxTipoPratos = new JComboBox();
 		panel_TipoPratosBotoes.add(comboBoxTipoPratos);
 
 		Button buttonAddPratos = new Button("Adicionar");
 		panel_TipoPratosBotoes.add(buttonAddPratos);
-
+		
 		Button buttonRemoverPratos = new Button("Remover");
 		panel_TipoPratosBotoes.add(buttonRemoverPratos);
 
@@ -173,10 +170,10 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		panel_InScrollPanelPratos = new JPanel();
 		scrollPanePratos.setViewportView(panel_InScrollPanelPratos);
 		panel_InScrollPanelPratos.setLayout(new BorderLayout(0, 0));
-
+		
 		listTipoDePratos = new JList();
 		panel_InScrollPanelPratos.add(listTipoDePratos, BorderLayout.CENTER);
-
+	
 		buttonAplicarFiltro = new Button("Aplicar Filtro");
 		buttonAplicarFiltro.setBounds(32, 367, 91, 22);
 		contentPane.add(buttonAplicarFiltro);
@@ -241,11 +238,14 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		JLabel lblAvaliao = new JLabel("Avaliação");
 		lblAvaliao.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_resultadosDivisoes.add(lblAvaliao);
-
+		
+		this.ctrConsulta = consulta;
+		
+		addListeners();
+		
 		this.setResizable(false);
 		this.setVisible(true);
 
-		addListeners();
 	}
 
 	private void addListeners() {
@@ -254,7 +254,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 
 			public void actionPerformed(ActionEvent arg0) {
 				ArrayList<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
-				listaEstabelecimentos = ctrControlador
+				listaEstabelecimentos = ctrConsulta
 						.consultarEstabelecimentos(null, null, null, 0.0, null,
 								0.0, null, false, null);
 				for (int i = 0; i < listaEstabelecimentos.size(); i++) {
@@ -264,14 +264,14 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 
 			}
 		});
-
+		
 		buttonAplicarFiltro.addActionListener(new ActionListener() {
-
+			
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
-
+				
 			}
 		});
-
+		
 	}
 }
