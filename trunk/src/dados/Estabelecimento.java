@@ -3,7 +3,6 @@ package dados;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 import dbc.DBConnection;
 
@@ -35,11 +34,11 @@ public class Estabelecimento {
 		this.rating = rating;
 	}
 
-	public List<Estabelecimento> select(String cidade, String zona,
+	public ArrayList<Estabelecimento> select(String cidade, String zona,
 			String tipo, double rating, String prato, double preco,
 			String evento, boolean foto, String nome) {
 
-		List<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
+		ArrayList<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
 
 		if (cidade == null && zona == null && tipo == null && rating == 0.0
 				&& prato == null && preco == 0.0 && evento == null && !foto
