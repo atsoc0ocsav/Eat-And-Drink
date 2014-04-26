@@ -234,7 +234,6 @@ public class Consulta extends JFrame {
 
 		buttonFiltroTodos.addActionListener(new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// System.out.println("Carreguei no botãoTodos!");
 				ArrayList<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
