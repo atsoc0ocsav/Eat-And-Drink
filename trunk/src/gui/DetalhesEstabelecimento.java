@@ -23,6 +23,8 @@ import javax.swing.border.TitledBorder;
 import java.awt.Color;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.ListSelectionModel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 public class DetalhesEstabelecimento extends JFrame {
 
@@ -39,7 +41,8 @@ public class DetalhesEstabelecimento extends JFrame {
 	private JTextField textField_Preco;
 	private JTextField textField_Global;
 	private JTextField textField_ASeguir;
-	private JTable table;
+	private JTable table_Pratos;
+	private JTable table_Mes;
 
 	/**
 	 * Launch the application (for debug purpose)
@@ -108,31 +111,31 @@ public class DetalhesEstabelecimento extends JFrame {
 		lbl_EatDrink.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		contentPane.add(lbl_EatDrink);
 
-		JLabel lbl_Estabelecimento = new JLabel("ESTABELECIMENTOS");
+		JLabel lbl_Estabelecimento = new JLabel("Estabelecimentos");
 		lbl_Estabelecimento.setHorizontalAlignment(SwingConstants.LEFT);
 		lbl_Estabelecimento.setBounds(73, 53, 116, 14);
 		contentPane.add(lbl_Estabelecimento);
 
-		JLabel lbl_Tipo = new JLabel("TIPO");
+		JLabel lbl_Tipo = new JLabel("Tipo");
 		lbl_Tipo.setHorizontalAlignment(SwingConstants.LEFT);
 		lbl_Tipo.setBounds(73, 83, 64, 14);
 		contentPane.add(lbl_Tipo);
 
-		JLabel lbl_Cidade = new JLabel("CIDADE");
+		JLabel lbl_Cidade = new JLabel("Cidade");
 		lbl_Cidade.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_Cidade.setBounds(232, 83, 47, 14);
 		contentPane.add(lbl_Cidade);
 
-		JLabel lbl_Zona = new JLabel("ZONA");
+		JLabel lbl_Zona = new JLabel("Zona");
 		lbl_Zona.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_Zona.setBounds(402, 83, 46, 14);
 		contentPane.add(lbl_Zona);
 
-		JLabel lbl_Morada = new JLabel("MORADA");
+		JLabel lbl_Morada = new JLabel("Morada");
 		lbl_Morada.setBounds(73, 113, 55, 14);
 		contentPane.add(lbl_Morada);
 
-		JLabel lbl_Horario = new JLabel("HOR\u00C1RIO");
+		JLabel lbl_Horario = new JLabel("Hor\u00E1rio");
 		lbl_Horario.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_Horario.setBounds(561, 83, 64, 14);
 		contentPane.add(lbl_Horario);
@@ -140,7 +143,7 @@ public class DetalhesEstabelecimento extends JFrame {
 		// Text Fields Constructors
 		textField_Estabelecimento = new JTextField();
 		textField_Estabelecimento.setEditable(false);
-		textField_Estabelecimento.setBounds(199, 50, 522, 20);
+		textField_Estabelecimento.setBounds(177, 50, 544, 20);
 		contentPane.add(textField_Estabelecimento);
 		textField_Estabelecimento.setColumns(10);
 
@@ -202,17 +205,17 @@ public class DetalhesEstabelecimento extends JFrame {
 		btn_Adicionar.setBounds(441, 238, 110, 23);
 		panel_Pratos.add(btn_Adicionar);
 
-		JLabel lbl_Nome = new JLabel("NOME");
+		JLabel lbl_Nome = new JLabel("Nome");
 		lbl_Nome.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_Nome.setBounds(349, 22, 74, 14);
 		panel_Pratos.add(lbl_Nome);
 
-		JLabel lbl_Descricao = new JLabel("DESCRI\u00C7\u00C3O");
+		JLabel lbl_Descricao = new JLabel("Descri\u00E7\u00E3o");
 		lbl_Descricao.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_Descricao.setBounds(349, 55, 74, 14);
 		panel_Pratos.add(lbl_Descricao);
 
-		JLabel lbl_Preco = new JLabel("PRE\u00C7O");
+		JLabel lbl_Preco = new JLabel("Pre\u00E7o");
 		lbl_Preco.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_Preco.setBounds(349, 208, 74, 14);
 		panel_Pratos.add(lbl_Preco);
@@ -236,8 +239,17 @@ public class DetalhesEstabelecimento extends JFrame {
 		textArea_Descricao.setBounds(429, 52, 157, 140);
 		panel_Pratos.add(textArea_Descricao);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
+		JScrollPane scrollPane_Pratos = new JScrollPane();
+		scrollPane_Pratos.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane_Pratos.setBounds(19, 22, 334, 205);
+		panel_Pratos.add(scrollPane_Pratos);
+		
+		table_Pratos = new JTable();
+		table_Pratos.setEnabled(false);
+		table_Pratos.setFillsViewportHeight(true);
+		table_Pratos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPane_Pratos.setViewportView(table_Pratos);
+		table_Pratos.setModel(new DefaultTableModel(
 			new Object[][] {
 				{"xzcx", null, "zxcxz", null},
 				{null, "zxczxc", null, null},
@@ -246,8 +258,6 @@ public class DetalhesEstabelecimento extends JFrame {
 				"New column", "New column", "New column", "New column"
 			}
 		));
-		table.setBounds(19, 22, 327, 204);
-		panel_Pratos.add(table);
 
 		// Evaluation Panel
 		JPanel panel_Avaliacao = new JPanel();
@@ -257,23 +267,23 @@ public class DetalhesEstabelecimento extends JFrame {
 		getContentPane().add(panel_Avaliacao);
 		panel_Avaliacao.setLayout(null);
 
-		JLabel lbl_Global = new JLabel("GLOBAL");
+		JLabel lbl_Global = new JLabel("Global");
 		lbl_Global.setBounds(35, 22, 49, 14);
 		panel_Avaliacao.add(lbl_Global);
 		lbl_Global.setHorizontalAlignment(SwingConstants.LEFT);
 
-		JLabel lbl_ASeguir = new JLabel("A SEGUIR");
+		JLabel lbl_ASeguir = new JLabel("A Seguir");
 		lbl_ASeguir.setBounds(35, 55, 58, 14);
 		panel_Avaliacao.add(lbl_ASeguir);
 		lbl_ASeguir.setHorizontalAlignment(SwingConstants.LEFT);
 
 		textField_Global = new JTextField();
-		textField_Global.setBounds(94, 19, 42, 20);
+		textField_Global.setBounds(87, 19, 49, 20);
 		panel_Avaliacao.add(textField_Global);
 		textField_Global.setColumns(10);
 
 		textField_ASeguir = new JTextField();
-		textField_ASeguir.setBounds(94, 52, 42, 20);
+		textField_ASeguir.setBounds(87, 52, 49, 20);
 		panel_Avaliacao.add(textField_ASeguir);
 		textField_ASeguir.setColumns(10);
 
@@ -284,13 +294,32 @@ public class DetalhesEstabelecimento extends JFrame {
 		getContentPane().add(panel_Mes);
 		panel_Mes.setLayout(null);
 		
-				JLabel lbl_Mes = new JLabel("M\u00CAS");
+				JLabel lbl_Mes = new JLabel("M\u00EAs");
 				lbl_Mes.setBounds(35, 22, 64, 14);
 				panel_Mes.add(lbl_Mes);
 				
 						JComboBox comboBox_Mes = new JComboBox();
-						comboBox_Mes.setBounds(96, 19, 84, 20);
+						comboBox_Mes.setBounds(87, 19, 93, 20);
 						panel_Mes.add(comboBox_Mes);
+						
+						JScrollPane scrollPane = new JScrollPane();
+						scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+						scrollPane.setBounds(10, 47, 170, 122);
+						panel_Mes.add(scrollPane);
+						
+						table_Mes = new JTable();
+						table_Mes.setModel(new DefaultTableModel(
+							new Object[][] {
+								{"asdsa", null},
+								{null, "asdsa"},
+								{"asdsa", null},
+							},
+							new String[] {
+								"New column", "New column"
+							}
+						));
+						table_Mes.getColumnModel().getColumn(1).setResizable(false);
+						scrollPane.setViewportView(table_Mes);
 
 	}
 }
