@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import dados.Cidade;
 import dados.Estabelecimento;
 import dados.TipoDeEstablecimento;
+import dados.TipoDeEvento;
+import dados.TipoDePrato;
 import dados.Zona;
 import dbc.DBConnection;
 
@@ -45,6 +47,18 @@ public class ctrlConsultarEstabelecimentos {
 	
 	public ArrayList<Zona> getZonas(){
 		return zona.getZonas();
+	}
+	
+	public ArrayList<TipoDeEstablecimento> getTiposDeEstablecimento(){
+		return tipoDeEstablecimento.getTiposDeEstablecimentos();
+	}
+	
+	public ArrayList<TipoDeEvento> getTiposDeEventos(){
+		return tipoDeEvento.getTiposDeEventos(); 
+	}
+	
+	public ArrayList<TipoDePrato> getTiposDePratos(){
+		return tipoDePrato.getTiposDePratos();
 	}
 
 }

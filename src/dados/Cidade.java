@@ -28,7 +28,7 @@ public class Cidade {
 
 		try {
 			while (resultSet.next()) {
-				name = resultSet.getString("coordenadasGps");
+				String name = resultSet.getString("coordenadasGps");
 				cidades.add(new Cidade(name));
 			}
 
@@ -37,6 +37,14 @@ public class Cidade {
 		}
 
 		return cidades;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }
