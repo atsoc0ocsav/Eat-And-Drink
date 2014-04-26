@@ -27,7 +27,7 @@ public class ecraEstabelecimentoDetalhes {
 
 	// GUI Variables
 	private JFrame frame;
-	private String designacao_estabelecimento = "t";
+	private String designacao_estabelecimento = " ";
 	private Estabelecimento estabelecimento;
 	private JTextField textField_Estabelecimento;
 	private JTextField textField_Tipo;
