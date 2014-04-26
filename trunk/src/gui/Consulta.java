@@ -27,6 +27,7 @@ import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 import controlo.CtrConsultarEstabelecimentos;
 import dados.Estabelecimento;
+import javax.swing.JList;
 
 public class Consulta extends JFrame {
 
@@ -37,11 +38,11 @@ public class Consulta extends JFrame {
 	private JComboBox comboBoxZona;
 	private JComboBox comboBoxTipo;
 	private JPanel panelTipoEventos;
-	private JPanel panel;
+	private JPanel panel_TipoEventosBotoes;
 	private JScrollPane scrollPaneEventos;
 	private JPanel panel_InScrollPaneEventos;
 	private JPanel panelTipoPratos;
-	private JPanel panel_1;
+	private JPanel panel_TipoPratosBotoes;
 	private JScrollPane scrollPanePratos;
 	private JPanel panel_InScrollPanelPratos;
 	private TextField textField_avaliacao;
@@ -54,6 +55,8 @@ public class Consulta extends JFrame {
 	
 	private CtrConsultarEstabelecimentos ctrControlador;
 	private JComboBox comboBoxTipoPratos;
+	private JList listEventos;
+	private JList listTipoDePratos;
 	
 	public Consulta(CtrConsultarEstabelecimentos ctrControlador) {
 		
@@ -116,16 +119,19 @@ public class Consulta extends JFrame {
 		contentPane.add(panelTipoEventos);
 		panelTipoEventos.setLayout(new BorderLayout(0, 0));
 
-		panel = new JPanel();
-		panelTipoEventos.add(panel, BorderLayout.SOUTH);
-		panel.setLayout(new GridLayout(0, 2, 0, 0));
+		panel_TipoEventosBotoes = new JPanel();
+		panelTipoEventos.add(panel_TipoEventosBotoes, BorderLayout.SOUTH);
+		panel_TipoEventosBotoes.setLayout(new GridLayout(0, 3, 0, 0));
 		
 		JComboBox comboBoxTipoEventos = new JComboBox();
 		comboBoxTipoEventos.setToolTipText("Tipo de Eventos");
-		panel.add(comboBoxTipoEventos);
+		panel_TipoEventosBotoes.add(comboBoxTipoEventos);
 
 		Button buttonAddEventos = new Button("Adicionar");
-		panel.add(buttonAddEventos);
+		panel_TipoEventosBotoes.add(buttonAddEventos);
+		
+		Button buttonRemoveEventos = new Button("Remover");
+		panel_TipoEventosBotoes.add(buttonRemoveEventos);
 
 		scrollPaneEventos = new JScrollPane();
 		scrollPaneEventos.setViewportBorder(new LineBorder(new Color(0, 0, 0)));
@@ -133,7 +139,10 @@ public class Consulta extends JFrame {
 
 		panel_InScrollPaneEventos = new JPanel();
 		scrollPaneEventos.setViewportView(panel_InScrollPaneEventos);
-		panel_InScrollPaneEventos.setLayout(new GridLayout(0, 2, 0, 0));
+		panel_InScrollPaneEventos.setLayout(new BorderLayout(0, 0));
+		
+		listEventos = new JList();
+		panel_InScrollPaneEventos.add(listEventos);
 
 		panelTipoPratos = new JPanel();
 		panelTipoPratos.setBounds(523, 445, 480, 160);
@@ -143,15 +152,18 @@ public class Consulta extends JFrame {
 		contentPane.add(panelTipoPratos);
 		panelTipoPratos.setLayout(new BorderLayout(0, 0));
 
-		panel_1 = new JPanel();
-		panelTipoPratos.add(panel_1, BorderLayout.SOUTH);
-		panel_1.setLayout(new GridLayout(0, 2, 0, 0));
+		panel_TipoPratosBotoes = new JPanel();
+		panelTipoPratos.add(panel_TipoPratosBotoes, BorderLayout.SOUTH);
+		panel_TipoPratosBotoes.setLayout(new GridLayout(0, 3, 0, 0));
 		
 		comboBoxTipoPratos = new JComboBox();
-		panel_1.add(comboBoxTipoPratos);
+		panel_TipoPratosBotoes.add(comboBoxTipoPratos);
 
 		Button buttonAddPratos = new Button("Adicionar");
-		panel_1.add(buttonAddPratos);
+		panel_TipoPratosBotoes.add(buttonAddPratos);
+		
+		Button buttonRemoverPratos = new Button("Remover");
+		panel_TipoPratosBotoes.add(buttonRemoverPratos);
 
 		scrollPanePratos = new JScrollPane();
 		scrollPanePratos.setViewportBorder(new LineBorder(new Color(0, 0, 0)));
@@ -160,7 +172,10 @@ public class Consulta extends JFrame {
 		panel_InScrollPanelPratos = new JPanel();
 		scrollPanePratos.setViewportView(panel_InScrollPanelPratos);
 		panel_InScrollPanelPratos.setLayout(new BorderLayout(0, 0));
-
+		
+		listTipoDePratos = new JList();
+		panel_InScrollPanelPratos.add(listTipoDePratos, BorderLayout.CENTER);
+	
 		buttonAplicarFiltro = new Button("Aplicar Filtro");
 		buttonAplicarFiltro.setBounds(32, 367, 91, 22);
 		contentPane.add(buttonAplicarFiltro);
@@ -251,7 +266,6 @@ public class Consulta extends JFrame {
 		
 		buttonAplicarFiltro.addActionListener(new ActionListener() {
 			
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
 				
