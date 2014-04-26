@@ -11,7 +11,6 @@ import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -238,7 +237,7 @@ public class Consulta extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// System.out.println("Carreguei no botãoTodos!");
-				List<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
+				ArrayList<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
 
 				listaEstabelecimentos = ctrControlador
 						.consultarEstabelecimentos(null, null, null, 0.0, null,

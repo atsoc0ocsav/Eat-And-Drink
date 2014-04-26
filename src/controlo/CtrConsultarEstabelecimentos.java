@@ -1,8 +1,6 @@
 package controlo;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
 
 import dados.Estabelecimento;
 import dbc.DBConnection;
@@ -17,11 +15,11 @@ public class CtrConsultarEstabelecimentos {
 		estabelecimento = new Estabelecimento(dbc);
 	}
 
-	public List<Estabelecimento> consultarEstabelecimentos(String cidade,
+	public ArrayList<Estabelecimento> consultarEstabelecimentos(String cidade,
 			String zona, String tipo, double rating, String prato,
 			double preco, String evento, boolean foto, String nome) {
 
-		List<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
+		ArrayList<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
 
 		listaEstabelecimentos = estabelecimento.select(cidade, zona, tipo,
 				rating, prato, preco, evento, foto, nome);
