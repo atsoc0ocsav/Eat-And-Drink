@@ -2,14 +2,12 @@ package dados;
 
 import dbc.DBConnection;
 
-public class TipoDeEstablecimento {
+public class TipoDePrato {
 	private DBConnection dbcConnection;
 
-	public TipoDeEstablecimento(DBConnection dbcConnection) {
+	public TipoDePrato(DBConnection dbcConnection) {
 		super();
 		this.dbcConnection = dbcConnection;
 	}
-	
-	
 
 }
