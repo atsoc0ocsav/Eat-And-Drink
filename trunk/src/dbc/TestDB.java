@@ -18,19 +18,20 @@ public class TestDB {
 		}
 
 		if (works) {
-			ResultSet result;
-
-			db.insert("");
-
-			result = db.select("");
-
-			showResult(result);
-
-			db.delete("");
-
-			result = db.select("");
-
-			showResult(result);
+			System.out.println("It Works!");
+//			ResultSet result;
+//
+//			db.insert("");
+//
+//			result = db.select("");
+//
+//			showResult(result);
+//
+//			db.delete("");
+//
+//			result = db.select("");
+//
+//			showResult(result);
 		}
 
 	}
