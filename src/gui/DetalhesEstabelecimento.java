@@ -237,6 +237,15 @@ public class DetalhesEstabelecimento extends JFrame {
 		panel_Pratos.add(textArea_Descricao);
 		
 		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"xzcx", null, "zxcxz", null},
+				{null, "zxczxc", null, null},
+			},
+			new String[] {
+				"New column", "New column", "New column", "New column"
+			}
+		));
 		table.setBounds(19, 22, 327, 204);
 		panel_Pratos.add(table);
 
