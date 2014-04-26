@@ -53,14 +53,12 @@ public class Consulta extends JFrame {
 	private Button buttonFiltroTodos;
 	private Button buttonAplicarFiltro;
 	
-	private CtrConsultarEstabelecimentos ctrControlador;
+	private CtrConsultarEstabelecimentos ctrConsulta;
 	private JComboBox comboBoxTipoPratos;
 	private JList listEventos;
 	private JList listTipoDePratos;
 	
-	public Consulta(CtrConsultarEstabelecimentos ctrControlador) {
-		
-		this.ctrControlador = ctrControlador;
+	public Consulta(CtrConsultarEstabelecimentos consulta) {
 		
 		setTitle("Eat & Drink Estabelecimentos - Consulta");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -241,10 +239,13 @@ public class Consulta extends JFrame {
 		lblAvaliao.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_resultadosDivisoes.add(lblAvaliao);
 		
+		this.ctrConsulta = consulta;
+		
+		addListeners();
+		
 		this.setResizable(false);
 		this.setVisible(true);
 
-		addListeners();
 	}
 
 	private void addListeners() {
@@ -253,7 +254,7 @@ public class Consulta extends JFrame {
 
 			public void actionPerformed(ActionEvent arg0) {
 				ArrayList<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
-				listaEstabelecimentos = ctrControlador
+				listaEstabelecimentos = ctrConsulta
 						.consultarEstabelecimentos(null, null, null, 0.0, null,
 								0.0, null, false, null);
 				for (int i = 0; i < listaEstabelecimentos.size(); i++) {
