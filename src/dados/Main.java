@@ -1,12 +1,13 @@
 package dados;
 
-import controlo.CtrConsultarEstabelecimentos;
-import gui.Consulta;
+import gui.ecraConsultarEstabelecimentos;
+import controlo.ctrlConsultarEstabelecimentos;
+
 
 public class Main {
 
 	public static void main(String[] args) {
-		Consulta guiConsulta = new Consulta(new CtrConsultarEstabelecimentos());
+		ecraConsultarEstabelecimentos guiConsulta = new ecraConsultarEstabelecimentos(new ctrlConsultarEstabelecimentos());
 	}
 
 }
