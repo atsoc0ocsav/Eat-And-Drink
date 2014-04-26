@@ -20,9 +20,9 @@ public class TipoDeEstablecimento {
 		this.tipoDeEstablecimento = tipoDeEstablecimento;
 	}
 
-	public ArrayList<TipoDeEstablecimento> getTiposDeEstablecimentos() {
+	public ArrayList<TipoDeEstablecimento> getTiposDeEstablecimento() {
 
-		ArrayList<TipoDeEstablecimento> tiposDeEstablecimentos = new ArrayList<TipoDeEstablecimento>();
+		ArrayList<TipoDeEstablecimento> tiposDeEstablecimento = new ArrayList<TipoDeEstablecimento>();
 
 		ResultSet resultSet = dbcConnection
 				.select("SELECT * FROM TipoDeEstablecimento");
@@ -30,7 +30,7 @@ public class TipoDeEstablecimento {
 		try {
 			while (resultSet.next()) {
 				String tipoDeEstablecimento = resultSet.getString("designacao");
-				tiposDeEstablecimentos.add(new TipoDeEstablecimento(
+				tiposDeEstablecimento.add(new TipoDeEstablecimento(
 						tipoDeEstablecimento));
 			}
 
@@ -38,7 +38,15 @@ public class TipoDeEstablecimento {
 			e.printStackTrace();
 		}
 
-		return tiposDeEstablecimentos;
+		return tiposDeEstablecimento;
+	}
+
+	public String getTipoDeEstablecimento() {
+		return tipoDeEstablecimento;
+	}
+
+	public void setTipoDeEstablecimento(String tipoDeEstablecimento) {
+		this.tipoDeEstablecimento = tipoDeEstablecimento;
 	}
 
 }

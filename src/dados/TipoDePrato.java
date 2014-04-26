@@ -22,8 +22,8 @@ public class TipoDePrato {
 		this.descricao = descricao;
 	}
 
-	public ArrayList<TipoDePrato> getTiposDePratos() {
-		ArrayList<TipoDePrato> tiposDePratos = new ArrayList<TipoDePrato>();
+	public ArrayList<TipoDePrato> getTiposDePrato() {
+		ArrayList<TipoDePrato> tiposDePrato = new ArrayList<TipoDePrato>();
 
 		ResultSet resultSet = dbcConnection.select("SELECT * FROM TipoDePrato");
 
@@ -31,14 +31,30 @@ public class TipoDePrato {
 			while (resultSet.next()) {
 				int tipoDePrato = resultSet.getInt("tipoDePrato");
 				String descricao = resultSet.getString("descricao");
-				tiposDePratos.add(new TipoDePrato(tipoDePrato, descricao));
+				tiposDePrato.add(new TipoDePrato(tipoDePrato, descricao));
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		return tiposDePratos;
+		return tiposDePrato;
+	}
+
+	public int getTipoDePrato() {
+		return tipoDePrato;
+	}
+
+	public void setTipoDePrato(int tipoDePrato) {
+		this.tipoDePrato = tipoDePrato;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 }

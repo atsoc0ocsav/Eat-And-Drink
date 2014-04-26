@@ -28,6 +28,10 @@ import com.jgoodies.forms.factories.DefaultComponentFactory;
 import controlo.ctrlConsultarEstabelecimentos;
 import dados.Cidade;
 import dados.Estabelecimento;
+import dados.TipoDeEstablecimento;
+import dados.TipoDeEvento;
+import dados.TipoDePrato;
+import dados.Zona;
 
 import javax.swing.JList;
 
@@ -36,9 +40,11 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	private static final long serialVersionUID = 4212115798640187383L;
 	private JPanel contentPane;
 	private Panel panelFiltros;
-	private JComboBox comboBoxCidade;
-	private JComboBox comboBoxZona;
-	private JComboBox comboBoxTipo;
+	private JComboBox comboBoxCidades;
+	private JComboBox comboBoxZonas;
+	private JComboBox comboBoxTiposDeEstablecimento;
+	private JComboBox comboBoxTiposDePrato;
+	private JComboBox comboBoxTiposDeEvento;
 	private JPanel panelTipoEventos;
 	private JPanel panel_TipoEventosBotoes;
 	private JScrollPane scrollPaneEventos;
@@ -54,16 +60,20 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	private JPanel panel_resultadosDivisoes;
 	private Button buttonFiltroTodos;
 	private Button buttonAplicarFiltro;
-	
+
 	private ctrlConsultarEstabelecimentos ctrConsulta;
-	private JComboBox comboBoxTipoPratos;
+
 	private JList listEventos;
 	private JList listTipoDePratos;
-	
-	ArrayList<Cidade> cidades;
-	
+
+	private ArrayList<Cidade> cidades;
+	private ArrayList<Zona> zonas;
+	private ArrayList<TipoDeEstablecimento> tiposdeEstablecimento;
+	private ArrayList<TipoDeEvento> tiposDeEvento;
+	private ArrayList<TipoDePrato> tiposDePrato;
+
 	public ecraConsultarEstabelecimentos(ctrlConsultarEstabelecimentos consulta) {
-		
+
 		setTitle("Eat & Drink Estabelecimentos - Consulta");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(180, 35, 1050, 674);
@@ -90,9 +100,9 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		lblCidade.setHorizontalAlignment(SwingConstants.CENTER);
 		panelFiltros.add(lblCidade);
 
-		comboBoxCidade = new JComboBox();
-		comboBoxCidade.setBounds(87, 0, 100, 23);
-		panelFiltros.add(comboBoxCidade);
+		comboBoxCidades = new JComboBox();
+		comboBoxCidades.setBounds(87, 0, 100, 23);
+		panelFiltros.add(comboBoxCidades);
 
 		JLabel lblZonaFiltro = new JLabel("Zona");
 		lblZonaFiltro.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -100,9 +110,9 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		lblZonaFiltro.setHorizontalAlignment(SwingConstants.CENTER);
 		panelFiltros.add(lblZonaFiltro);
 
-		comboBoxZona = new JComboBox();
-		comboBoxZona.setBounds(87, 48, 100, 23);
-		panelFiltros.add(comboBoxZona);
+		comboBoxZonas = new JComboBox();
+		comboBoxZonas.setBounds(87, 48, 100, 23);
+		panelFiltros.add(comboBoxZonas);
 
 		JLabel lblTipo = new JLabel("Tipo");
 		lblTipo.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -110,9 +120,9 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		lblTipo.setHorizontalAlignment(SwingConstants.CENTER);
 		panelFiltros.add(lblTipo);
 
-		comboBoxTipo = new JComboBox();
-		comboBoxTipo.setBounds(87, 96, 100, 23);
-		panelFiltros.add(comboBoxTipo);
+		comboBoxTiposDeEstablecimento = new JComboBox();
+		comboBoxTiposDeEstablecimento.setBounds(87, 96, 100, 23);
+		panelFiltros.add(comboBoxTiposDeEstablecimento);
 
 		panelTipoEventos = new JPanel();
 		panelTipoEventos.setBounds(32, 445, 480, 160);
@@ -124,14 +134,14 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		panel_TipoEventosBotoes = new JPanel();
 		panelTipoEventos.add(panel_TipoEventosBotoes, BorderLayout.SOUTH);
 		panel_TipoEventosBotoes.setLayout(new GridLayout(0, 3, 0, 0));
-		
-		JComboBox comboBoxTipoEventos = new JComboBox();
-		comboBoxTipoEventos.setToolTipText("Tipo de Eventos");
-		panel_TipoEventosBotoes.add(comboBoxTipoEventos);
+
+		comboBoxTiposDeEvento = new JComboBox();
+		comboBoxTiposDeEvento.setToolTipText("Tipo de Eventos");
+		panel_TipoEventosBotoes.add(comboBoxTiposDeEvento);
 
 		Button buttonAddEventos = new Button("Adicionar");
 		panel_TipoEventosBotoes.add(buttonAddEventos);
-		
+
 		Button buttonRemoveEventos = new Button("Remover");
 		panel_TipoEventosBotoes.add(buttonRemoveEventos);
 
@@ -142,7 +152,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		panel_InScrollPaneEventos = new JPanel();
 		scrollPaneEventos.setViewportView(panel_InScrollPaneEventos);
 		panel_InScrollPaneEventos.setLayout(new BorderLayout(0, 0));
-		
+
 		listEventos = new JList();
 		panel_InScrollPaneEventos.add(listEventos);
 
@@ -157,13 +167,13 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		panel_TipoPratosBotoes = new JPanel();
 		panelTipoPratos.add(panel_TipoPratosBotoes, BorderLayout.SOUTH);
 		panel_TipoPratosBotoes.setLayout(new GridLayout(0, 3, 0, 0));
-		
-		comboBoxTipoPratos = new JComboBox();
-		panel_TipoPratosBotoes.add(comboBoxTipoPratos);
+
+		comboBoxTiposDePrato = new JComboBox();
+		panel_TipoPratosBotoes.add(comboBoxTiposDePrato);
 
 		Button buttonAddPratos = new Button("Adicionar");
 		panel_TipoPratosBotoes.add(buttonAddPratos);
-		
+
 		Button buttonRemoverPratos = new Button("Remover");
 		panel_TipoPratosBotoes.add(buttonRemoverPratos);
 
@@ -174,10 +184,10 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		panel_InScrollPanelPratos = new JPanel();
 		scrollPanePratos.setViewportView(panel_InScrollPanelPratos);
 		panel_InScrollPanelPratos.setLayout(new BorderLayout(0, 0));
-		
+
 		listTipoDePratos = new JList();
 		panel_InScrollPanelPratos.add(listTipoDePratos, BorderLayout.CENTER);
-	
+
 		buttonAplicarFiltro = new Button("Aplicar Filtro");
 		buttonAplicarFiltro.setBounds(32, 367, 91, 22);
 		contentPane.add(buttonAplicarFiltro);
@@ -242,26 +252,54 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		JLabel lblAvaliao = new JLabel("Avaliação");
 		lblAvaliao.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_resultadosDivisoes.add(lblAvaliao);
-		
+
 		this.ctrConsulta = consulta;
-		
+
 		addListeners();
-		
-		fillComponentsWithData();
-		
+
+		fillComboxesWithData();
+
 		this.setResizable(false);
 		this.setVisible(true);
 
 	}
 
-	private void fillComponentsWithData() {
-		this.cidades =  ctrConsulta.getCidades();
-		
+	private void fillComboxesWithData() {
+		this.cidades = ctrConsulta.getCidades();
+
 		for (Cidade cidade : cidades) {
-			comboBoxCidade.insertItemAt(cidade.getName(), comboBoxCidade.getItemCount()-1);
+			comboBoxCidades.insertItemAt(cidade.getName(),
+					comboBoxCidades.getItemCount() - 1);
 		}
-		
-		
+
+		this.zonas = ctrConsulta.getZonas();
+
+		for (Zona zona : zonas) {
+			comboBoxZonas.insertItemAt(zona.getDesignacao(),
+					comboBoxZonas.getItemCount() - 1);
+		}
+
+		this.tiposdeEstablecimento = ctrConsulta.getTiposDeEstablecimento();
+
+		for (TipoDeEstablecimento tipoEsblecimento : tiposdeEstablecimento) {
+			comboBoxTiposDeEstablecimento.insertItemAt(
+					tipoEsblecimento.getTipoDeEstablecimento(),
+					comboBoxTiposDeEstablecimento.getItemCount() - 1);
+		}
+
+		this.tiposDeEvento = ctrConsulta.getTiposDeEventos();
+
+		for (TipoDeEvento tipoDeEvento : tiposDeEvento) {
+			comboBoxTiposDeEvento.insertItemAt(tipoDeEvento.getDescricao(),
+					comboBoxTiposDeEvento.getItemCount() - 1);
+		}
+
+		this.tiposDePrato = ctrConsulta.getTiposDePratos();
+
+		for (TipoDePrato tipoDePrato : tiposDePrato) {
+			comboBoxTiposDePrato.insertItemAt(tipoDePrato.getDescricao(),
+					comboBoxTiposDePrato.getItemCount() - 1);
+		}
 	}
 
 	private void addListeners() {
@@ -270,9 +308,8 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 
 			public void actionPerformed(ActionEvent arg0) {
 				ArrayList<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
-				listaEstabelecimentos = ctrConsulta
-						.consultarEstabelecimentos(null, null, null, 0.0, null,
-								0.0, null, false, null);
+				listaEstabelecimentos = ctrConsulta.consultarEstabelecimentos(
+						null, null, null, 0.0, null, 0.0, null, false, null);
 				for (int i = 0; i < listaEstabelecimentos.size(); i++) {
 					// System.out.println("Estou aqui!");
 					// .. mete na interface todos os estabelecimentos recebidos
@@ -280,14 +317,16 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 
 			}
 		});
-		
+
 		buttonAplicarFiltro.addActionListener(new ActionListener() {
-			
+
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
-				
+
 			}
 		});
-		
+
 	}
+	
+	
 }
