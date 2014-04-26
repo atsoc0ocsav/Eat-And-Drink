@@ -50,15 +50,15 @@ public class ctrlConsultarEstabelecimentos {
 	}
 	
 	public ArrayList<TipoDeEstablecimento> getTiposDeEstablecimento(){
-		return tipoDeEstablecimento.getTiposDeEstablecimentos();
+		return tipoDeEstablecimento.getTiposDeEstablecimento();
 	}
 	
 	public ArrayList<TipoDeEvento> getTiposDeEventos(){
-		return tipoDeEvento.getTiposDeEventos(); 
+		return tipoDeEvento.getTiposDeEvento(); 
 	}
 	
 	public ArrayList<TipoDePrato> getTiposDePratos(){
-		return tipoDePrato.getTiposDePratos();
+		return tipoDePrato.getTiposDePrato();
 	}
 
 }

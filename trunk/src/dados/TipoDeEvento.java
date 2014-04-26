@@ -22,8 +22,8 @@ public class TipoDeEvento {
 		this.descricao = descricao;
 	}
 
-	public ArrayList<TipoDeEvento> getTiposDeEventos() {
-		ArrayList<TipoDeEvento> tiposDeEventos = new ArrayList<TipoDeEvento>();
+	public ArrayList<TipoDeEvento> getTiposDeEvento() {
+		ArrayList<TipoDeEvento> tiposDeEvento = new ArrayList<TipoDeEvento>();
 
 		ResultSet resultSet = dbcConnection
 				.select("SELECT * FROM TipoDeEvento");
@@ -32,14 +32,30 @@ public class TipoDeEvento {
 			while (resultSet.next()) {
 				int tipoDeEvento = resultSet.getInt("tipoDeEvento");
 				String descricao = resultSet.getString("descricao");
-				tiposDeEventos.add(new TipoDeEvento(tipoDeEvento, descricao));
+				tiposDeEvento.add(new TipoDeEvento(tipoDeEvento, descricao));
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		return tiposDeEventos;
+
+		return tiposDeEvento;
+	}
+
+	public int getTipoDeEvento() {
+		return tipoDeEvento;
+	}
+
+	public void setTipoDeEvento(int tipoDeEvento) {
+		this.tipoDeEvento = tipoDeEvento;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 }

@@ -29,7 +29,7 @@ public class Zona {
 		ArrayList<Zona> zonas = new ArrayList<Zona>();
 
 		ResultSet resultSet = dbcConnection.select("SELECT * FROM Zona");
-		
+
 		try {
 			while (resultSet.next()) {
 				int idZona = resultSet.getInt("idZona");
@@ -43,6 +43,30 @@ public class Zona {
 		}
 
 		return zonas;
+	}
+
+	public int getIdZona() {
+		return idZona;
+	}
+
+	public void setIdZona(int idZona) {
+		this.idZona = idZona;
+	}
+
+	public String getCidade() {
+		return cidade;
+	}
+
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
+	}
+
+	public String getDesignacao() {
+		return designacao;
+	}
+
+	public void setDesignacao(String designacao) {
+		this.designacao = designacao;
 	}
 
 }
