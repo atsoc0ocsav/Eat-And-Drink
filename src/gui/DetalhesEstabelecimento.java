@@ -19,6 +19,10 @@ import javax.swing.UnsupportedLookAndFeelException;
 import controlo.CtrlDetalhesEstabelecimento;
 import dados.Estabelecimento;
 import javax.swing.JComboBox;
+import javax.swing.border.TitledBorder;
+import java.awt.Color;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.ListSelectionModel;
 
 public class DetalhesEstabelecimento extends JFrame {
 
@@ -32,10 +36,10 @@ public class DetalhesEstabelecimento extends JFrame {
 	private JTextField textField_Morada;
 	private JTextField textField_Horario;
 	private JTextField textField_Nome_Prato;
-	private JTable table_Pratos;
 	private JTextField textField_Preco;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField textField_Global;
+	private JTextField textField_ASeguir;
+	private JTable table;
 
 	/**
 	 * Launch the application (for debug purpose)
@@ -170,9 +174,18 @@ public class DetalhesEstabelecimento extends JFrame {
 		contentPane.add(textField_Horario);
 		textField_Horario.setColumns(10);
 
+		JButton btn_AplicarFiltro = new JButton("Aplicar Filtro");
+		btn_AplicarFiltro.setBounds(49, 450, 110, 23);
+		contentPane.add(btn_AplicarFiltro);
+
+		// Buttons Constructors
+		JButton btn_Sair = new JButton("Sair");
+		btn_Sair.setBounds(645, 450, 110, 23);
+		contentPane.add(btn_Sair);
+
 		// Menus Panel
 		JPanel panel_Pratos = new JPanel();
-		panel_Pratos.setBounds(204, 156, 574, 272);
+		panel_Pratos.setBounds(204, 156, 596, 272);
 		panel_Pratos.setBorder(BorderFactory.createTitledBorder("Pratos"));
 		contentPane.add(panel_Pratos);
 		panel_Pratos.setLayout(null);
@@ -205,71 +218,70 @@ public class DetalhesEstabelecimento extends JFrame {
 		panel_Pratos.add(lbl_Preco);
 
 		JLabel lbl_Euro = new JLabel("\u20AC");
-		lbl_Euro.setBounds(499, 208, 65, 14);
+		lbl_Euro.setBounds(509, 208, 65, 14);
 		panel_Pratos.add(lbl_Euro);
 
 		textField_Nome_Prato = new JTextField();
-		textField_Nome_Prato.setBounds(429, 19, 135, 20);
+		textField_Nome_Prato.setBounds(429, 19, 157, 20);
 		panel_Pratos.add(textField_Nome_Prato);
 		textField_Nome_Prato.setColumns(10);
 
 		textField_Preco = new JTextField();
-		textField_Preco.setBounds(429, 205, 60, 20);
+		textField_Preco.setBounds(429, 205, 70, 20);
 		panel_Pratos.add(textField_Preco);
 		textField_Preco.setColumns(10);
 
-		TextArea textArea_Descricao = new TextArea("",20,10,TextArea.SCROLLBARS_VERTICAL_ONLY);
-		textArea_Descricao.setBounds(429, 52, 134, 140);
+		TextArea textArea_Descricao = new TextArea("", 20, 10,
+				TextArea.SCROLLBARS_VERTICAL_ONLY);
+		textArea_Descricao.setBounds(429, 52, 157, 140);
 		panel_Pratos.add(textArea_Descricao);
+		
+		table = new JTable();
+		table.setBounds(19, 22, 327, 204);
+		panel_Pratos.add(table);
 
-		//TODO JTable not working....
-		table_Pratos = new JTable();
-		table_Pratos.setBounds(19, 222, 336, -200);
-		//JScrollPane scroll_Table = new JScrollPane(table_Pratos);
-		//scroll_Table.setBounds(10, 227, 323, -198);
-		panel_Pratos.add(table_Pratos);
+		// Evaluation Panel
+		JPanel panel_Avaliacao = new JPanel();
+		panel_Avaliacao.setBounds(10, 156, 190, 81);
+		panel_Avaliacao.setBorder(BorderFactory
+				.createTitledBorder("Avalia\u00E7\u00E3o"));
+		getContentPane().add(panel_Avaliacao);
+		panel_Avaliacao.setLayout(null);
 
-		// Buttons Constructors
-		JButton btn_Sair = new JButton("Sair");
-		btn_Sair.setBounds(645, 450, 110, 23);
-		contentPane.add(btn_Sair);
+		JLabel lbl_Global = new JLabel("GLOBAL");
+		lbl_Global.setBounds(35, 22, 49, 14);
+		panel_Avaliacao.add(lbl_Global);
+		lbl_Global.setHorizontalAlignment(SwingConstants.LEFT);
 
-		JButton btn_AplicarFiltro = new JButton("Aplicar Filtro");
-		btn_AplicarFiltro.setBounds(49, 450, 110, 23);
-		contentPane.add(btn_AplicarFiltro);
+		JLabel lbl_ASeguir = new JLabel("A SEGUIR");
+		lbl_ASeguir.setBounds(35, 55, 58, 14);
+		panel_Avaliacao.add(lbl_ASeguir);
+		lbl_ASeguir.setHorizontalAlignment(SwingConstants.LEFT);
 
-		JLabel lbl_Avalicao = new JLabel("AVALIA\u00C7\u00C3O");
-		lbl_Avalicao.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_Avalicao.setBounds(66, 166, 81, 14);
-		getContentPane().add(lbl_Avalicao);
+		textField_Global = new JTextField();
+		textField_Global.setBounds(94, 19, 42, 20);
+		panel_Avaliacao.add(textField_Global);
+		textField_Global.setColumns(10);
+
+		textField_ASeguir = new JTextField();
+		textField_ASeguir.setBounds(94, 52, 42, 20);
+		panel_Avaliacao.add(textField_ASeguir);
+		textField_ASeguir.setColumns(10);
+
+		// Month Panel
+		JPanel panel_Mes = new JPanel();
+		panel_Mes.setBounds(10, 248, 190, 180);
+		panel_Mes.setBorder(BorderFactory.createTitledBorder("M\u00EAs"));
+		getContentPane().add(panel_Mes);
+		panel_Mes.setLayout(null);
 		
-		JLabel lblGlobal = new JLabel("GLOBAL");
-		lblGlobal.setHorizontalAlignment(SwingConstants.LEFT);
-		lblGlobal.setBounds(50, 186, 64, 14);
-		getContentPane().add(lblGlobal);
-		
-		JLabel lblASeguir = new JLabel("A SEGUIR");
-		lblASeguir.setHorizontalAlignment(SwingConstants.LEFT);
-		lblASeguir.setBounds(50, 216, 64, 14);
-		getContentPane().add(lblASeguir);
-		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(90, 269, 75, 20);
-		getContentPane().add(comboBox);
-		
-		JLabel lblMs = new JLabel("M\u00CAS");
-		lblMs.setBounds(50, 272, 64, 14);
-		getContentPane().add(lblMs);
-		
-		textField = new JTextField();
-		textField.setBounds(112, 183, 53, 20);
-		getContentPane().add(textField);
-		textField.setColumns(10);
-		
-		textField_1 = new JTextField();
-		textField_1.setBounds(112, 213, 53, 20);
-		getContentPane().add(textField_1);
-		textField_1.setColumns(10);
+				JLabel lbl_Mes = new JLabel("M\u00CAS");
+				lbl_Mes.setBounds(35, 22, 64, 14);
+				panel_Mes.add(lbl_Mes);
+				
+						JComboBox comboBox_Mes = new JComboBox();
+						comboBox_Mes.setBounds(96, 19, 84, 20);
+						panel_Mes.add(comboBox_Mes);
 
 	}
 }
