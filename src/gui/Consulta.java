@@ -38,12 +38,10 @@ public class Consulta extends JFrame {
 	private JComboBox comboBoxTipo;
 	private JPanel panelTipoEventos;
 	private JPanel panel;
-	private TextField textFieldEventos;
 	private JScrollPane scrollPaneEventos;
 	private JPanel panel_InScrollPaneEventos;
 	private JPanel panelTipoPratos;
 	private JPanel panel_1;
-	private TextField textFieldPratos;
 	private JScrollPane scrollPanePratos;
 	private JPanel panel_InScrollPanelPratos;
 	private TextField textField_avaliacao;
@@ -52,8 +50,10 @@ public class Consulta extends JFrame {
 	private JScrollPane scrollPaneResultadosPesquisa;
 	private JPanel panel_resultadosDivisoes;
 	private Button buttonFiltroTodos;
+	private Button buttonAplicarFiltro;
 	
 	private CtrConsultarEstabelecimentos ctrControlador;
+	private JComboBox comboBoxTipoPratos;
 	
 	public Consulta(CtrConsultarEstabelecimentos ctrControlador) {
 		
@@ -79,9 +79,9 @@ public class Consulta extends JFrame {
 		contentPane.add(panelFiltros);
 		panelFiltros.setLayout(null);
 
-		JLabel lblCidade = new JLabel("CIDADE");
+		JLabel lblCidade = new JLabel("Cidade");
 		lblCidade.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblCidade.setBounds(0, 0, 87, 23);
+		lblCidade.setBounds(10, 0, 87, 23);
 		lblCidade.setHorizontalAlignment(SwingConstants.CENTER);
 		panelFiltros.add(lblCidade);
 
@@ -89,9 +89,9 @@ public class Consulta extends JFrame {
 		comboBoxCidade.setBounds(87, 0, 100, 23);
 		panelFiltros.add(comboBoxCidade);
 
-		JLabel lblZonaFiltro = new JLabel("ZONA");
+		JLabel lblZonaFiltro = new JLabel("Zona");
 		lblZonaFiltro.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblZonaFiltro.setBounds(0, 48, 87, 23);
+		lblZonaFiltro.setBounds(10, 48, 87, 23);
 		lblZonaFiltro.setHorizontalAlignment(SwingConstants.CENTER);
 		panelFiltros.add(lblZonaFiltro);
 
@@ -99,9 +99,9 @@ public class Consulta extends JFrame {
 		comboBoxZona.setBounds(87, 48, 100, 23);
 		panelFiltros.add(comboBoxZona);
 
-		JLabel lblTipo = new JLabel("TIPO");
+		JLabel lblTipo = new JLabel("Tipo");
 		lblTipo.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblTipo.setBounds(0, 96, 87, 23);
+		lblTipo.setBounds(10, 96, 87, 23);
 		lblTipo.setHorizontalAlignment(SwingConstants.CENTER);
 		panelFiltros.add(lblTipo);
 
@@ -119,9 +119,10 @@ public class Consulta extends JFrame {
 		panel = new JPanel();
 		panelTipoEventos.add(panel, BorderLayout.SOUTH);
 		panel.setLayout(new GridLayout(0, 2, 0, 0));
-
-		textFieldEventos = new TextField();
-		panel.add(textFieldEventos);
+		
+		JComboBox comboBoxTipoEventos = new JComboBox();
+		comboBoxTipoEventos.setToolTipText("Tipo de Eventos");
+		panel.add(comboBoxTipoEventos);
 
 		Button buttonAddEventos = new Button("Adicionar");
 		panel.add(buttonAddEventos);
@@ -145,9 +146,9 @@ public class Consulta extends JFrame {
 		panel_1 = new JPanel();
 		panelTipoPratos.add(panel_1, BorderLayout.SOUTH);
 		panel_1.setLayout(new GridLayout(0, 2, 0, 0));
-
-		textFieldPratos = new TextField();
-		panel_1.add(textFieldPratos);
+		
+		comboBoxTipoPratos = new JComboBox();
+		panel_1.add(comboBoxTipoPratos);
 
 		Button buttonAddPratos = new Button("Adicionar");
 		panel_1.add(buttonAddPratos);
@@ -160,7 +161,7 @@ public class Consulta extends JFrame {
 		scrollPanePratos.setViewportView(panel_InScrollPanelPratos);
 		panel_InScrollPanelPratos.setLayout(new BorderLayout(0, 0));
 
-		Button buttonAplicarFiltro = new Button("Aplicar Filtro");
+		buttonAplicarFiltro = new Button("Aplicar Filtro");
 		buttonAplicarFiltro.setBounds(32, 367, 91, 22);
 		contentPane.add(buttonAplicarFiltro);
 
@@ -172,23 +173,23 @@ public class Consulta extends JFrame {
 		textField_avaliacao.setBounds(163, 261, 38, 22);
 		contentPane.add(textField_avaliacao);
 
-		Label label_avaliacao = new Label("AVALIA\u00C7\u00C3O");
+		Label label_avaliacao = new Label("Avaliação");
 		label_avaliacao.setFont(new Font("Tahoma", Font.BOLD, 11));
-		label_avaliacao.setBounds(32, 261, 80, 22);
+		label_avaliacao.setBounds(70, 261, 60, 22);
 		contentPane.add(label_avaliacao);
 
 		Label label_sinal = new Label(">=");
 		label_sinal.setFont(new Font("Tahoma", Font.BOLD, 13));
-		label_sinal.setBounds(118, 261, 26, 22);
+		label_sinal.setBounds(131, 261, 26, 22);
 		contentPane.add(label_sinal);
 
 		textField_nome = new TextField();
 		textField_nome.setBounds(121, 314, 80, 22);
 		contentPane.add(textField_nome);
 
-		Label label_nome = new Label("NOME");
+		Label label_nome = new Label("Nome");
 		label_nome.setFont(new Font("Tahoma", Font.BOLD, 11));
-		label_nome.setBounds(60, 314, 62, 22);
+		label_nome.setBounds(81, 314, 62, 22);
 		contentPane.add(label_nome);
 
 		panel_resultadoPesquisa = new JPanel();
@@ -213,18 +214,19 @@ public class Consulta extends JFrame {
 		panel_resultadoPesquisa.add(panel_resultadosDivisoes);
 		panel_resultadosDivisoes.setLayout(new GridLayout(0, 3, 0, 0));
 
-		JLabel lblNome = new JLabel("NOME");
+		JLabel lblNome = new JLabel("Nome");
 		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_resultadosDivisoes.add(lblNome);
 
-		JLabel lblZona = new JLabel("ZONA");
+		JLabel lblZona = new JLabel("Zona");
 		lblZona.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_resultadosDivisoes.add(lblZona);
 
-		JLabel lblAvaliao = new JLabel("AVALIA\u00C7\u00C3O");
+		JLabel lblAvaliao = new JLabel("Avaliação");
 		lblAvaliao.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_resultadosDivisoes.add(lblAvaliao);
 		
+		this.setResizable(false);
 		this.setVisible(true);
 
 		addListeners();
@@ -235,13 +237,10 @@ public class Consulta extends JFrame {
 		buttonFiltroTodos.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
-				// System.out.println("Carreguei no botãoTodos!");
 				ArrayList<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
-
 				listaEstabelecimentos = ctrControlador
 						.consultarEstabelecimentos(null, null, null, 0.0, null,
 								0.0, null, false, null);
-
 				for (int i = 0; i < listaEstabelecimentos.size(); i++) {
 					// System.out.println("Estou aqui!");
 					// .. mete na interface todos os estabelecimentos recebidos
@@ -249,5 +248,15 @@ public class Consulta extends JFrame {
 
 			}
 		});
+		
+		buttonAplicarFiltro.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ArrayList<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
+				
+			}
+		});
+		
 	}
 }
