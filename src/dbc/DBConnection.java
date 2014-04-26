@@ -7,14 +7,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DBConnection {
-	private static final String DB = "eatdrink";
+	private static final String DBNAME = "eatdrink";
 	private static final String USER = "dba";
 	private static final String PASSWORD = "sql";
 	private static final String HOST_NAME = "localhost";
-	private static final String URL = "jdbc:sqlanywhere:Tds:" + HOST_NAME
-			+ ":2638?eng=" + DB;
-	// private static final String url =
-	// "jdbc:sqlanywhere:Tds:localhost:2638?eng=" + db;
+	private static final String URL = "jdbc:sqlanywhere:Tds:"+HOST_NAME+":2638?eng=" + DBNAME;
 
 	private Connection conn = null;
 
@@ -22,6 +19,7 @@ public class DBConnection {
 	public DBConnection() {
 		try {
 			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			conn.setAutoCommit(false); 
 		} catch (SQLException e) {
 			System.out.println("Erro ao estabelecer a ligação.");
 			System.out.println("SQL Exception: " + e.getMessage());
