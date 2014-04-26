@@ -26,7 +26,9 @@ import javax.swing.border.LineBorder;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 import controlo.ctrlConsultarEstabelecimentos;
+import dados.Cidade;
 import dados.Estabelecimento;
+
 import javax.swing.JList;
 
 public class ecraConsultarEstabelecimentos extends JFrame {
@@ -57,6 +59,8 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	private JComboBox comboBoxTipoPratos;
 	private JList listEventos;
 	private JList listTipoDePratos;
+	
+	ArrayList<Cidade> cidades;
 	
 	public ecraConsultarEstabelecimentos(ctrlConsultarEstabelecimentos consulta) {
 		
@@ -243,9 +247,21 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		
 		addListeners();
 		
+		fillComponentsWithData();
+		
 		this.setResizable(false);
 		this.setVisible(true);
 
+	}
+
+	private void fillComponentsWithData() {
+		this.cidades =  ctrConsulta.getCidades();
+		
+		for (Cidade cidade : cidades) {
+			comboBoxCidade.insertItemAt(cidade.getName(), comboBoxCidade.getItemCount()-1);
+		}
+		
+		
 	}
 
 	private void addListeners() {

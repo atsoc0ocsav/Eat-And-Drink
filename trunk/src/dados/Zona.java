@@ -1,28 +1,48 @@
 package dados;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import dbc.DBConnection;
 
 public class Zona {
 	private DBConnection dbcConnection;
+	private int idZona;
+	private String cidade;
+	private String designacao;
 
 	public Zona(DBConnection dbcConnection) {
 		super();
 		this.dbcConnection = dbcConnection;
 	}
 
-	public ArrayList<Zona> getZonas() {
-		
-		ArrayList<Zona> zonas = new ArrayList<Zona>();
-		
-		ResultSet resultSet = dbcConnection.select("SELECT * FROM Zona");
-
-		
-		return null;
+	public Zona(int idZona, String cidade, String designacao) {
+		super();
+		this.idZona = idZona;
+		this.cidade = cidade;
+		this.designacao = designacao;
 	}
-	
-	
+
+	public ArrayList<Zona> getZonas() {
+
+		ArrayList<Zona> zonas = new ArrayList<Zona>();
+
+		ResultSet resultSet = dbcConnection.select("SELECT * FROM Zona");
+		
+		try {
+			while (resultSet.next()) {
+				int idZona = resultSet.getInt("idZona");
+				String cidade = resultSet.getString("cidade");
+				String designacao = resultSet.getString("designacao");
+				zonas.add(new Zona(idZona, cidade, designacao));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return zonas;
+	}
 
 }
