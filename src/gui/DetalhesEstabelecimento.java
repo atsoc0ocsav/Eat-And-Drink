@@ -18,11 +18,11 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import controlo.CtrlDetalhesEstabelecimento;
 import dados.Estabelecimento;
+import javax.swing.JComboBox;
 
 public class DetalhesEstabelecimento extends JFrame {
 
 	private static final long serialVersionUID = -4354922814029833393L;
-	private final String[] COLUMN_NAMES_PRATOS = { "NOME", "DESCRIÇÃO", "PREÇO" };
 	private CtrlDetalhesEstabelecimento controladorDetalherEstabelecimento;
 	private Estabelecimento estabelecimento;
 	private JTextField textField_Estabelecimento;
@@ -34,6 +34,8 @@ public class DetalhesEstabelecimento extends JFrame {
 	private JTextField textField_Nome_Prato;
 	private JTable table_Pratos;
 	private JTextField textField_Preco;
+	private JTextField textField;
+	private JTextField textField_1;
 
 	/**
 	 * Launch the application (for debug purpose)
@@ -102,7 +104,7 @@ public class DetalhesEstabelecimento extends JFrame {
 		lbl_EatDrink.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		contentPane.add(lbl_EatDrink);
 
-		JLabel lbl_Estabelecimento = new JLabel("ESTABELECIMENTO");
+		JLabel lbl_Estabelecimento = new JLabel("ESTABELECIMENTOS");
 		lbl_Estabelecimento.setHorizontalAlignment(SwingConstants.LEFT);
 		lbl_Estabelecimento.setBounds(73, 53, 116, 14);
 		contentPane.add(lbl_Estabelecimento);
@@ -221,8 +223,7 @@ public class DetalhesEstabelecimento extends JFrame {
 		panel_Pratos.add(textArea_Descricao);
 
 		//TODO JTable not working....
-		String[][] teste = { { "teste", " ", " " }, { "teste 1", " ", "" } };
-		table_Pratos = new JTable(teste, COLUMN_NAMES_PRATOS);
+		table_Pratos = new JTable();
 		table_Pratos.setBounds(19, 222, 336, -200);
 		//JScrollPane scroll_Table = new JScrollPane(table_Pratos);
 		//scroll_Table.setBounds(10, 227, 323, -198);
@@ -241,6 +242,34 @@ public class DetalhesEstabelecimento extends JFrame {
 		lbl_Avalicao.setHorizontalAlignment(SwingConstants.CENTER);
 		lbl_Avalicao.setBounds(66, 166, 81, 14);
 		getContentPane().add(lbl_Avalicao);
+		
+		JLabel lblGlobal = new JLabel("GLOBAL");
+		lblGlobal.setHorizontalAlignment(SwingConstants.LEFT);
+		lblGlobal.setBounds(50, 186, 64, 14);
+		getContentPane().add(lblGlobal);
+		
+		JLabel lblASeguir = new JLabel("A SEGUIR");
+		lblASeguir.setHorizontalAlignment(SwingConstants.LEFT);
+		lblASeguir.setBounds(50, 216, 64, 14);
+		getContentPane().add(lblASeguir);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(90, 269, 75, 20);
+		getContentPane().add(comboBox);
+		
+		JLabel lblMs = new JLabel("M\u00CAS");
+		lblMs.setBounds(50, 272, 64, 14);
+		getContentPane().add(lblMs);
+		
+		textField = new JTextField();
+		textField.setBounds(112, 183, 53, 20);
+		getContentPane().add(textField);
+		textField.setColumns(10);
+		
+		textField_1 = new JTextField();
+		textField_1.setBounds(112, 213, 53, 20);
+		getContentPane().add(textField_1);
+		textField_1.setColumns(10);
 
 	}
 }
