@@ -9,6 +9,7 @@ import java.sql.Statement;
 public class DBConnection {
 
 	// Connection Parameters
+	private static final boolean DEBUG_MODE = true;
 	private static final String DBNAME = "eatdrink";
 	private static final String USER = "dba";
 	private static final String PASSWORD = "sql";
@@ -68,13 +69,15 @@ public class DBConnection {
 	 * @param exception
 	 */
 	public void printSQLException(SQLException e) {
-		System.out.println("SQLException: " + e.getMessage());
-		System.out.println("SQLState: " + e.getSQLState());
-		System.out.println("VendorError: " + e.getErrorCode());
-		if (e.getCause() != null) {
-			System.out.println("Cause: " + e.getCause().toString());
-		} else {
-			System.out.println("Cause: null");
+		if (DEBUG_MODE) {
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("VendorError: " + e.getErrorCode());
+			if (e.getCause() != null) {
+				System.out.println("Cause: " + e.getCause().toString());
+			} else {
+				System.out.println("Cause: null");
+			}
 		}
 	}
 
