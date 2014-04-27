@@ -39,6 +39,7 @@ public class FileParser {
 			try {
 				String sCurrentLine;
 				in = new BufferedReader(new FileReader(fileName));
+				sCurrentLine = in.readLine();
 
 				while ((sCurrentLine = in.readLine()) != null) {
 					if (!sCurrentLine.isEmpty()) {
