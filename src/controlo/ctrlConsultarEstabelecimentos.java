@@ -30,13 +30,13 @@ public class ctrlConsultarEstabelecimentos {
 	}
 
 	public ArrayList<Estabelecimento> consultarEstabelecimentos(String cidade,
-			String zona, String tipo, double rating, String prato,
-			double preco, String evento, boolean foto, String nome) {
+			String zona, String tipo, double aval, String prato, String evento,
+			String nome) {
 
 		ArrayList<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
 
 		listaEstabelecimentos = estabelecimento.select(cidade, zona, tipo,
-				rating, prato, preco, evento, foto, nome);
+				aval, prato, evento, nome);
 
 		return listaEstabelecimentos;
 	}
@@ -44,20 +44,20 @@ public class ctrlConsultarEstabelecimentos {
 	public ArrayList<Cidade> getCidades() {
 		return cidade.getCidades();
 	}
-	
-	public ArrayList<Zona> getZonas(){
+
+	public ArrayList<Zona> getZonas() {
 		return zona.getZonas();
 	}
-	
-	public ArrayList<TipoDeEstablecimento> getTiposDeEstablecimento(){
+
+	public ArrayList<TipoDeEstablecimento> getTiposDeEstablecimento() {
 		return tipoDeEstablecimento.getTiposDeEstablecimento();
 	}
-	
-	public ArrayList<TipoDeEvento> getTiposDeEventos(){
-		return tipoDeEvento.getTiposDeEvento(); 
+
+	public ArrayList<TipoDeEvento> getTiposDeEventos() {
+		return tipoDeEvento.getTiposDeEvento();
 	}
-	
-	public ArrayList<TipoDePrato> getTiposDePratos(){
+
+	public ArrayList<TipoDePrato> getTiposDePratos() {
 		return tipoDePrato.getTiposDePrato();
 	}
 

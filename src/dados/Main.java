@@ -7,7 +7,8 @@ import controlo.ctrlConsultarEstabelecimentos;
 public class Main {
 
 	public static void main(String[] args) {
-		ecraConsultarEstabelecimentos guiConsulta = new ecraConsultarEstabelecimentos(new ctrlConsultarEstabelecimentos());
+		ctrlConsultarEstabelecimentos controlador = new ctrlConsultarEstabelecimentos();
+		ecraConsultarEstabelecimentos guiConsulta = new ecraConsultarEstabelecimentos(controlador);
 	}
 
 }

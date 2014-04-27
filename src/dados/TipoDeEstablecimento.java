@@ -25,7 +25,7 @@ public class TipoDeEstablecimento {
 		ArrayList<TipoDeEstablecimento> tiposDeEstablecimento = new ArrayList<TipoDeEstablecimento>();
 
 		ResultSet resultSet = dbcConnection
-				.select("SELECT * FROM TipoDeEstablecimento");
+				.select("SELECT * FROM TipoDeEstabelecimento");
 
 		try {
 			while (resultSet.next()) {

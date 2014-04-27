@@ -34,6 +34,8 @@ import dados.TipoDePrato;
 import dados.Zona;
 
 import javax.swing.JList;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 
 public class ecraConsultarEstabelecimentos extends JFrame {
 
@@ -60,17 +62,21 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	private JPanel panel_resultadosDivisoes;
 	private Button buttonFiltroTodos;
 	private Button buttonAplicarFiltro;
+	private consultaEstablecimentosTableDataModel modeloTabelaConsulta = new consultaEstablecimentosTableDataModel();
 
 	private ctrlConsultarEstabelecimentos ctrConsulta;
 
-	private JList listEventos;
+	private JList listTipoDeEventos;
+	private ListaDeTiposDataModel modeloListaDeEventos;
 	private JList listTipoDePratos;
+	private ListaDeTiposDataModel modeloListaDePratos;
 
 	private ArrayList<Cidade> cidades;
 	private ArrayList<Zona> zonas;
 	private ArrayList<TipoDeEstablecimento> tiposdeEstablecimento;
 	private ArrayList<TipoDeEvento> tiposDeEvento;
 	private ArrayList<TipoDePrato> tiposDePrato;
+	private JTable table;
 
 	public ecraConsultarEstabelecimentos(ctrlConsultarEstabelecimentos consulta) {
 
@@ -153,8 +159,9 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		scrollPaneEventos.setViewportView(panel_InScrollPaneEventos);
 		panel_InScrollPaneEventos.setLayout(new BorderLayout(0, 0));
 
-		listEventos = new JList();
-		panel_InScrollPaneEventos.add(listEventos);
+		listTipoDeEventos = new JList(modeloListaDeEventos);
+		listTipoDeEventos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		panel_InScrollPaneEventos.add(listTipoDePratos);
 
 		panelTipoPratos = new JPanel();
 		panelTipoPratos.setBounds(523, 445, 480, 160);
@@ -185,7 +192,8 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		scrollPanePratos.setViewportView(panel_InScrollPanelPratos);
 		panel_InScrollPanelPratos.setLayout(new BorderLayout(0, 0));
 
-		listTipoDePratos = new JList();
+		listTipoDePratos = new JList(modeloListaDePratos);
+		listTipoDePratos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		panel_InScrollPanelPratos.add(listTipoDePratos, BorderLayout.CENTER);
 
 		buttonAplicarFiltro = new Button("Aplicar Filtro");
@@ -236,6 +244,9 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		scrollPaneResultadosPesquisa.setBounds(10, 44, 701, 339);
 		panel_resultadoPesquisa.add(scrollPaneResultadosPesquisa);
 
+		table = new JTable(modeloTabelaConsulta);
+		scrollPaneResultadosPesquisa.setViewportView(table);
+
 		panel_resultadosDivisoes = new JPanel();
 		panel_resultadosDivisoes.setBounds(10, 17, 701, 31);
 		panel_resultadoPesquisa.add(panel_resultadosDivisoes);
@@ -257,14 +268,14 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 
 		addListeners();
 
-		fillComboxesWithData();
+		fillComboBoxesWithData();
 
 		this.setResizable(false);
 		this.setVisible(true);
 
 	}
 
-	private void fillComboxesWithData() {
+	private void fillComboBoxesWithData() {
 		this.cidades = ctrConsulta.getCidades();
 
 		for (Cidade cidade : cidades) {
@@ -307,26 +318,88 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		buttonFiltroTodos.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
-				ArrayList<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
-				listaEstabelecimentos = ctrConsulta.consultarEstabelecimentos(
-						null, null, null, 0.0, null, 0.0, null, false, null);
-				for (int i = 0; i < listaEstabelecimentos.size(); i++) {
-					// System.out.println("Estou aqui!");
-					// .. mete na interface todos os estabelecimentos recebidos
-				}
-
+				consultarEstabelecimentos(true);
 			}
 		});
 
 		buttonAplicarFiltro.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				ArrayList<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
-
+				consultarEstabelecimentos(false);
 			}
 		});
 
 	}
-	
-	
+
+	private void consultarEstabelecimentos(boolean todos) {
+		ArrayList<Estabelecimento> estabelecimentos = null;
+
+		if (todos) {
+			estabelecimentos = ctrConsulta.consultarEstabelecimentos(null,
+					null, null, 0.0, null, null, null);
+		} else {
+			String cidade = cidades.get(comboBoxCidades.getSelectedIndex())
+					.getName();
+			String zona = zonas.get(comboBoxZonas.getSelectedIndex())
+					.getDesignacao();
+			String tipoDeEstablecimento = tiposdeEstablecimento.get(
+					comboBoxTiposDeEstablecimento.getSelectedIndex())
+					.getTipoDeEstablecimento();
+			double aval = Double.parseDouble(textField_avaliacao.getText());
+			String eventos = juntarEventos();
+			String pratos = juntarpratos();
+			String nome = textField_nome.getText();
+			estabelecimentos = ctrConsulta.consultarEstabelecimentos(cidade,
+					zona, tipoDeEstablecimento, aval, pratos, eventos, nome);
+		}
+
+		showConsultResult(estabelecimentos);
+	}
+
+	private String juntarpratos() {
+		String pratos = "";
+
+		for (int i = 0; i < modeloListaDePratos.getSize(); i++) {
+			pratos += modeloListaDePratos.getElementAt(i);
+			if (i + 1 < modeloListaDePratos.getSize())
+				pratos += " ";
+		}
+
+		return pratos;
+	}
+
+	private String juntarEventos() {
+		String eventos = "";
+
+		for (int i = 0; i < modeloListaDeEventos.getSize(); i++) {
+			eventos += modeloListaDeEventos.getElementAt(i);
+			if (i + 1 < modeloListaDeEventos.getSize())
+				eventos += " ";
+		}
+
+		return eventos;
+	}
+
+	private void showConsultResult(ArrayList<Estabelecimento> estabelecimentos) {
+		Object[][] resultado = new Object[estabelecimentos.size()][3];
+
+		for (int i = 0; i < estabelecimentos.size(); i++) {
+			Estabelecimento x = estabelecimentos.get(i);
+			resultado[i][0] = x.getDesignacao();
+			resultado[i][1] = idZoneToDesignacao(x.getIdZona());
+			resultado[i][2] = x.getRating();
+		}
+
+		modeloTabelaConsulta.changeData(resultado);
+		modeloTabelaConsulta.fireTableDataChanged();
+	}
+
+	private Object idZoneToDesignacao(int idZona) {
+		for (Zona zona : zonas) {
+			if (zona.getIdZona() == idZona) {
+				return zona.getDesignacao();
+			}
+		}
+		return "-";
+	}
 }
