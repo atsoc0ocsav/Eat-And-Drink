@@ -34,7 +34,7 @@ public class DBConnection {
 		try {
 			connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			connection.setAutoCommit(false);
-			System.out.println("Connection Succesfull Established!");
+			System.out.println("Connection Succesfull Established!\n");
 		} catch (SQLException e) {
 			System.out.println("Erro ao estabelecer a ligação.");
 			System.out.println("SQL Exception: " + e.getMessage());
@@ -119,15 +119,26 @@ public class DBConnection {
 	 * @return either (1) the row count for SQL Data Manipulation Language (DML)
 	 *         statements or (2) 0 for SQL statements that return nothing
 	 */
-	public int executeUpdate(String query) {
+	public boolean executeUpdate(String query) {
 		releaseResources();
-		int i = -1;
+		boolean i = false;
 		try {
 			stmt = connection.createStatement();
-			i = stmt.executeUpdate(query);
+			i = stmt.execute(query);
 		} catch (SQLException e) {
 			printSQLException(e);
 		}
 		return i;
+	}
+
+	/**
+	 * Commits the changes made to the Database
+	 */
+	public void commit() {
+		try {
+			connection.commit();
+		} catch (SQLException e) {
+			printSQLException(e);
+		}
 	}
 }
