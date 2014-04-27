@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class FileParser {
-	public ArrayList<Object> chargeConfigurationFile(String fileName) {
-		ArrayList<Object> data = new ArrayList<>();
+	public ArrayList<String> parseFile(String fileName) {
+		ArrayList<String> data = new ArrayList<>();
 		if (fileName != null) {
 			BufferedReader in = null;
 			try {
