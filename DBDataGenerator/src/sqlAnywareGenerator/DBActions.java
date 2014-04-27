@@ -234,7 +234,7 @@ public class DBActions {
 	 */
 	public void addUsersToDB(int usersQnt) throws NoSuchAlgorithmException,
 			SQLException {
-		ArrayList<String> firstNames = parser.plainTextFileParser(FIRST_NAMES);
+		ArrayList<String[]> firstNames = parser.cvsFileParser(FIRST_NAMES, " ");
 		ArrayList<String> familyNames = parser
 				.plainTextFileParser(FAMILY_NAMES);
 		ArrayList<String> emailAlias = parser.plainTextFileParser(EMAIL_ALIAS);
@@ -263,40 +263,45 @@ public class DBActions {
 			username = username.trim();
 			username = username.substring(0, 10);
 
+			StringBuilder sb = new StringBuilder(firstNames.get(random
+					.nextInt(maxFirstName))[0]);
+			for (int index = 1; index < sb.length(); index++) {
+				char c = sb.charAt(index);
+				sb.setCharAt(index, Character.toLowerCase(c));
+			}
+
 			String email = username
 					+ emailAlias.get(random.nextInt(maxEmailAlias));
-			String name = firstNames.get(random.nextInt(maxFirstName)) + " "
+			String name = sb.toString() + " "
 					+ familyNames.get(random.nextInt(maxFamilyName));
 
-			String password = new BigInteger(130, secureRandom).toString(31);
+			String password = new BigInteger(130, secureRandom).toString(15);
 			password = password.trim();
 			password = password.substring(0, 14);
-			password = md5Encode(password);
 
 			String university = universities.get(random
 					.nextInt(maxUniversities));
 
 			int idPhoto = createUserPhoto();
 
-			dbConnection
-					.executeUpdate("INSERT INTO Utilizador(email,idFotografia,nome,escola,senha,zona) VALUES ('"
-							+ email
-							+ "','"
-							+ idPhoto
-							+ "','"
-							+ name
-							+ "','"
-							+ university
-							+ "','"
-							+ password
-							+ "','"
-							+ random.nextInt(currentZoneID) + "')");
-
-			dbConnection.commit();
+			 dbConnection
+			 .executeUpdate("INSERT INTO Utilizador(email,idFotografia,nome,escola,senha,zona) VALUES ('"
+			 + email
+			 + "','"
+			 + idPhoto
+			 + "','"
+			 + name
+			 + "','"
+			 + university
+			 + "','"
+			 + password
+			 + "','"
+			 + random.nextInt(currentZoneID) + "')");
+			
+			 dbConnection.commit();
 			addEmailToPhoto(email, idPhoto);
-			dbConnection.commit();
 		}
-		//dbConnection.commit();
+		dbConnection.commit();
 	}
 
 	/**
@@ -320,6 +325,7 @@ public class DBActions {
 		dbConnection
 				.executeUpdate("INSERT INTO Fotografia(idFotografia) VALUES ('"
 						+ currentID + "')");
+		dbConnection.commit();
 		return currentID;
 	}
 
@@ -334,6 +340,7 @@ public class DBActions {
 	private void addEmailToPhoto(String email, int idPhoto) {
 		dbConnection.executeUpdate("UPDATE Fotografia SET emailutilizador='"
 				+ email + "' WHERE idFotografia='" + idPhoto + "'");
+		dbConnection.commit();
 	}
 
 	/**
