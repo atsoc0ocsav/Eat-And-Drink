@@ -43,7 +43,7 @@ public class DBActions {
 		dbConnection
 				.executeUpdate("ALTER TABLE Utilizador ADD CONSTRAINT \"FK_UTILIZADOR_ZONA\" NOT NULL FOREIGN KEY (\"idZona\" ASC ) REFERENCES Zona (\"idZona\") ON UPDATE CASCADE;");
 		dbConnection.commit();
-		
+
 		System.out.println("Changes to the database made with sucess");
 	}
 
@@ -822,5 +822,4 @@ public class DBActions {
 		}
 		return cityNames;
 	}
-
 }
