@@ -29,6 +29,25 @@ public class DBActions {
 	private DBConnection dbConnection;
 
 	/**
+	 * Creates the missing Zone column in user table and creates the foreign key
+	 */
+	public void createZoneFieldInUserTable() {
+		dbConnection
+				.executeUpdate("ALTER TABLE Utilizador ADD newcol INTEGER NOT NULL");
+		dbConnection.commit();
+
+		dbConnection
+				.executeUpdate("ALTER TABLE Utilizador RENAME newcol TO idZona");
+		dbConnection.commit();
+
+		dbConnection
+				.executeUpdate("ALTER TABLE Utilizador ADD CONSTRAINT \"FK_UTILIZADOR_ZONA\" NOT NULL FOREIGN KEY (\"idZona\" ASC ) REFERENCES Zona (\"idZona\") ON UPDATE CASCADE;");
+		dbConnection.commit();
+		
+		System.out.println("Changes to the database made with sucess");
+	}
+
+	/**
 	 * Default constructor which also creates a connection to the database
 	 */
 	public DBActions() {
@@ -291,7 +310,7 @@ public class DBActions {
 			int idPhoto = createUserPhoto();
 
 			dbConnection
-					.executeUpdate("INSERT INTO Utilizador(email,idFotografia,nome,escola,senha,zona) VALUES ('"
+					.executeUpdate("INSERT INTO Utilizador(email,idFotografia,nome,escola,senha,idZona) VALUES ('"
 							+ email
 							+ "','"
 							+ idPhoto
