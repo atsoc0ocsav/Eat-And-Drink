@@ -1,6 +1,5 @@
 package sqlAnywareGenerator;
 
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 public class Main {
@@ -19,12 +18,17 @@ public class Main {
 			// dbAction.addEventTypeToDB();
 			// dbAction.addMealTypeToDB();
 			// dbAction.addMealsToDB(100000);
-			dbAction.addUsersToDB(2);
+			//dbAction.addUsersToDB(100000);
+			//dbAction.addEstablishmentsToDB(100000);
+			//dbAction.addFollowersToDB(100);
+			//dbAction.addAvailableEventsToDB(100);
+			//dbAction.addEstablishmentScheduleToDB();
+			dbAction.addEstablishmentMenusToDB(5);
 
 			System.out.println("\n---------------------------------------");
 			System.out.println("Task Duration: "
 					+ (System.currentTimeMillis() - time) + " ms");
-		} catch (SQLException | NoSuchAlgorithmException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
