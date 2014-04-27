@@ -1,5 +1,6 @@
 package sqlAnywareGenerator;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 public class Main {
@@ -11,24 +12,30 @@ public class Main {
 			System.out.println("Adding data to database!");
 			System.out.println("---------------------------------------");
 
-			// dbAction.addCitiesToDB();
-			// dbAction.addZonesToDB();
-			// dbAction.addEstablishmentTypesToDB();
-			// dbAction.addWeekDaysToDB();
-			// dbAction.addEventTypeToDB();
-			// dbAction.addMealTypeToDB();
-			// dbAction.addMealsToDB(100000);
-			//dbAction.addUsersToDB(100000);
-			//dbAction.addEstablishmentsToDB(100000);
-			//dbAction.addFollowersToDB(100);
-			//dbAction.addAvailableEventsToDB(100);
-			//dbAction.addEstablishmentScheduleToDB();
-			dbAction.addEstablishmentMenusToDB(5);
+			dbAction.createZoneFieldInUserTable();
+
+			dbAction.addCitiesToDB();
+			dbAction.addZonesToDB();
+			dbAction.addEstablishmentTypesToDB();
+			dbAction.addWeekDaysToDB();
+			dbAction.addEventTypeToDB();
+			dbAction.addMealTypeToDB();
+			dbAction.addMealsToDB(1000);
+			dbAction.addUsersToDB(10000);
+			dbAction.addEstablishmentsToDB(1000);
+			dbAction.addFollowersToDB(500);
+			dbAction.addAvailableEventsToDB(500);
+			dbAction.addEstablishmentScheduleToDB();
+			dbAction.addEstablishmentMenusToDB(10);
+			dbAction.addRecomendedMealsToDB(500);
+			dbAction.addMealsCommentsToDB(500);
+			dbAction.addEstablishmentCommentsToDB(500);
+			dbAction.addMealsPhotographies(500);
 
 			System.out.println("\n---------------------------------------");
 			System.out.println("Task Duration: "
 					+ (System.currentTimeMillis() - time) + " ms");
-		} catch (SQLException e) {
+		} catch (SQLException | NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
 	}
