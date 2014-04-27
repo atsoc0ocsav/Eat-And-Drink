@@ -1,4 +1,4 @@
-package dados;
+package main;
 
 import gui.ecraConsultarEstabelecimentos;
 import controlo.ctrlConsultarEstabelecimentos;

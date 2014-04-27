@@ -67,9 +67,9 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	private ctrlConsultarEstabelecimentos ctrConsulta;
 
 	private JList listTipoDeEventos;
-	private ListaDeTiposDataModel modeloListaDeEventos;
+	private ListaDeTiposDataModel modeloListaDeEventos = new ListaDeTiposDataModel();
 	private JList listTipoDePratos;
-	private ListaDeTiposDataModel modeloListaDePratos;
+	private ListaDeTiposDataModel modeloListaDePratos = new ListaDeTiposDataModel();
 
 	private ArrayList<Cidade> cidades;
 	private ArrayList<Zona> zonas;
@@ -161,7 +161,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 
 		listTipoDeEventos = new JList(modeloListaDeEventos);
 		listTipoDeEventos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		panel_InScrollPaneEventos.add(listTipoDePratos);
+		panel_InScrollPaneEventos.add(listTipoDeEventos);
 
 		panelTipoPratos = new JPanel();
 		panelTipoPratos.setBounds(523, 445, 480, 160);
