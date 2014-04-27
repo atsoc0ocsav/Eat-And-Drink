@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -16,11 +17,14 @@ public class DBActions {
 	private static final String ESTABLISHMENT_TYPE_LIST = "./dataSource/Types/Tipos de Estabelecimento.txt";
 	private static final String EVENT_TYPE_LIST = "./dataSource/Types/Tipos de Evento.txt";
 	private static final String MEAL_TYPE_LIST = "./dataSource/Types/Tipos de Prato.txt";
-	private static final String MEAL_DESCRIPTION = "./dataSource/Random Theme/Ditados Populares.txt";
+	private static final String PROVERB_LIST = "./dataSource/Random Theme/Lista de Ditados Populares.txt";
 	private static final String FAMILY_NAMES = "./dataSource/User/Family Names.txt";
 	private static final String FIRST_NAMES = "./dataSource/User/First Names.txt";
 	private static final String EMAIL_ALIAS = "./dataSource/User/Emails Alias.txt";
 	private static final String UNIVESITY_LIST = "./dataSource/User/Lista de Universidades.txt";
+	private static final String MANTRA_LIST = "./dataSource/Random Theme/Lista de Mantras.txt";
+	private static final String RESTAURANT_LIST = "./dataSource/Random Theme/Lista de Restaurantes.txt";
+
 	private FileParser parser = new FileParser();
 	private DBConnection dbConnection;
 
@@ -181,7 +185,7 @@ public class DBActions {
 	 */
 	public void addMealsToDB(int mealsQnt) throws SQLException {
 		ArrayList<String> descriptions = parser
-				.plainTextFileParser(MEAL_DESCRIPTION);
+				.plainTextFileParser(PROVERB_LIST);
 		ResultSet rs = dbConnection
 				.executeQuery("SELECT FIRST idPrato FROM Prato ORDER BY idPrato DESC");
 		Random random = new Random();
@@ -259,21 +263,23 @@ public class DBActions {
 		}
 
 		for (int i = 0; i < usersQnt; i++) {
-			String username = new BigInteger(130, secureRandom).toString(30);
-			username = username.trim();
-			username = username.substring(0, 10);
+			// String username = new BigInteger(130, secureRandom).toString(30);
+			// username = username.trim();
+			// username = username.substring(0, 10);
 
-			StringBuilder sb = new StringBuilder(firstNames.get(random
+			StringBuilder firstName = new StringBuilder(firstNames.get(random
 					.nextInt(maxFirstName))[0]);
-			for (int index = 1; index < sb.length(); index++) {
-				char c = sb.charAt(index);
-				sb.setCharAt(index, Character.toLowerCase(c));
+			for (int index = 1; index < firstName.length(); index++) {
+				char c = firstName.charAt(index);
+				firstName.setCharAt(index, Character.toLowerCase(c));
 			}
+			String familyName = familyNames.get(random.nextInt(maxFamilyName));
 
-			String email = username
+			// String email = username
+			// + emailAlias.get(random.nextInt(maxEmailAlias));
+			String email = firstName.toString() + "_" + familyName
 					+ emailAlias.get(random.nextInt(maxEmailAlias));
-			String name = sb.toString() + " "
-					+ familyNames.get(random.nextInt(maxFamilyName));
+			String name = firstName.toString() + " " + familyName;
 
 			String password = new BigInteger(130, secureRandom).toString(15);
 			password = password.trim();
@@ -284,24 +290,25 @@ public class DBActions {
 
 			int idPhoto = createUserPhoto();
 
-			 dbConnection
-			 .executeUpdate("INSERT INTO Utilizador(email,idFotografia,nome,escola,senha,zona) VALUES ('"
-			 + email
-			 + "','"
-			 + idPhoto
-			 + "','"
-			 + name
-			 + "','"
-			 + university
-			 + "','"
-			 + password
-			 + "','"
-			 + random.nextInt(currentZoneID) + "')");
-			
-			 dbConnection.commit();
+			dbConnection
+					.executeUpdate("INSERT INTO Utilizador(email,idFotografia,nome,escola,senha,zona) VALUES ('"
+							+ email
+							+ "','"
+							+ idPhoto
+							+ "','"
+							+ name
+							+ "','"
+							+ university
+							+ "','"
+							+ password
+							+ "','"
+							+ random.nextInt(currentZoneID) + "')");
+
+			dbConnection.commit();
 			addEmailToPhoto(email, idPhoto);
 		}
 		dbConnection.commit();
+		System.out.println(usersQnt + " Users Added with success to database");
 	}
 
 	/**
@@ -357,4 +364,281 @@ public class DBActions {
 		return new BigInteger(1, mdEnc.digest()).toString(16);
 	}
 
+	/**
+	 * Adds a specified quantity of establishments to the database (with random
+	 * parameters) to Database
+	 * 
+	 * @param establishemnts
+	 *            Quantity
+	 * @throws SQLException
+	 */
+	public void addEstablishmentsToDB(int estabQnt) throws SQLException {
+		ArrayList<String> addressList = parser.plainTextFileParser(MANTRA_LIST);
+		ArrayList<String> waysToPlaceList = parser
+				.plainTextFileParser(PROVERB_LIST);
+		ArrayList<String> restaurantList = parser
+				.plainTextFileParser(RESTAURANT_LIST);
+
+		Random random = new Random();
+		SecureRandom secureRandom = new SecureRandom();
+
+		ResultSet rs = dbConnection
+				.executeQuery("SELECT FIRST idZona FROM Zona ORDER BY idZona DESC");
+		int maxZone;
+		if (rs.next()) {
+			maxZone = rs.getInt(1) + 1;
+		} else {
+			throw new NullPointerException("No zones in zones table");
+		}
+
+		rs = dbConnection
+				.executeQuery("SELECT tipoDoEstabelecimento FROM TipoDeEstabelecimento");
+		ArrayList<String> establishmentTypes = new ArrayList<>();
+		while (rs.next()) {
+			establishmentTypes.add(rs.getString(1));
+		}
+
+		rs = dbConnection.executeQuery("SELECT email FROM Utilizador");
+		ArrayList<String> usersEmails = new ArrayList<>();
+		while (rs.next()) {
+			usersEmails.add(rs.getString(1));
+		}
+
+		rs = dbConnection
+				.executeQuery("SELECT FIRST idEstabelecimento FROM Estabelecimento ORDER BY idEstabelecimento DESC");
+		int currentEstablishemntID;
+		if (rs.next()) {
+			currentEstablishemntID = rs.getInt(1) + 1;
+		} else {
+			currentEstablishemntID = 0;
+		}
+
+		for (int i = 0; i < estabQnt; i++) {
+			double rating = random.nextInt(10) + random.nextDouble() * 100;
+			int zone = random.nextInt(maxZone);
+			String establishmentType = establishmentTypes.get(random
+					.nextInt(establishmentTypes.size()));
+			String email = usersEmails.get(random.nextInt(usersEmails.size()));
+			String address = addressList
+					.get(random.nextInt(addressList.size()));
+			String wayToPlace = waysToPlaceList.get(random
+					.nextInt(waysToPlaceList.size()));
+			String restaurantName = restaurantList.get(random
+					.nextInt(restaurantList.size()));
+
+			char latit = random.nextBoolean() ? 'N' : 'S';
+			char longit = random.nextBoolean() ? 'E' : 'O';
+
+			String coordinates = random.nextInt(179) + "" + random.nextInt(60)
+					+ "" + random.nextInt(60) + "" + latit + " "
+					+ random.nextInt(179) + "" + random.nextInt(60) + ""
+					+ +random.nextInt(60) + "" + longit;
+
+			String schedule = new BigInteger(130, secureRandom).toString(15);
+			schedule = schedule.trim();
+			schedule = schedule.substring(0, 20);
+
+			// System.out.println("Horario=" + schedule);
+			// System.out.println("Forma de Chegar=" + wayToPlace);
+			// System.out.println("Coordenadas=" + coordinates);
+			// System.out.println("Morada=" + address);
+			// System.out.println("ID=" + currentEstablishemntID);
+			// System.out.println("Email=" + email);
+			// System.out.println("idZona=" + zone);
+			// System.out.println("Tipo de estab=" + establishmentType);
+			// System.out.println("Design=" + restaurantName);
+			// System.out.println("Rating=" + rating);
+
+			dbConnection
+					.executeUpdate("INSERT INTO Estabelecimento(informacoesHorario,formaDeLaChegar,coordenadasGps,morada,idEstabelecimento,email,idZona,tipoDoEstabelecimento,designacao,rating) VALUES "
+							+ "('"
+							+ schedule
+							+ "','"
+							+ wayToPlace
+							+ "','"
+							+ coordinates
+							+ "','"
+							+ address
+							+ "','"
+							+ currentEstablishemntID
+							+ "','"
+							+ email
+							+ "','"
+							+ zone
+							+ "','"
+							+ establishmentType
+							+ "','"
+							+ restaurantName + "','" + rating + "')");
+
+			currentEstablishemntID++;
+		}
+
+		dbConnection.commit();
+		System.out.println(estabQnt
+				+ " Establishments Added with success to database");
+	}
+
+	/**
+	 * Adds user followers to Database. Doesn't prevent trying to add existing follows....
+	 * 
+	 * @param followersQnt
+	 * @throws SQLException
+	 */
+	public void addFollowersToDB(int followersQnt) throws SQLException {
+		ResultSet rs = dbConnection
+				.executeQuery("SELECT email FROM Utilizador");
+		ArrayList<String> usersEmails = new ArrayList<>();
+		Random random = new Random();
+
+		while (rs.next()) {
+			usersEmails.add(rs.getString(1));
+		}
+
+		for (int i = 0; i < followersQnt; i++) {
+			String follower = null;
+			String toFollow = null;
+
+			do {
+				follower = usersEmails.get(random.nextInt(usersEmails.size()));
+				toFollow = usersEmails.get(random.nextInt(usersEmails.size()));
+			} while (follower == null || toFollow == null
+					|| follower.equals(toFollow));
+
+			dbConnection
+					.executeUpdate("INSERT INTO follow(emailsguidor,emailsgu) VALUES ('"
+							+ follower + "','" + toFollow + "')");
+		}
+		dbConnection.commit();
+		System.out.println(followersQnt
+				+ " Followers Added with success to database");
+	}
+
+	/**
+	 * Add available events for random establishment, to Database
+	 * 
+	 * @param eventQnt
+	 * @throws SQLException
+	 */
+	public void addAvailableEventsToDB(int eventQnt) throws SQLException {
+		ResultSet rs = dbConnection
+				.executeQuery("SELECT tipoDoEvento FROM TipoDeEvento");
+		ArrayList<String> eventTypes = new ArrayList<>();
+		while (rs.next()) {
+			eventTypes.add(rs.getString(1));
+		}
+
+		rs = dbConnection
+				.executeQuery("SELECT idEstabelecimento FROM Estabelecimento");
+		ArrayList<String> establishmentIDs = new ArrayList<>();
+		while (rs.next()) {
+			establishmentIDs.add(rs.getString(1));
+		}
+
+		Random random = new Random();
+
+		for (int i = 0; i < eventQnt; i++) {
+			String type = eventTypes.get(random.nextInt(eventTypes.size()));
+			String establishmentID = establishmentIDs.get(random
+					.nextInt(establishmentIDs.size()));
+
+			dbConnection
+					.executeUpdate("INSERT INTO eventoOferecido(idEstabelecimento,tipoDoEvento) VALUES ('"
+							+ establishmentID + "','" + type + "')");
+		}
+		dbConnection.commit();
+		System.out.println(eventQnt
+				+ " Establishment Events Added with success to database");
+	}
+
+	/**
+	 * Add the schedule of each establishment (all possible week days per each) to Database
+	 * 
+	 * @throws SQLException
+	 */
+	@SuppressWarnings("deprecation")
+	public void addEstablishmentScheduleToDB() throws SQLException {
+		ResultSet rs = dbConnection
+				.executeQuery("SELECT idEstabelecimento FROM Estabelecimento");
+		ArrayList<String> establishmentIDs = new ArrayList<>();
+		while (rs.next()) {
+			establishmentIDs.add(rs.getString(1));
+		}
+
+		rs = dbConnection.executeQuery("SELECT diaDaSemana FROM DiaSemana");
+		ArrayList<String> weekDays = new ArrayList<>();
+		while (rs.next()) {
+			weekDays.add(rs.getString(1));
+		}
+
+		Random random = new Random();
+		Time openHour;
+		Time closeHour;
+		for (String establishmentID : establishmentIDs) {
+			for (String weekDay : weekDays) {
+				do {
+					openHour = new Time(random.nextInt(24), random.nextInt(59),
+							random.nextInt(59));
+					closeHour = new Time(random.nextInt(24),
+							random.nextInt(59), random.nextInt(59));
+				} while (openHour.after(closeHour)
+						|| openHour.equals(closeHour));
+
+				dbConnection
+						.executeUpdate("INSERT INTO HorarioEstabelecimento(idEstabelecimento,diaDaSemana,horaAbertura,horaFecho) VALUES ('"
+								+ establishmentID
+								+ "','"
+								+ weekDay
+								+ "','"
+								+ openHour + "','" + closeHour + "')");
+			}
+		}
+
+		dbConnection.commit();
+		System.out.println(establishmentIDs.size() * weekDays.size()
+				+ " Schedules Added with success to database");
+	}
+
+	/**
+	 * Adds the menu for each establishment, with the indicated dish quantity, to Database
+	 * 
+	 * @param dishQnt
+	 * @throws SQLException
+	 */
+	public void addEstablishmentMenusToDB(int dishQnt) throws SQLException {
+		ResultSet rs = dbConnection
+				.executeQuery("SELECT idEstabelecimento FROM Estabelecimento");
+		ArrayList<String> establishmentIDs = new ArrayList<>();
+		while (rs.next()) {
+			establishmentIDs.add(rs.getString(1));
+		}
+
+		rs = dbConnection.executeQuery("SELECT idPrato FROM Prato");
+		ArrayList<String> dishesList = new ArrayList<>();
+		while (rs.next()) {
+			dishesList.add(rs.getString(1));
+		}
+
+		Random random = new Random();
+		for (String establishmentID : establishmentIDs) {
+			for (int i = 0; i < dishQnt; i++) {
+				String dish = dishesList.get(random.nextInt(dishesList.size()));
+
+				dbConnection
+						.executeUpdate("INSERT INTO menuDoEstabelecimento(idEstabelecimento,idPrato) VALUES ('"
+								+ establishmentID + "','" + dish + "')");
+			}
+		}
+		
+		dbConnection.commit();
+		System.out.println(dishQnt*establishmentIDs.size()
+				+ " Dishes on Menus Added with success to database");
+	}
+	
+	/**
+	 * Add the user recomended dishes to Database
+	 * @param recomendeQnt
+	 */
+	private void addRecomendedDishesToDB(int recomendeQnt){
+		
+	}
 }
