@@ -8,24 +8,26 @@ import dbc.DBConnection;
 
 public class Estabelecimento {
 	private String coordenadasGPS;
+	private int idZona;
 	private String designacao;
 	private String formaDeChegar;
 	private int idEstabelecimento;
 	private String informacoesHorario;
 	private String morada;
 	private double rating;
-	
+
 	private DBConnection dbcConnection;
-	
+
 	public Estabelecimento(DBConnection dbcConnection) {
 		this.dbcConnection = dbcConnection;
 	}
 
-	public Estabelecimento(String coordenadasGPS, String designacao,
-			String formaDeChegar, int idEstabelecimento,
+	public Estabelecimento(String coordenadasGPS, int idZona,
+			String designacao, String formaDeChegar, int idEstabelecimento,
 			String informacoesHorario, String morada, double rating) {
 		super();
 		this.coordenadasGPS = coordenadasGPS;
+		this.idZona = idZona;
 		this.designacao = designacao;
 		this.formaDeChegar = formaDeChegar;
 		this.idEstabelecimento = idEstabelecimento;
@@ -35,36 +37,36 @@ public class Estabelecimento {
 	}
 
 	public ArrayList<Estabelecimento> select(String cidade, String zona,
-			String tipo, double rating, String prato, double preco,
-			String evento, boolean foto, String nome) {
+			String tipo, double aval, String prato, String evento, String nome) {
 
-		ArrayList<Estabelecimento> listaEstabelecimentos = new ArrayList<Estabelecimento>();
+		ArrayList<Estabelecimento> estabelecimentos = new ArrayList<Estabelecimento>();
 
-		if (cidade == null && zona == null && tipo == null && rating == 0.0
-				&& prato == null && preco == 0.0 && evento == null && !foto
-				&& nome == null) {
+		if (cidade == null && zona == null && tipo == null && aval == 0.0
+				&& prato == null && evento == null && nome == null) {
 
-			ResultSet resultSet = dbcConnection.select("SELECT * FROM Estabelecimento");
+			ResultSet resultSet = dbcConnection
+					.select("SELECT * FROM Estabelecimento");
 
 			try {
 				while (resultSet.next()) {
-					coordenadasGPS = resultSet
+					String coordenadasGPS = resultSet
 							.getString("coordenadasGps");
-					designacao = resultSet.getString("designacao");
-					formaDeChegar = resultSet
+					String designacao = resultSet.getString("designacao");
+					String formaDeChegar = resultSet
 							.getString("formaDeLaChegar");
-					idEstabelecimento = resultSet
+					int idEstabelecimento = resultSet
 							.getInt("idEstabelecimento");
-					informacoesHorario = resultSet
+					String informacoesHorario = resultSet
 							.getString("informacoesHorario");
-					morada = resultSet.getString("morada");
-					rating = resultSet.getInt("rating");
+					String morada = resultSet.getString("morada");
+					int idZona = resultSet.getInt("idZona");
+					double rating = resultSet.getDouble("rating");
 
 					Estabelecimento estabelecimento = new Estabelecimento(
-							coordenadasGPS, designacao, formaDeChegar,
+							coordenadasGPS, idZona, designacao, formaDeChegar,
 							idEstabelecimento, informacoesHorario, morada,
 							rating);
-					listaEstabelecimentos.add(estabelecimento);
+					estabelecimentos.add(estabelecimento);
 				}
 
 			} catch (SQLException e) {
@@ -73,7 +75,7 @@ public class Estabelecimento {
 		} else {
 			// Faz a pesquisa pelo filtro
 		}
-		return listaEstabelecimentos;
+		return estabelecimentos;
 	}
 
 	public String getCoordenadasGPS() {
@@ -102,6 +104,14 @@ public class Estabelecimento {
 
 	public double getRating() {
 		return rating;
+	}
+
+	public int getIdZona() {
+		return idZona;
+	}
+
+	public void setIdZona(int idZona) {
+		this.idZona = idZona;
 	}
 
 }
