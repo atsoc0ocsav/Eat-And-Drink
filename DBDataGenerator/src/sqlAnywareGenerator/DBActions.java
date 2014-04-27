@@ -391,18 +391,8 @@ public class DBActions {
 			throw new NullPointerException("No zones in zones table");
 		}
 
-		rs = dbConnection
-				.executeQuery("SELECT tipoDoEstabelecimento FROM TipoDeEstabelecimento");
-		ArrayList<String> establishmentTypes = new ArrayList<>();
-		while (rs.next()) {
-			establishmentTypes.add(rs.getString(1));
-		}
-
-		rs = dbConnection.executeQuery("SELECT email FROM Utilizador");
-		ArrayList<String> usersEmails = new ArrayList<>();
-		while (rs.next()) {
-			usersEmails.add(rs.getString(1));
-		}
+		ArrayList<String> establishmentTypes = getEstablishmentTypes();
+		ArrayList<String> usersEmails = getUserEmails();
 
 		rs = dbConnection
 				.executeQuery("SELECT FIRST idEstabelecimento FROM Estabelecimento ORDER BY idEstabelecimento DESC");
@@ -479,20 +469,15 @@ public class DBActions {
 	}
 
 	/**
-	 * Adds user followers to Database. Doesn't prevent trying to add existing follows....
+	 * Adds user followers to Database. Doesn't prevent trying to add existing
+	 * follows....
 	 * 
 	 * @param followersQnt
 	 * @throws SQLException
 	 */
 	public void addFollowersToDB(int followersQnt) throws SQLException {
-		ResultSet rs = dbConnection
-				.executeQuery("SELECT email FROM Utilizador");
-		ArrayList<String> usersEmails = new ArrayList<>();
+		ArrayList<String> usersEmails = getUserEmails();
 		Random random = new Random();
-
-		while (rs.next()) {
-			usersEmails.add(rs.getString(1));
-		}
 
 		for (int i = 0; i < followersQnt; i++) {
 			String follower = null;
@@ -520,20 +505,8 @@ public class DBActions {
 	 * @throws SQLException
 	 */
 	public void addAvailableEventsToDB(int eventQnt) throws SQLException {
-		ResultSet rs = dbConnection
-				.executeQuery("SELECT tipoDoEvento FROM TipoDeEvento");
-		ArrayList<String> eventTypes = new ArrayList<>();
-		while (rs.next()) {
-			eventTypes.add(rs.getString(1));
-		}
-
-		rs = dbConnection
-				.executeQuery("SELECT idEstabelecimento FROM Estabelecimento");
-		ArrayList<String> establishmentIDs = new ArrayList<>();
-		while (rs.next()) {
-			establishmentIDs.add(rs.getString(1));
-		}
-
+		ArrayList<String> eventTypes = getEventTypes();
+		ArrayList<String> establishmentIDs = getEstablishmentsIDs();
 		Random random = new Random();
 
 		for (int i = 0; i < eventQnt; i++) {
@@ -551,24 +524,15 @@ public class DBActions {
 	}
 
 	/**
-	 * Add the schedule of each establishment (all possible week days per each) to Database
+	 * Add the schedule of each establishment (all possible week days per each)
+	 * to Database
 	 * 
 	 * @throws SQLException
 	 */
 	@SuppressWarnings("deprecation")
 	public void addEstablishmentScheduleToDB() throws SQLException {
-		ResultSet rs = dbConnection
-				.executeQuery("SELECT idEstabelecimento FROM Estabelecimento");
-		ArrayList<String> establishmentIDs = new ArrayList<>();
-		while (rs.next()) {
-			establishmentIDs.add(rs.getString(1));
-		}
-
-		rs = dbConnection.executeQuery("SELECT diaDaSemana FROM DiaSemana");
-		ArrayList<String> weekDays = new ArrayList<>();
-		while (rs.next()) {
-			weekDays.add(rs.getString(1));
-		}
+		ArrayList<String> establishmentIDs = getEstablishmentsIDs();
+		ArrayList<String> weekDays = getWeekDays();
 
 		Random random = new Random();
 		Time openHour;
@@ -599,26 +563,17 @@ public class DBActions {
 	}
 
 	/**
-	 * Adds the menu for each establishment, with the indicated dish quantity, to Database
+	 * Adds the menu for each establishment, with the indicated dish quantity,
+	 * to Database
 	 * 
 	 * @param dishQnt
 	 * @throws SQLException
 	 */
 	public void addEstablishmentMenusToDB(int dishQnt) throws SQLException {
-		ResultSet rs = dbConnection
-				.executeQuery("SELECT idEstabelecimento FROM Estabelecimento");
-		ArrayList<String> establishmentIDs = new ArrayList<>();
-		while (rs.next()) {
-			establishmentIDs.add(rs.getString(1));
-		}
-
-		rs = dbConnection.executeQuery("SELECT idPrato FROM Prato");
-		ArrayList<String> dishesList = new ArrayList<>();
-		while (rs.next()) {
-			dishesList.add(rs.getString(1));
-		}
-
+		ArrayList<String> establishmentIDs = getEstablishmentsIDs();
+		ArrayList<String> dishesList = getMealsList();
 		Random random = new Random();
+
 		for (String establishmentID : establishmentIDs) {
 			for (int i = 0; i < dishQnt; i++) {
 				String dish = dishesList.get(random.nextInt(dishesList.size()));
@@ -628,17 +583,225 @@ public class DBActions {
 								+ establishmentID + "','" + dish + "')");
 			}
 		}
-		
+
 		dbConnection.commit();
-		System.out.println(dishQnt*establishmentIDs.size()
+		System.out.println(dishQnt * establishmentIDs.size()
 				+ " Dishes on Menus Added with success to database");
 	}
-	
+
 	/**
-	 * Add the user recomended dishes to Database
+	 * Add the user recommended dishes to Database
+	 * 
 	 * @param recomendeQnt
+	 * @throws SQLException
 	 */
-	private void addRecomendedDishesToDB(int recomendeQnt){
-		
+	public void addRecomendedMealsToDB(int recomendeQnt) throws SQLException {
+		ArrayList<String> usersEmails = getUserEmails();
+		ArrayList<String> dishesList = getMealsList();
+		Random random = new Random();
+
+		for (int i = 0; i < recomendeQnt; i++) {
+			String email = usersEmails.get(random.nextInt(usersEmails.size()));
+			String dish = dishesList.get(random.nextInt(dishesList.size()));
+
+			dbConnection
+					.executeUpdate("INSERT INTO pratoRecomendado(email,idPrato) VALUES ('"
+							+ email + "','" + dish + "')");
+		}
+
+		dbConnection.commit();
+		System.out.println(recomendeQnt
+				+ " Dishes Recomendations Added with success to database");
 	}
+
+	/**
+	 * Add the indicated dish comments to database
+	 * 
+	 * @param commentsQnt
+	 * @throws SQLException
+	 */
+	public void addMealsCommentsToDB(int commentsQnt) throws SQLException {
+		ArrayList<String> commentsList = parser
+				.plainTextFileParser(PROVERB_LIST);
+		ArrayList<String> usersEmails = getUserEmails();
+		ArrayList<String> dishesList = getMealsList();
+		Random random = new Random();
+
+		for (int i = 0; i < commentsQnt; i++) {
+			String email = usersEmails.get(random.nextInt(usersEmails.size()));
+			String dish = dishesList.get(random.nextInt(dishesList.size()));
+			String comment = commentsList.get(random.nextInt(commentsList
+					.size()));
+			int classification = random.nextInt(100);
+
+			dbConnection
+					.executeUpdate("INSERT INTO ComentarioAoPrato(email,idPrato,comentario,nota) VALUES ('"
+							+ email
+							+ "','"
+							+ dish
+							+ "','"
+							+ comment
+							+ "','"
+							+ classification + "')");
+		}
+
+		dbConnection.commit();
+		System.out.println(commentsQnt
+				+ " Meals Comments Added with success to database");
+	}
+
+	/**
+	 * Add the indicated establishment comments
+	 * 
+	 * @param commentsQnt
+	 * @throws SQLException
+	 */
+	public void addEstablishmentCommentsToDB(int commentsQnt)
+			throws SQLException {
+		ArrayList<String> commentsList = parser
+				.plainTextFileParser(PROVERB_LIST);
+		ArrayList<String> establishmentIDs = getEstablishmentsIDs();
+		ArrayList<String> usersEmails = getUserEmails();
+		Random random = new Random();
+
+		for (int i = 0; i < commentsQnt; i++) {
+			String email = usersEmails.get(random.nextInt(usersEmails.size()));
+			String comment = commentsList.get(random.nextInt(commentsList
+					.size()));
+			String establishmentID = establishmentIDs.get(random
+					.nextInt(establishmentIDs.size()));
+			int grade = random.nextInt(100);
+			int status = random.nextInt(10);
+
+			dbConnection
+					.executeUpdate("INSERT INTO ComentarioAoEstabelecimento(idEstabelecimento,email,comentario,nota,estado) VALUES"
+							+ " ('"
+							+ establishmentID
+							+ "','"
+							+ email
+							+ "','"
+							+ comment + "','" + grade + "','" + status + "')");
+		}
+
+		dbConnection.commit();
+		System.out.println(commentsQnt
+				+ " Establishments comments Added with success to database");
+	}
+
+	/**
+	 * Adds meals photographs to the database
+	 * 
+	 * @param photographsQnt
+	 * @throws SQLException
+	 */
+	public void addMealsPhotographies(int photographsQnt) throws SQLException {
+		ArrayList<String> establishmentIDs = getEstablishmentsIDs();
+		ArrayList<String> usersEmails = getUserEmails();
+		ArrayList<String> mealsList = getMealsList();
+
+		Random random = new Random();
+
+		ResultSet rs = dbConnection
+				.executeQuery("SELECT FIRST idFotografia FROM Fotografia ORDER BY idFotografia DESC");
+
+		int currentID;
+		if (rs.next()) {
+			currentID = rs.getInt(1) + 1;
+		} else {
+			currentID = 0;
+		}
+
+		for (int i = 0; i < photographsQnt; i++) {
+			String establishmentID = establishmentIDs.get(random
+					.nextInt(establishmentIDs.size()));
+			String email = usersEmails.get(random.nextInt(usersEmails.size()));
+			String meal = mealsList.get(random.nextInt(mealsList.size()));
+
+			dbConnection
+					.executeUpdate("INSERT INTO Fotografia(idFotografia,idEstabelecimento,emailutilizador,idPrato) VALUES"
+							+ " ('"
+							+ currentID
+							+ "','"
+							+ establishmentID
+							+ "','" + email + "','" + meal + "')");
+
+			currentID++;
+		}
+
+		dbConnection.commit();
+		System.out.println(photographsQnt
+				+ " Photographs Added with success to database");
+	}
+
+	// Auxiliary Database Getters
+	private ArrayList<String> getMealsList() throws SQLException {
+		ResultSet rs = dbConnection.executeQuery("SELECT idPrato FROM Prato");
+		ArrayList<String> dishesList = new ArrayList<>();
+		while (rs.next()) {
+			dishesList.add(rs.getString(1));
+		}
+		return dishesList;
+	}
+
+	private ArrayList<String> getUserEmails() throws SQLException {
+		ResultSet rs = dbConnection
+				.executeQuery("SELECT email FROM Utilizador");
+		ArrayList<String> usersEmails = new ArrayList<>();
+
+		while (rs.next()) {
+			usersEmails.add(rs.getString(1));
+		}
+		return usersEmails;
+	}
+
+	private ArrayList<String> getEstablishmentsIDs() throws SQLException {
+		ResultSet rs = dbConnection
+				.executeQuery("SELECT idEstabelecimento FROM Estabelecimento");
+		ArrayList<String> establishmentIDs = new ArrayList<>();
+		while (rs.next()) {
+			establishmentIDs.add(rs.getString(1));
+		}
+		return establishmentIDs;
+	}
+
+	private ArrayList<String> getEstablishmentTypes() throws SQLException {
+		ResultSet rs = dbConnection
+				.executeQuery("SELECT tipoDoEstabelecimento FROM TipoDeEstabelecimento");
+		ArrayList<String> establishmentTypes = new ArrayList<>();
+		while (rs.next()) {
+			establishmentTypes.add(rs.getString(1));
+		}
+		return establishmentTypes;
+	}
+
+	private ArrayList<String> getEventTypes() throws SQLException {
+		ResultSet rs = dbConnection
+				.executeQuery("SELECT tipoDoEvento FROM TipoDeEvento");
+		ArrayList<String> eventTypes = new ArrayList<>();
+		while (rs.next()) {
+			eventTypes.add(rs.getString(1));
+		}
+		return eventTypes;
+	}
+
+	private ArrayList<String> getWeekDays() throws SQLException {
+		ResultSet rs = dbConnection
+				.executeQuery("SELECT diaDaSemana FROM DiaSemana");
+		ArrayList<String> weekDays = new ArrayList<>();
+		while (rs.next()) {
+			weekDays.add(rs.getString(1));
+		}
+		return weekDays;
+	}
+
+	@SuppressWarnings("unused")
+	private ArrayList<String> getCitiesList() throws SQLException {
+		ResultSet rs = dbConnection.executeQuery("SELECT cidade FROM Cidade");
+		ArrayList<String> cityNames = new ArrayList<>();
+		while (rs.next()) {
+			cityNames.add(rs.getString(1));
+		}
+		return cityNames;
+	}
+
 }
