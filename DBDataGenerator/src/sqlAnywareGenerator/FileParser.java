@@ -14,7 +14,7 @@ public class FileParser {
 				String sCurrentLine;
 				in = new BufferedReader(new FileReader(fileName));
 				while ((sCurrentLine = in.readLine()) != null) {
-					if (!sCurrentLine.isEmpty()) {
+					if (!sCurrentLine.contains("#") && !sCurrentLine.isEmpty()) {
 						data.add(sCurrentLine);
 					}
 				}
