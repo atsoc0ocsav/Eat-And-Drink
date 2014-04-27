@@ -9,7 +9,7 @@ import java.sql.Statement;
 public class DBConnection {
 
 	// Connection Parameters
-	private static final boolean DEBUG_MODE = true;
+	private static final boolean DEBUG_MODE = false;
 	private static final String DBNAME = "eatdrink";
 	private static final String USER = "dba";
 	private static final String PASSWORD = "sql";
