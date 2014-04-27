@@ -1,0 +1,383 @@
+#
+#Restaurantes no Porto
+#Tirado de http://restaurantes.aospontos.com/?pt=Restaurantes%20no%20Porto%20de%20A%20a%20Z
+#
+3 C
+A cozinha do Manel
+A Máscara
+À Parte (Porto)
+Água d'Ouro
+Al Forno
+Artemísia
+BB Villa
+BBGourmet Bull & Bear
+BBGourmet Maiorca
+Beeffondue
+Boca do Lobo
+Brasserie Irene Jardim
+Brestaurant(Bessa Hotel)
+Buhle
+Café Lusitano
+Cafeína
+Campo Alegre
+Canelas de Coelho
+Casa Agrícola
+Casa Aleixo
+Casa d'Oro
+Chez Albert
+Chez Lapin
+Churrascão do Mar
+Churrascão Gaúcho
+Clube da Gula
+Costume Bistro
+Cufra
+Divan
+Dom Tonho
+DOP
+Eataly
+Espaços Divinos
+Essência
+Filha da Mãe Preta
+Fim de Boca
+First Floor (Casal Lounge)
+Foz Velha
+Galeria de Paris
+Gokobe
+Góshò
+Grappa by Chakall
+Hellenikon
+Homem do Leme
+Itamae
+La Ricotta
+Le chien qui fume
+Le Poivron Rouge
+Lider
+Loureiro
+Mal Cozinhado
+Marrakesh
+Mendi
+Mercearia
+Mesa
+Molhe
+Nakité
+Nood (Porto)
+O Comercial
+O Escondidinho
+O Perfume
+O Restaurante da Alzira
+Pai Ramiro
+Paladar da Alma
+Papa Razzi
+Papaki
+Paris Texas
+Pedro Lemos
+Pimms
+Pinocchio
+Porto Novo
+Portobeer
+Portucale
+Praia da Luz
+Restaurante da Alzira
+Restaurante da Casa da Música
+Restaurante da Pousada do Porto (Palácio do Freixo)
+Restaurante do Museu de Serralves
+Rogério do Redondo
+Salsa & Loureiro
+Sessenta Setenta
+Shakesbeer
+Shis
+Simbiose
+Soho Sushi
+Splashback
+Suribachi
+Taberna do Bonjardim
+Tapas e +
+Temaki D'Lux
+Terra
+Toscano 
+Triplex
+Uma Rosa
+Urban Specials
+Vinhas d'Alho
+Vintage
+Vita Pura
+
+#
+#Restaurantes em Cascais
+#Tirado de http://restaurantes.aospontos.com/?pt=Restaurantes%20em%20Cascais%20de%20A%20a%20Z
+#
+Restaurante
+100 Vícios em Cascais
+Restaurante
+A Carvoaria
+Restaurante
+Al Fresco (Estoril)
+Restaurante
+Albatroz
+Restaurante
+Beira Mar
+Restaurante
+Belvedere
+Restaurante
+Café de São Bento (Estoril)
+Restaurante
+Carcavelos Sushi
+Restaurante
+Cervejaria Luzmar
+Restaurante
+Choupana Gordinni
+Restaurante
+Cimas English Bar
+Restaurante
+Comida Goesa
+Restaurante
+Confraria (Cascais)
+Restaurante
+Costa do Estoril
+Restaurante
+Entráguas
+Restaurante
+Estoril Mandarim
+Restaurante
+Foral da vila
+Restaurante
+Fortaleza do Guincho
+Restaurante
+Fortaleza do Guincho
+Restaurante
+Furnas do Guincho
+Restaurante
+Grill Four Seasons (Palácio Estoril Hotel)
+Restaurante
+Hemingway
+Restaurante
+Ilhas Gregas
+Restaurante
+JA (Cascais)
+Restaurante
+Jardim da Cerveja
+Restaurante
+John Bull
+Restaurante
+La Brasserie de L'Entrêcote - Marina de Cascais
+Restaurante
+Lucullus
+Restaurante
+Mar do Inferno
+Restaurante
+Melting Pot
+Restaurante
+Mercearia Vencedora (Fontainhas)
+Restaurante
+Mesón Andaluz
+Restaurante
+Monte Mar
+Restaurante
+O Mastro
+Restaurante
+O Púcaro
+Restaurante
+O Viriato
+Restaurante
+Os Prazeres da Carne
+Restaurante
+Pátria Lusa
+Restaurante
+Peixe na Linha
+Restaurante
+Porto de Santa Maria
+Restaurante
+restaurante.come
+Restaurante
+Rocca
+Restaurante
+Rola na Areia
+Restaurante
+Sabores dos Alpes
+Restaurante
+Sandalwood Café
+Restaurante
+Sushi Fashion 
+Restaurante
+Sushi na Linha
+Restaurante
+Sushimoto
+Restaurante
+The Mix
+Restaurante
+Vin Rouge
+Restaurante
+Ypsilon
+Restaurante
+Zeno Lounge
+
+#
+#Restaurantes em Braga
+#Tirado de http://restaurantes.aospontos.com/?pt=Restaurantes%20em%20Braga%20de%20A%20a%20Z
+#
+Abadia d Este
+Brac
+Casa da Pedra Cavalgada
+Casa das Artes
+Centurium
+Cor de Tangerina
+Cozinha da Sé
+D. Maria
+De Bouro
+Delicatum
+Dona Elvira
+Eugénios
+Ferrugem
+Histórico by Papaboa
+La Castañuela
+Mar de Sinos
+Moutados de Baixo
+Nora Zé da Curva
+O Pórtico
+PapaBoa
+Picadeiro (Guimarães)
+Prós & Contras
+São Gião
+
+#
+#Restaurantes em Sintra
+#Tirado de http://restaurantes.aospontos.com/?pt=Restaurantes%20em%20Sintra%20de%20A%20a%20Z
+#
+A Adega
+A Vaca Argentina
+Arola
+Bica D Azeite
+Colares Velho
+Cozinha Velha
+D´el Rei
+G Spot
+Hockey Caffee
+Midori (Hotel Penha Longa)
+Restaurante Café Paris
+Seteais
+Tasca Lusa
+
+#
+#Restaurantes em Lisboa (a Menos de 20 Euros)
+#Tirado de http://restaurantes.aospontos.com/index.php?pt=Restaurantes%20Lisboa%20menos%20de%2020%20euros
+#
+100 Remédio
+2 good
+31 da Armada
+A Cocheira Alentejana
+À Parte
+A Paz
+A Tapadinha
+A Toscana
+Adega dos Lombinhos
+Al Café
+Al Cantaro
+Alfaia
+Alto do Século
+Astória
+Aya Bistrôt
+Bella Lisa
+Bem-Me-Quer
+Bengal Tandoori
+Bica-me
+Boa Papa
+Bonjardim
+Brasuca
+Buona Bocca
+Cais do Chiado
+Calcutá
+Capricciosa
+Caruso
+Casa dos Passarinhos
+Casanova
+Caxemira
+Cervejaria Portugália Almirante Reis
+Cervejaria Trindade
+Chaminés do Palácio
+Chez Degroote
+Come Prima
+Delhi Palace
+Don Pomodoro
+Eça Janela
+Espaço da Rosa
+Étnico
+Fábulas
+Food & Bubbles
+Forneria Estado Líquido
+Galeto
+Green Pepper (José Malhoa)
+Guarda-Mor
+Gustus - Sushi Alentejano
+Hamburgueria Gourmet Café do Rio
+Haweli Tandoori
+Hippopotamus
+Ikos
+Il Pizzarium
+JA (Lisboa)
+Jardim dos Sentidos
+Kaffeehaus
+La Finestra
+La Hora Española
+Le Chat
+Le Petit Bistro
+Leitaria Gourmet
+Les Mauvais Garçons
+Limoncello
+Malaca Too
+Mamma Rosa
+Masstige
+Matiz Pombalina 
+Mercy Brasserie
+Miss Saigon
+Moma
+Momenti Italiani
+Néctar Winebar
+Novamesa
+O Coreto de Carnide
+O Mamma Mia
+Oliva
+Panorâmico O Sol
+Pedro das Arábias
+Petiscaria Ideal
+Picanha
+Pirâmide (Lisboa)
+Pizzeria Mezzogiorno
+Prima pasta
+Primavera do Jerónimo
+Príncipe do Calhariz
+Prova dos 9
+PSI
+Quotidiano
+Real Fábrica
+República da Cerveja
+Restaurante D'BACALHAU
+Restaurante Os Tibetanos
+Rosa da Rua
+Royale Café
+Sabores do Atlântico
+Samurai
+Santissimus
+Securas
+Siga La Vaca
+Sinal Vermelho
+Solar de Alcântara
+Solar dos Duques
+Stop do Bairro
+Storik
+Sukhothai
+Supercalifragilistic
+Sushill Out
+Taberna Ibérica
+Taberna Ideal
+Taberna Maria do Correio
+Taberna Portuguesa
+Tasca do Manel
+Tasca República
+Tempero de Minas
+Tentações de Goa
+Terra (Lisboa)
+Torricado
+Trinca e Cinco
+Txakoli
+Velho Macedo
+Zafferano
