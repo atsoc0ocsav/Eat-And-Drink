@@ -7,24 +7,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DBConnection {
+	private static final boolean DEBUG_MODE = false;
 	private static final String DBNAME = "eatdrink";
 	private static final String USER = "dba";
 	private static final String PASSWORD = "sql";
 	private static final String HOST_NAME = "localhost";
-	private static final String URL = "jdbc:sqlanywhere:Tds:"+HOST_NAME+":2638?eng=" + DBNAME;
+	private static final String URL = "jdbc:sqlanywhere:Tds:" + HOST_NAME
+			+ ":2638?eng=" + DBNAME;
 
 	private Connection conn = null;
+	private PreparedStatement prepStat = null;
 
-	// Acho q tou a ter problemas com o porto!
-	public DBConnection() {
+	/**
+	 * Creates a new connection to the database, using the parameters specified
+	 * has constants
+	 */
+	private void doConnections() {
 		try {
 			conn = DriverManager.getConnection(URL, USER, PASSWORD);
-			conn.setAutoCommit(false); 
+			conn.setAutoCommit(false);
 		} catch (SQLException e) {
-			System.out.println("Erro ao estabelecer a ligação.");
-			System.out.println("SQL Exception: " + e.getMessage());
-			System.out.println("SQL State: " + e.getSQLState());
-			System.out.println("Error Code: " + e.getErrorCode());
+			System.err.println("Erro ao estabelecer a ligação à base de dados");
+			printSQLException(e);
 		}
 	}
 
@@ -39,14 +43,18 @@ public class DBConnection {
 		ResultSet resultSet = null;
 
 		try {
-			PreparedStatement statement = conn.prepareStatement(sql);
-			resultSet = statement.executeQuery();
+			doConnections();
+
+			prepStat = conn.prepareStatement(sql);
+			resultSet = prepStat.executeQuery();
+
+			releaseResources();
+			commit();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			printSQLException(e);
 		}
 
 		return resultSet;
-
 	}
 
 	// No relatorio e void mas devia retornar um int...
@@ -55,13 +63,15 @@ public class DBConnection {
 		// recebendo os seus argumentos
 
 		try {
-			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.executeUpdate();
+			doConnections();
+
+			prepStat = conn.prepareStatement(sql);
+			prepStat.executeUpdate();
+
+			releaseResources();
+			commit();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("SQL Exception: " + e.getMessage());
-			System.out.println("SQL State: " + e.getSQLState());
-			System.out.println("Error Code: " + e.getErrorCode());
+			printSQLException(e);
 		}
 
 	}
@@ -72,15 +82,70 @@ public class DBConnection {
 		// recebendo os seus argumentos
 
 		try {
-			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.executeUpdate();
+			doConnections();
+
+			prepStat = conn.prepareStatement(sql);
+			prepStat.executeUpdate();
+
+			releaseResources();
+			commit();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("SQL Exception: " + e.getMessage());
-			System.out.println("SQL State: " + e.getSQLState());
-			System.out.println("Error Code: " + e.getErrorCode());
+			printSQLException(e);
 		}
 
 	}
 
+	/**
+	 * Prints data about the given SQL Exception
+	 * 
+	 * @param SQLException
+	 */
+	private void printSQLException(SQLException e) {
+		if (DEBUG_MODE)
+			e.printStackTrace();
+		System.out.println("SQL Exception: " + e.getMessage());
+		System.out.println("SQL State: " + e.getSQLState());
+		System.out.println("Error Code: " + e.getErrorCode());
+	}
+
+	/**
+	 * Commits the changes made to the Database
+	 */
+	private void commit() {
+		try {
+			conn.commit();
+		} catch (SQLException e) {
+			printSQLException(e);
+		}
+	}
+
+	/**
+	 * Releases the PreparedStatement
+	 */
+	private void releaseResources() {
+		if (prepStat != null) {
+			try {
+				prepStat.close();
+			} catch (SQLException e) {
+				printSQLException(e);
+			} finally {
+				prepStat = null;
+			}
+		}
+	}
+
+	/**
+	 * Closes the connection to the database
+	 */
+	public void closeDBConnection() {
+		if (conn != null) {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				printSQLException(e);
+			} finally {
+				conn = null;
+			}
+		}
+	}
 }
