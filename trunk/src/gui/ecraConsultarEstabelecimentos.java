@@ -86,7 +86,8 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	private Button buttonAddEventos;
 	private Button buttonRemoveEventos;
 
-	public ecraConsultarEstabelecimentos(ctrlConsultarEstabelecimentos consulta) {
+	public ecraConsultarEstabelecimentos() {
+		ctrConsulta = new ctrlConsultarEstabelecimentos();
 
 		setTitle("Eat & Drink Estabelecimentos - Consulta");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -276,8 +277,6 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		lblAvaliao.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_resultadosDivisoes.add(lblAvaliao);
 
-		this.ctrConsulta = consulta;
-
 		addListeners();
 
 		fillComboBoxesWithData();
@@ -396,9 +395,9 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		int i = comboBoxTiposDePrato.getSelectedIndex();
 		if (i != -1) {
 			String x = tiposDePrato.get(i).getDescricao();
-			if(!modeloListaDePratos.exists(x)){
-			modeloListaDePratos.add(x);
-			buttonRemoverPratos.setEnabled(true);
+			if (!modeloListaDePratos.exists(x)) {
+				modeloListaDePratos.add(x);
+				buttonRemoverPratos.setEnabled(true);
 			}
 		}
 	}
