@@ -7,13 +7,12 @@ import java.util.ArrayList;
 import dbc.DBConnection;
 
 public class TipoDeEvento {
-	private DBConnection dbcConnection;
+	private DBConnection dbConnection;
 	private int tipoDeEvento;
 	private String descricao;
 
-	public TipoDeEvento(DBConnection dbcConnection) {
-		super();
-		this.dbcConnection = dbcConnection;
+	public TipoDeEvento() {
+		dbConnection = new DBConnection();
 	}
 
 	public TipoDeEvento(int tipoDeEvento, String descricao) {
@@ -25,8 +24,7 @@ public class TipoDeEvento {
 	public ArrayList<TipoDeEvento> getTiposDeEvento() {
 		ArrayList<TipoDeEvento> tiposDeEvento = new ArrayList<TipoDeEvento>();
 
-		ResultSet resultSet = dbcConnection
-				.select("SELECT * FROM TipoDeEvento");
+		ResultSet resultSet = dbConnection.select("SELECT * FROM TipoDeEvento");
 
 		try {
 			while (resultSet.next()) {
