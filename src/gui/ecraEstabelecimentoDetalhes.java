@@ -74,16 +74,18 @@ public class ecraEstabelecimentoDetalhes {
 				designacao_estabelecimento = "Estabelecimento de Teste";
 				buildGUI();
 			} else {
-
-				controladorDetalherEstabelecimento = new ctrlDetalhesEstabelecimento(
-						establishmentID);
+				controladorDetalherEstabelecimento = new ctrlDetalhesEstabelecimento();
 				estabelecimento = controladorDetalherEstabelecimento
-						.consultarDetalhes();
+						.consultarDetalhesEstabelecimento(establishmentID);
 				designacao_estabelecimento = estabelecimento.getDesignacao();
+
 				buildGUI();
+
 			}
 			display();
-		} catch (Exception e) {
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
