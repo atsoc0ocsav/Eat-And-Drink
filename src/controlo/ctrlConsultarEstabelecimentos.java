@@ -8,10 +8,8 @@ import dados.TipoDeEstablecimento;
 import dados.TipoDeEvento;
 import dados.TipoDePrato;
 import dados.Zona;
-import dbc.DBConnection;
 
 public class ctrlConsultarEstabelecimentos {
-	private DBConnection dbc;
 	private Estabelecimento estabelecimento;
 	private Cidade cidade;
 	private Zona zona;
@@ -20,13 +18,12 @@ public class ctrlConsultarEstabelecimentos {
 	private TipoDePrato tipoDePrato;
 
 	public ctrlConsultarEstabelecimentos() {
-		dbc = new DBConnection();
-		estabelecimento = new Estabelecimento(dbc);
-		cidade = new Cidade(dbc);
-		zona = new Zona(dbc);
-		tipoDeEstablecimento = new TipoDeEstablecimento(dbc);
-		tipoDeEvento = new TipoDeEvento(dbc);
-		tipoDePrato = new TipoDePrato(dbc);
+		estabelecimento = new Estabelecimento();
+		cidade = new Cidade();
+		zona = new Zona();
+		tipoDeEstablecimento = new TipoDeEstablecimento();
+		tipoDeEvento = new TipoDeEvento();
+		tipoDePrato = new TipoDePrato();
 	}
 
 	public ArrayList<Estabelecimento> consultarEstabelecimentos(String cidade,
