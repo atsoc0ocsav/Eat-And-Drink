@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -153,9 +154,11 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		panel_TipoEventosBotoes.add(comboBoxTiposDeEvento);
 
 		buttonAddEventos = new Button("Adicionar");
+		buttonAddEventos.setEnabled(false);
 		panel_TipoEventosBotoes.add(buttonAddEventos);
 
 		buttonRemoveEventos = new Button("Remover");
+		buttonRemoveEventos.setEnabled(false);
 		panel_TipoEventosBotoes.add(buttonRemoveEventos);
 
 		scrollPaneEventos = new JScrollPane();
@@ -186,9 +189,11 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		panel_TipoPratosBotoes.add(comboBoxTiposDePrato);
 
 		buttonAddPratos = new Button("Adicionar");
+		buttonAddPratos.setEnabled(false);
 		panel_TipoPratosBotoes.add(buttonAddPratos);
 
 		buttonRemoverPratos = new Button("Remover");
+		buttonRemoverPratos.setEnabled(false);
 		panel_TipoPratosBotoes.add(buttonRemoverPratos);
 
 		scrollPanePratos = new JScrollPane();
@@ -307,16 +312,22 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 
 		this.tiposDeEvento = ctrConsulta.getTiposDeEventos();
 
-		for (TipoDeEvento tipoDeEvento : tiposDeEvento) {
-			comboBoxTiposDeEvento.insertItemAt(tipoDeEvento.getDescricao(),
-					comboBoxTiposDeEvento.getItemCount());
+		if (tiposDeEvento.size() > 0) {
+			for (TipoDeEvento tipoDeEvento : tiposDeEvento) {
+				comboBoxTiposDeEvento.insertItemAt(tipoDeEvento.getDescricao(),
+						comboBoxTiposDeEvento.getItemCount());
+			}
+			buttonAddEventos.setEnabled(true);
 		}
 
 		this.tiposDePrato = ctrConsulta.getTiposDePratos();
 
-		for (TipoDePrato tipoDePrato : tiposDePrato) {
-			comboBoxTiposDePrato.insertItemAt(tipoDePrato.getDescricao(),
-					comboBoxTiposDePrato.getItemCount());
+		if (tiposDePrato.size() > 0) {
+			for (TipoDePrato tipoDePrato : tiposDePrato) {
+				comboBoxTiposDePrato.insertItemAt(tipoDePrato.getDescricao(),
+						comboBoxTiposDePrato.getItemCount());
+			}
+			buttonAddPratos.setEnabled(true);
 		}
 	}
 
@@ -374,15 +385,21 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		int i = listTipoDePratos.getSelectedIndex();
 		if (i != -1) {
 			modeloListaDePratos.remove(i);
-			repaint();
+			if (modeloListaDePratos.getSize() == 0) {
+				buttonRemoverPratos.setEnabled(false);
+			}
 		}
+
 	}
 
 	private void adicionarPrato() {
 		int i = comboBoxTiposDePrato.getSelectedIndex();
 		if (i != -1) {
-			modeloListaDePratos.add(tiposDePrato.get(i).getDescricao());
-			repaint();
+			String x = tiposDePrato.get(i).getDescricao();
+			if(!modeloListaDePratos.exists(x)){
+			modeloListaDePratos.add(x);
+			buttonRemoverPratos.setEnabled(true);
+			}
 		}
 	}
 
@@ -390,13 +407,20 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		int i = listTipoDeEventos.getSelectedIndex();
 		if (i != -1) {
 			modeloListaDeEventos.remove(i);
+			if (modeloListaDeEventos.getSize() == 0) {
+				buttonRemoveEventos.setEnabled(false);
+			}
 		}
 	}
 
 	private void adicionarEvento() {
 		int i = comboBoxTiposDeEvento.getSelectedIndex();
 		if (i != -1) {
-			modeloListaDeEventos.add(tiposDeEvento.get(i).getDescricao());
+			String x = tiposDeEvento.get(i).getDescricao();
+			if (!modeloListaDeEventos.exists(x)) {
+				modeloListaDeEventos.add(x);
+				buttonRemoveEventos.setEnabled(true);
+			}
 		}
 	}
 
@@ -443,14 +467,14 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 				JOptionPane
 						.showMessageDialog(
 								this,
-								"O campo avaliação só pode estar preenchido com números de 0 a 100 com uma casa decimal opcional.");
+								"O campo avaliação só pode estar preenchido com números de 0 a 100 com uma casa decimal opcional");
 			}
 		}
 	}
 
 	private boolean validaAval() {
 		String textoAval = textField_avaliacao.getText();
-		if(textoAval.matches("[0-9]{1,3}|[0-9]{1,3},[0-9]{1}")){
+		if (textoAval.matches("[0-9]{1,3}|[0-9]{1,3},[0-9]{1}")) {
 			Double aval = Double.parseDouble(textoAval);
 			if (aval <= 100 && aval >= 0)
 				return true;
