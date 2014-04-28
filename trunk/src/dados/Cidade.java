@@ -7,12 +7,11 @@ import java.util.ArrayList;
 import dbc.DBConnection;
 
 public class Cidade {
-	private DBConnection dbcConnection;
+	private DBConnection dbConnection;
 	private String name;
 
-	public Cidade(DBConnection dbcConnection) {
-		super();
-		this.dbcConnection = dbcConnection;
+	public Cidade() {
+		dbConnection = new DBConnection();
 	}
 
 	public Cidade(String name) {
@@ -24,7 +23,7 @@ public class Cidade {
 
 		ArrayList<Cidade> cidades = new ArrayList<Cidade>();
 
-		ResultSet resultSet = dbcConnection.select("SELECT * FROM Cidade");
+		ResultSet resultSet = dbConnection.select("SELECT * FROM Cidade");
 
 		try {
 			while (resultSet.next()) {

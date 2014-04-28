@@ -7,12 +7,11 @@ import java.util.ArrayList;
 import dbc.DBConnection;
 
 public class TipoDeEstablecimento {
-	private DBConnection dbcConnection;
+	private DBConnection dbConnection;
 	private String tipoDeEstablecimento;
 
-	public TipoDeEstablecimento(DBConnection dbcConnection) {
-		super();
-		this.dbcConnection = dbcConnection;
+	public TipoDeEstablecimento() {
+		dbConnection = new DBConnection();
 	}
 
 	public TipoDeEstablecimento(String tipoDeEstablecimento) {
@@ -24,12 +23,13 @@ public class TipoDeEstablecimento {
 
 		ArrayList<TipoDeEstablecimento> tiposDeEstablecimento = new ArrayList<TipoDeEstablecimento>();
 
-		ResultSet resultSet = dbcConnection
+		ResultSet resultSet = dbConnection
 				.select("SELECT * FROM TipoDeEstabelecimento");
 
 		try {
 			while (resultSet.next()) {
-				String tipoDeEstablecimento = resultSet.getString("tipoDoEstabelecimento");
+				String tipoDeEstablecimento = resultSet
+						.getString("tipoDoEstabelecimento");
 				tiposDeEstablecimento.add(new TipoDeEstablecimento(
 						tipoDeEstablecimento));
 			}

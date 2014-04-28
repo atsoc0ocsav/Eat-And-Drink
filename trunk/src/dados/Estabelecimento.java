@@ -16,10 +16,10 @@ public class Estabelecimento {
 	private String morada;
 	private double rating;
 
-	private DBConnection dbcConnection;
+	private DBConnection dbConnection;
 
-	public Estabelecimento(DBConnection dbcConnection) {
-		this.dbcConnection = dbcConnection;
+	public Estabelecimento() {
+		dbConnection = new DBConnection();
 	}
 
 	public Estabelecimento(String coordenadasGPS, int idZona,
@@ -44,7 +44,7 @@ public class Estabelecimento {
 		if (cidade == null && zona == null && tipo == null && aval == 0.0
 				&& prato == null && evento == null && nome == null) {
 
-			ResultSet resultSet = dbcConnection
+			ResultSet resultSet = dbConnection
 					.select("SELECT * FROM Estabelecimento");
 
 			try {
@@ -73,14 +73,18 @@ public class Estabelecimento {
 				e.printStackTrace();
 			}
 		} else {
-			ResultSet resultSet = dbcConnection
+			ResultSet resultSet = dbConnection
 					.select("SELECT * "
 							+ "FROM Estabelecimento, Zona "
-							+ "WHERE Estabelecimento.idZona = Zona.idZona AND Zona.cidade = '"+ cidade + "' OR "
-							+ "Estabelecimento.idZona = Zona.idZona AND Zona.designacao = '" + zona + "' OR "
-							+ "Estabelecimento.tipoDoEstabelecimento = '" + tipo + "' OR "
-							+ "Estabelecimento.rating >= '" + aval + "' OR "
-							+ "Estabelecimento.designacao = '" + nome + "'");			
+							+ "WHERE Estabelecimento.idZona = Zona.idZona AND Zona.cidade = '"
+							+ cidade
+							+ "' OR "
+							+ "Estabelecimento.idZona = Zona.idZona AND Zona.designacao = '"
+							+ zona + "' OR "
+							+ "Estabelecimento.tipoDoEstabelecimento = '"
+							+ tipo + "' OR " + "Estabelecimento.rating >= '"
+							+ aval + "' OR " + "Estabelecimento.designacao = '"
+							+ nome + "'");
 			try {
 				while (resultSet.next()) {
 					String coordenadasGPS = resultSet
@@ -108,6 +112,11 @@ public class Estabelecimento {
 			}
 		}
 		return estabelecimentos;
+	}
+
+	public ArrayList<Estabelecimento> select(int establishmentID) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public String getCoordenadasGPS() {
@@ -145,5 +154,4 @@ public class Estabelecimento {
 	public void setIdZona(int idZona) {
 		this.idZona = idZona;
 	}
-
 }

@@ -7,14 +7,13 @@ import java.util.ArrayList;
 import dbc.DBConnection;
 
 public class Zona {
-	private DBConnection dbcConnection;
+	private DBConnection dbConnection;
 	private int idZona;
 	private String cidade;
 	private String designacao;
 
-	public Zona(DBConnection dbcConnection) {
-		super();
-		this.dbcConnection = dbcConnection;
+	public Zona() {
+		dbConnection = new DBConnection();
 	}
 
 	public Zona(int idZona, String cidade, String designacao) {
@@ -28,7 +27,7 @@ public class Zona {
 
 		ArrayList<Zona> zonas = new ArrayList<Zona>();
 
-		ResultSet resultSet = dbcConnection.select("SELECT * FROM Zona");
+		ResultSet resultSet = dbConnection.select("SELECT * FROM Zona");
 
 		try {
 			while (resultSet.next()) {
