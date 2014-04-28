@@ -73,7 +73,39 @@ public class Estabelecimento {
 				e.printStackTrace();
 			}
 		} else {
-			// Faz a pesquisa pelo filtro
+			ResultSet resultSet = dbcConnection
+					.select("SELECT * "
+							+ "FROM Estabelecimento, Zona "
+							+ "WHERE Estabelecimento.idZona = Zona.idZona AND Zona.cidade = '"+ cidade + "' OR "
+							+ "Estabelecimento.idZona = Zona.idZona AND Zona.designacao = '" + zona + "' OR "
+							+ "Estabelecimento.tipoDoEstabelecimento = '" + tipo + "' OR "
+							+ "Estabelecimento.rating >= '" + aval + "' OR "
+							+ "Estabelecimento.designacao = '" + nome + "'");			
+			try {
+				while (resultSet.next()) {
+					String coordenadasGPS = resultSet
+							.getString("coordenadasGps");
+					String designacao = resultSet.getString("designacao");
+					String formaDeChegar = resultSet
+							.getString("formaDeLaChegar");
+					int idEstabelecimento = resultSet
+							.getInt("idEstabelecimento");
+					String informacoesHorario = resultSet
+							.getString("informacoesHorario");
+					String morada = resultSet.getString("morada");
+					int idZona = resultSet.getInt("idZona");
+					double rating = resultSet.getDouble("rating");
+
+					Estabelecimento estabelecimento = new Estabelecimento(
+							coordenadasGPS, idZona, designacao, formaDeChegar,
+							idEstabelecimento, informacoesHorario, morada,
+							rating);
+					estabelecimentos.add(estabelecimento);
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return estabelecimentos;
 	}

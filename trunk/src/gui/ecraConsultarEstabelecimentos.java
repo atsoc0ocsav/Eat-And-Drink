@@ -338,14 +338,28 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 			estabelecimentos = ctrConsulta.consultarEstabelecimentos(null,
 					null, null, 0.0, null, null, null);
 		} else {
-			String cidade = cidades.get(comboBoxCidades.getSelectedIndex())
-					.getName();
-			String zona = zonas.get(comboBoxZonas.getSelectedIndex())
-					.getDesignacao();
-			String tipoDeEstablecimento = tiposdeEstablecimento.get(
-					comboBoxTiposDeEstablecimento.getSelectedIndex())
-					.getTipoDeEstablecimento();
-			double aval = Double.parseDouble(textField_avaliacao.getText());
+			String cidade = "";
+			if (comboBoxCidades.getSelectedIndex() != -1) {
+				cidade = cidades.get(comboBoxCidades.getSelectedIndex())
+						.getName();
+			}
+			String zona = "";
+			if (comboBoxZonas.getSelectedIndex() != -1) {
+				zona = zonas.get(comboBoxZonas.getSelectedIndex())
+						.getDesignacao();
+			}
+
+			String tipoDeEstablecimento = "";
+			if (comboBoxTiposDeEstablecimento.getSelectedIndex() != -1) {
+				tipoDeEstablecimento = tiposdeEstablecimento.get(
+						comboBoxTiposDeEstablecimento.getSelectedIndex())
+						.getTipoDeEstablecimento();
+			}
+
+			double aval = 0.0;
+			if (!textField_avaliacao.getText().equals("")) {
+				aval = Double.parseDouble(textField_avaliacao.getText());
+			}
 			String eventos = juntarEventos();
 			String pratos = juntarpratos();
 			String nome = textField_nome.getText();
