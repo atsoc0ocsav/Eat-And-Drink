@@ -29,7 +29,7 @@ public class TipoDeEstablecimento {
 
 		try {
 			while (resultSet.next()) {
-				String tipoDeEstablecimento = resultSet.getString("designacao");
+				String tipoDeEstablecimento = resultSet.getString("tipoDoEstabelecimento");
 				tiposDeEstablecimento.add(new TipoDeEstablecimento(
 						tipoDeEstablecimento));
 			}

@@ -280,14 +280,14 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 
 		for (Cidade cidade : cidades) {
 			comboBoxCidades.insertItemAt(cidade.getName(),
-					comboBoxCidades.getItemCount() - 1);
+					comboBoxCidades.getItemCount());
 		}
 
 		this.zonas = ctrConsulta.getZonas();
 
 		for (Zona zona : zonas) {
 			comboBoxZonas.insertItemAt(zona.getDesignacao(),
-					comboBoxZonas.getItemCount() - 1);
+					comboBoxZonas.getItemCount());
 		}
 
 		this.tiposdeEstablecimento = ctrConsulta.getTiposDeEstablecimento();
@@ -295,21 +295,21 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		for (TipoDeEstablecimento tipoEsblecimento : tiposdeEstablecimento) {
 			comboBoxTiposDeEstablecimento.insertItemAt(
 					tipoEsblecimento.getTipoDeEstablecimento(),
-					comboBoxTiposDeEstablecimento.getItemCount() - 1);
+					comboBoxTiposDeEstablecimento.getItemCount());
 		}
 
 		this.tiposDeEvento = ctrConsulta.getTiposDeEventos();
 
 		for (TipoDeEvento tipoDeEvento : tiposDeEvento) {
 			comboBoxTiposDeEvento.insertItemAt(tipoDeEvento.getDescricao(),
-					comboBoxTiposDeEvento.getItemCount() - 1);
+					comboBoxTiposDeEvento.getItemCount());
 		}
 
 		this.tiposDePrato = ctrConsulta.getTiposDePratos();
 
 		for (TipoDePrato tipoDePrato : tiposDePrato) {
 			comboBoxTiposDePrato.insertItemAt(tipoDePrato.getDescricao(),
-					comboBoxTiposDePrato.getItemCount() - 1);
+					comboBoxTiposDePrato.getItemCount());
 		}
 	}
 
