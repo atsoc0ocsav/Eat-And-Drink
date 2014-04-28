@@ -1,29 +1,24 @@
 package controlo;
 
+import java.util.ArrayList;
+
 import dados.Estabelecimento;
 
 public class ctrlDetalhesEstabelecimento {
-
 	/**
-	 * Creates the Establishment Details Controller
+	 * Return the establishment with the given ID
 	 * 
-	 * @param establishment
-	 *            ID
+	 * @return establishment ID
 	 */
-	public ctrlDetalhesEstabelecimento(int establishmentID) {
-		// TODO Auto-generated constructor stub
-	}
+	public Estabelecimento consultarDetalhesEstabelecimento(int establishmentID) {
+		Estabelecimento establishmentDataObject = new Estabelecimento();
+		ArrayList<Estabelecimento> establishment = establishmentDataObject
+				.select(establishmentID);
 
-	/**
-	 * Return the establishment with the ID given on the constructor method
-	 * 
-	 * @return establishment with the given ID
-	 */
-	public Estabelecimento consultarDetalhes() {
-		//TODO Estabelecimento de Teste.... Falta fazer o verdadeiro ;)
-		return new Estabelecimento("38º44'52.11717\" 9º9'12.40631\"",
-				0, "Estabelecimento de Teste", "Virá à esquerda e à direira! ",
-				123, "Aberto 24 sobre 24", "Av. das Forças Armadas", 0);
+		if (establishment != null && establishment.size() > 1)
+			return establishment.get(0);
+		else
+			return null;
 	}
 
 }
