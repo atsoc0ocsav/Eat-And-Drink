@@ -30,7 +30,7 @@ public class TipoDeEvento {
 
 		try {
 			while (resultSet.next()) {
-				int tipoDeEvento = resultSet.getInt("tipoDeEvento");
+				int tipoDeEvento = resultSet.getInt("tipoDoEvento");
 				String descricao = resultSet.getString("descricao");
 				tiposDeEvento.add(new TipoDeEvento(tipoDeEvento, descricao));
 			}
