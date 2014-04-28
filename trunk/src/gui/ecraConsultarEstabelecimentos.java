@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
@@ -62,7 +63,9 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	private JPanel panel_resultadosDivisoes;
 	private Button buttonFiltroTodos;
 	private Button buttonAplicarFiltro;
+
 	private consultaEstablecimentosTableDataModel modeloTabelaConsulta = new consultaEstablecimentosTableDataModel();
+	private JTable table;
 
 	private ctrlConsultarEstabelecimentos ctrConsulta;
 
@@ -76,7 +79,11 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	private ArrayList<TipoDeEstablecimento> tiposdeEstablecimento;
 	private ArrayList<TipoDeEvento> tiposDeEvento;
 	private ArrayList<TipoDePrato> tiposDePrato;
-	private JTable table;
+
+	private Button buttonAddPratos;
+	private Button buttonRemoverPratos;
+	private Button buttonAddEventos;
+	private Button buttonRemoveEventos;
 
 	public ecraConsultarEstabelecimentos(ctrlConsultarEstabelecimentos consulta) {
 
@@ -145,10 +152,10 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		comboBoxTiposDeEvento.setToolTipText("Tipo de Eventos");
 		panel_TipoEventosBotoes.add(comboBoxTiposDeEvento);
 
-		Button buttonAddEventos = new Button("Adicionar");
+		buttonAddEventos = new Button("Adicionar");
 		panel_TipoEventosBotoes.add(buttonAddEventos);
 
-		Button buttonRemoveEventos = new Button("Remover");
+		buttonRemoveEventos = new Button("Remover");
 		panel_TipoEventosBotoes.add(buttonRemoveEventos);
 
 		scrollPaneEventos = new JScrollPane();
@@ -178,10 +185,10 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		comboBoxTiposDePrato = new JComboBox();
 		panel_TipoPratosBotoes.add(comboBoxTiposDePrato);
 
-		Button buttonAddPratos = new Button("Adicionar");
+		buttonAddPratos = new Button("Adicionar");
 		panel_TipoPratosBotoes.add(buttonAddPratos);
 
-		Button buttonRemoverPratos = new Button("Remover");
+		buttonRemoverPratos = new Button("Remover");
 		panel_TipoPratosBotoes.add(buttonRemoverPratos);
 
 		scrollPanePratos = new JScrollPane();
@@ -329,6 +336,68 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 			}
 		});
 
+		buttonAddEventos.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				adicionarEvento();
+			}
+		});
+
+		buttonRemoveEventos.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removerEvento();
+			}
+		});
+
+		buttonAddPratos.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				adicionarPrato();
+			}
+		});
+
+		buttonRemoverPratos.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removerPrato();
+			}
+		});
+
+	}
+
+	private void removerPrato() {
+		int i = listTipoDePratos.getSelectedIndex();
+		if (i != -1) {
+			modeloListaDePratos.remove(i);
+			repaint();
+		}
+	}
+
+	private void adicionarPrato() {
+		int i = comboBoxTiposDePrato.getSelectedIndex();
+		if (i != -1) {
+			modeloListaDePratos.add(tiposDePrato.get(i).getDescricao());
+			repaint();
+		}
+	}
+
+	private void removerEvento() {
+		int i = listTipoDeEventos.getSelectedIndex();
+		if (i != -1) {
+			modeloListaDeEventos.remove(i);
+		}
+	}
+
+	private void adicionarEvento() {
+		int i = comboBoxTiposDeEvento.getSelectedIndex();
+		if (i != -1) {
+			modeloListaDeEventos.add(tiposDeEvento.get(i).getDescricao());
+		}
 	}
 
 	private void consultarEstabelecimentos(boolean todos) {
@@ -337,37 +406,59 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		if (todos) {
 			estabelecimentos = ctrConsulta.consultarEstabelecimentos(null,
 					null, null, 0.0, null, null, null);
+			showConsultResult(estabelecimentos);
 		} else {
-			String cidade = "";
-			if (comboBoxCidades.getSelectedIndex() != -1) {
-				cidade = cidades.get(comboBoxCidades.getSelectedIndex())
-						.getName();
-			}
-			String zona = "";
-			if (comboBoxZonas.getSelectedIndex() != -1) {
-				zona = zonas.get(comboBoxZonas.getSelectedIndex())
-						.getDesignacao();
-			}
+			if (validaAval()) {
+				String cidade = "";
+				if (comboBoxCidades.getSelectedIndex() != -1) {
+					cidade = cidades.get(comboBoxCidades.getSelectedIndex())
+							.getName();
+				}
+				String zona = "";
+				if (comboBoxZonas.getSelectedIndex() != -1) {
+					zona = zonas.get(comboBoxZonas.getSelectedIndex())
+							.getDesignacao();
+				}
 
-			String tipoDeEstablecimento = "";
-			if (comboBoxTiposDeEstablecimento.getSelectedIndex() != -1) {
-				tipoDeEstablecimento = tiposdeEstablecimento.get(
-						comboBoxTiposDeEstablecimento.getSelectedIndex())
-						.getTipoDeEstablecimento();
-			}
+				String tipoDeEstablecimento = "";
+				if (comboBoxTiposDeEstablecimento.getSelectedIndex() != -1) {
+					tipoDeEstablecimento = tiposdeEstablecimento.get(
+							comboBoxTiposDeEstablecimento.getSelectedIndex())
+							.getTipoDeEstablecimento();
+				}
 
-			double aval = 0.0;
-			if (!textField_avaliacao.getText().equals("")) {
-				aval = Double.parseDouble(textField_avaliacao.getText());
+				double aval = 0.0;
+				if (!textField_avaliacao.getText().equals("")) {
+					aval = Double.parseDouble(textField_avaliacao.getText());
+				}
+				String eventos = juntarEventos();
+				String pratos = juntarpratos();
+				String nome = textField_nome.getText();
+				estabelecimentos = ctrConsulta.consultarEstabelecimentos(
+						cidade, zona, tipoDeEstablecimento, aval, pratos,
+						eventos, nome);
+
+				showConsultResult(estabelecimentos);
+			} else {
+				JOptionPane
+						.showMessageDialog(
+								this,
+								"O campo avaliação só pode estar preenchido com números de 0 a 100 com uma casa decimal opcional.");
 			}
-			String eventos = juntarEventos();
-			String pratos = juntarpratos();
-			String nome = textField_nome.getText();
-			estabelecimentos = ctrConsulta.consultarEstabelecimentos(cidade,
-					zona, tipoDeEstablecimento, aval, pratos, eventos, nome);
 		}
+	}
 
-		showConsultResult(estabelecimentos);
+	private boolean validaAval() {
+		String textoAval = textField_avaliacao.getText();
+		if(textoAval.matches("[0-9]{1,3}|[0-9]{1,3},[0-9]{1}")){
+			Double aval = Double.parseDouble(textoAval);
+			if (aval <= 100 && aval >= 0)
+				return true;
+			else
+				return false;
+		} else {
+			return false;
+		}
 	}
 
 	private String juntarpratos() {
