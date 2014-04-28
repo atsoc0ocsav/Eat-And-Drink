@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DBConnection {
-	private static final boolean DEBUG_MODE = false;
+	private static final boolean DEBUG_MODE = true;
 	private static final String DBNAME = "eatdrink";
 	private static final String USER = "dba";
 	private static final String PASSWORD = "sql";
@@ -16,7 +16,6 @@ public class DBConnection {
 			+ ":2638?eng=" + DBNAME;
 
 	private Connection conn = null;
-	private PreparedStatement prepStat = null;
 
 	/**
 	 * Creates a new connection to the database, using the parameters specified
@@ -45,11 +44,8 @@ public class DBConnection {
 		try {
 			doConnections();
 
-			prepStat = conn.prepareStatement(sql);
+			PreparedStatement prepStat = conn.prepareStatement(sql);
 			resultSet = prepStat.executeQuery();
-
-			releaseResources();
-			commit();
 		} catch (SQLException e) {
 			printSQLException(e);
 		}
@@ -65,10 +61,9 @@ public class DBConnection {
 		try {
 			doConnections();
 
-			prepStat = conn.prepareStatement(sql);
+			PreparedStatement prepStat = conn.prepareStatement(sql);
 			prepStat.executeUpdate();
 
-			releaseResources();
 			commit();
 		} catch (SQLException e) {
 			printSQLException(e);
@@ -84,10 +79,9 @@ public class DBConnection {
 		try {
 			doConnections();
 
-			prepStat = conn.prepareStatement(sql);
+			PreparedStatement prepStat = conn.prepareStatement(sql);
 			prepStat.executeUpdate();
 
-			releaseResources();
 			commit();
 		} catch (SQLException e) {
 			printSQLException(e);
@@ -116,21 +110,6 @@ public class DBConnection {
 			conn.commit();
 		} catch (SQLException e) {
 			printSQLException(e);
-		}
-	}
-
-	/**
-	 * Releases the PreparedStatement
-	 */
-	private void releaseResources() {
-		if (prepStat != null) {
-			try {
-				prepStat.close();
-			} catch (SQLException e) {
-				printSQLException(e);
-			} finally {
-				prepStat = null;
-			}
 		}
 	}
 
