@@ -15,6 +15,10 @@ public class Estabelecimento {
 	private String informacoesHorario;
 	private String morada;
 	private double rating;
+	private String email;
+	private String tipoDoEstabelecimento;
+	private String nomeZona;
+	private String cidade;
 
 	private DBConnection dbConnection;
 
@@ -24,8 +28,11 @@ public class Estabelecimento {
 
 	public Estabelecimento(String coordenadasGPS, int idZona,
 			String designacao, String formaDeChegar, int idEstabelecimento,
-			String informacoesHorario, String morada, double rating) {
-		super();
+			String informacoesHorario, String morada, double rating,
+			String tipoDoEstabelecimento, String email, String nomeZona,
+			String cidade) {
+		dbConnection = new DBConnection();
+
 		this.coordenadasGPS = coordenadasGPS;
 		this.idZona = idZona;
 		this.designacao = designacao;
@@ -34,6 +41,10 @@ public class Estabelecimento {
 		this.informacoesHorario = informacoesHorario;
 		this.morada = morada;
 		this.rating = rating;
+		this.tipoDoEstabelecimento = tipoDoEstabelecimento;
+		this.email = email;
+		this.nomeZona = nomeZona;
+		this.cidade = cidade;
 	}
 
 	public ArrayList<Estabelecimento> select(String cidade, String zona,
@@ -41,8 +52,9 @@ public class Estabelecimento {
 
 		ArrayList<Estabelecimento> estabelecimentos = new ArrayList<Estabelecimento>();
 
-		if (cidade.equals("") && zona.equals("") && tipo.equals("") && aval == 0.0
-				&& prato.equals("") && evento.equals("") && nome.equals("")) {
+		if (cidade.equals("") && zona.equals("") && tipo.equals("")
+				&& aval == 0.0 && prato.equals("") && evento.equals("")
+				&& nome.equals("")) {
 
 			ResultSet resultSet = dbConnection
 					.select("SELECT * FROM Estabelecimento");
@@ -65,7 +77,7 @@ public class Estabelecimento {
 					Estabelecimento estabelecimento = new Estabelecimento(
 							coordenadasGPS, idZona, designacao, formaDeChegar,
 							idEstabelecimento, informacoesHorario, morada,
-							rating);
+							rating, null, null, null, null);
 					estabelecimentos.add(estabelecimento);
 				}
 
@@ -73,119 +85,143 @@ public class Estabelecimento {
 				e.printStackTrace();
 			}
 		} else {
-			
+
 			String sqlExpression = "SELECT * FROM Estabelecimento WHERE";
-						
+
 			// Caso em que tudo é null menos o nome e a avaliação
-			if(cidade.equals("") && zona.equals("") && tipo.equals("") && 
-					prato.equals("") && evento.equals("") && !nome.equals("")) {
-				sqlExpression += " Estabelecimento.designacao = '" + nome + "' AND Estabelecimento.rating >= " + aval;	
-				
-			// Caso em que tudo é null a avaliação
-			} else if (cidade.equals("") && zona.equals("") && tipo.equals("") && 
-					prato.equals("") && evento.equals("") && nome.equals("")) {
-				
+			if (cidade.equals("") && zona.equals("") && tipo.equals("")
+					&& prato.equals("") && evento.equals("")
+					&& !nome.equals("")) {
+				sqlExpression += " Estabelecimento.designacao = '" + nome
+						+ "' AND Estabelecimento.rating >= " + aval;
+
+				// Caso em que tudo é null a avaliação
+			} else if (cidade.equals("") && zona.equals("") && tipo.equals("")
+					&& prato.equals("") && evento.equals("") && nome.equals("")) {
+
 				sqlExpression += " Estabelecimento.rating >= " + aval;
-				
-			// Restantes casos	
-			} else {			
-				sqlExpression = "SELECT * FROM Estabelecimento, Zona WHERE";
-			
-			if(!cidade.equals("")) {
-				sqlExpression += " Estabelecimento.idZona = Zona.idZona AND Zona.cidade = '" + cidade + "' AND";
-				
-				if(!zona.equals("")) {
-					sqlExpression += " Estabelecimento.idZona = Zona.idZona AND Zona.designacao = '" + zona + "' AND";
-				
-					if(!tipo.equals("")) {
-						sqlExpression += " Estabelecimento.tipoDoEstabelecimento = '" + tipo + "' AND";
-					
-						if(!nome.equals("")) {
-							sqlExpression += " Estabelecimento.designacao = '" + nome + "' AND";	
-							sqlExpression += " Estabelecimento.rating >= " + aval;
-						}
-						else {
-							sqlExpression += " Estabelecimento.rating >= " + aval;
-						}
-					} else {
-						if(!nome.equals("")) {
-							sqlExpression += " Estabelecimento.designacao = '" + nome + "' AND";	
-							sqlExpression += " Estabelecimento.rating >= " + aval;
-						}
-						else {
-							sqlExpression += " Estabelecimento.rating >= " + aval;
-						}
-					}
-				} else {
-					if(!tipo.equals("")) {
-						sqlExpression += " Estabelecimento.tipoDoEstabelecimento = '" + tipo + "' AND";
-					
-						if(!nome.equals("")) {
-							sqlExpression += " Estabelecimento.designacao = '" + nome + "' AND";	
-							sqlExpression += " Estabelecimento.rating >= " + aval;
-						}
-						else {
-							sqlExpression += " Estabelecimento.rating >= " + aval;
-						}
-					} else {
-						if(!nome.equals("")) {
-							sqlExpression += " Estabelecimento.designacao = '" + nome + "' AND";	
-							sqlExpression += " Estabelecimento.rating >= " + aval;
-						}
-						else {
-							sqlExpression += " Estabelecimento.rating >= " + aval;
-						}
-					}
-				}
+
+				// Restantes casos
 			} else {
-				if(!zona.equals("")) {
-					sqlExpression += " Estabelecimento.idZona = Zona.idZona AND Zona.designacao = '" + zona + "' AND";
-				
-					if(!tipo.equals("")) {
-						sqlExpression += " Estabelecimento.tipoDoEstabelecimento = '" + tipo + "' AND";
-					
-						if(!nome.equals("")) {
-							sqlExpression += " Estabelecimento.designacao = '" + nome + "' AND";	
-							sqlExpression += " Estabelecimento.rating >= " + aval;
-						}
-						else {
-							sqlExpression += " Estabelecimento.rating >= " + aval;
+				sqlExpression = "SELECT * FROM Estabelecimento, Zona WHERE";
+
+				if (!cidade.equals("")) {
+					sqlExpression += " Estabelecimento.idZona = Zona.idZona AND Zona.cidade = '"
+							+ cidade + "' AND";
+
+					if (!zona.equals("")) {
+						sqlExpression += " Estabelecimento.idZona = Zona.idZona AND Zona.designacao = '"
+								+ zona + "' AND";
+
+						if (!tipo.equals("")) {
+							sqlExpression += " Estabelecimento.tipoDoEstabelecimento = '"
+									+ tipo + "' AND";
+
+							if (!nome.equals("")) {
+								sqlExpression += " Estabelecimento.designacao = '"
+										+ nome + "' AND";
+								sqlExpression += " Estabelecimento.rating >= "
+										+ aval;
+							} else {
+								sqlExpression += " Estabelecimento.rating >= "
+										+ aval;
+							}
+						} else {
+							if (!nome.equals("")) {
+								sqlExpression += " Estabelecimento.designacao = '"
+										+ nome + "' AND";
+								sqlExpression += " Estabelecimento.rating >= "
+										+ aval;
+							} else {
+								sqlExpression += " Estabelecimento.rating >= "
+										+ aval;
+							}
 						}
 					} else {
-						if(!nome.equals("")) {
-							sqlExpression += " Estabelecimento.designacao = '" + nome + "' AND";
-							sqlExpression += " Estabelecimento.rating >= " + aval;	
-						}
-						else {
-							sqlExpression += " Estabelecimento.rating >= " + aval;
+						if (!tipo.equals("")) {
+							sqlExpression += " Estabelecimento.tipoDoEstabelecimento = '"
+									+ tipo + "' AND";
+
+							if (!nome.equals("")) {
+								sqlExpression += " Estabelecimento.designacao = '"
+										+ nome + "' AND";
+								sqlExpression += " Estabelecimento.rating >= "
+										+ aval;
+							} else {
+								sqlExpression += " Estabelecimento.rating >= "
+										+ aval;
+							}
+						} else {
+							if (!nome.equals("")) {
+								sqlExpression += " Estabelecimento.designacao = '"
+										+ nome + "' AND";
+								sqlExpression += " Estabelecimento.rating >= "
+										+ aval;
+							} else {
+								sqlExpression += " Estabelecimento.rating >= "
+										+ aval;
+							}
 						}
 					}
 				} else {
-					if(!tipo.equals("")) {
-						sqlExpression += " Estabelecimento.tipoDoEstabelecimento = '" + tipo + "' AND";
-					
-						if(!nome.equals("")) {
-							sqlExpression += " Estabelecimento.designacao = '" + nome + "' AND";	
-							sqlExpression += " Estabelecimento.rating >= " + aval;
-						}
-						else {
-							sqlExpression += " Estabelecimento.rating >= " + aval;
+					if (!zona.equals("")) {
+						sqlExpression += " Estabelecimento.idZona = Zona.idZona AND Zona.designacao = '"
+								+ zona + "' AND";
+
+						if (!tipo.equals("")) {
+							sqlExpression += " Estabelecimento.tipoDoEstabelecimento = '"
+									+ tipo + "' AND";
+
+							if (!nome.equals("")) {
+								sqlExpression += " Estabelecimento.designacao = '"
+										+ nome + "' AND";
+								sqlExpression += " Estabelecimento.rating >= "
+										+ aval;
+							} else {
+								sqlExpression += " Estabelecimento.rating >= "
+										+ aval;
+							}
+						} else {
+							if (!nome.equals("")) {
+								sqlExpression += " Estabelecimento.designacao = '"
+										+ nome + "' AND";
+								sqlExpression += " Estabelecimento.rating >= "
+										+ aval;
+							} else {
+								sqlExpression += " Estabelecimento.rating >= "
+										+ aval;
+							}
 						}
 					} else {
-						if(!nome.equals("")) {
-							sqlExpression += " Estabelecimento.designacao = '" + nome + "' AND";
-							sqlExpression += " Estabelecimento.rating >= " + aval;	
-						}
-						else {
-							sqlExpression += " Estabelecimento.rating >= " + aval;
+						if (!tipo.equals("")) {
+							sqlExpression += " Estabelecimento.tipoDoEstabelecimento = '"
+									+ tipo + "' AND";
+
+							if (!nome.equals("")) {
+								sqlExpression += " Estabelecimento.designacao = '"
+										+ nome + "' AND";
+								sqlExpression += " Estabelecimento.rating >= "
+										+ aval;
+							} else {
+								sqlExpression += " Estabelecimento.rating >= "
+										+ aval;
+							}
+						} else {
+							if (!nome.equals("")) {
+								sqlExpression += " Estabelecimento.designacao = '"
+										+ nome + "' AND";
+								sqlExpression += " Estabelecimento.rating >= "
+										+ aval;
+							} else {
+								sqlExpression += " Estabelecimento.rating >= "
+										+ aval;
+							}
 						}
 					}
 				}
 			}
-		}
-			
-			ResultSet resultSet = dbConnection
-					.select(sqlExpression);
+
+			ResultSet resultSet = dbConnection.select(sqlExpression);
 			try {
 				while (resultSet.next()) {
 					String coordenadasGPS = resultSet
@@ -204,7 +240,7 @@ public class Estabelecimento {
 					Estabelecimento estabelecimento = new Estabelecimento(
 							coordenadasGPS, idZona, designacao, formaDeChegar,
 							idEstabelecimento, informacoesHorario, morada,
-							rating);
+							rating, null, null, null, null);
 					estabelecimentos.add(estabelecimento);
 				}
 
@@ -215,9 +251,57 @@ public class Estabelecimento {
 		return estabelecimentos;
 	}
 
-	public ArrayList<Estabelecimento> select(int establishmentID) {
-		// TODO Auto-generated method stub
-		return null;
+	public Estabelecimento select(int establishmentID) {
+		try {
+			ResultSet resultSet = dbConnection
+					.select("SELECT * FROM Estabelecimento WHERE idEstabelecimento="
+							+ establishmentID);
+
+			String coordenadasGPS;
+			String designacao;
+			String formaDeChegar;
+			String informacoesHorario;
+			String morada;
+			String email;
+			String tipoDoEstabelecimento;
+			String nomeZona;
+			String cidade;
+			int idZona;
+			double rating;
+
+			if (resultSet.next()) {
+				coordenadasGPS = resultSet.getString("coordenadasGps");
+				designacao = resultSet.getString("designacao");
+				formaDeChegar = resultSet.getString("formaDeLaChegar");
+				informacoesHorario = resultSet.getString("informacoesHorario");
+				morada = resultSet.getString("morada");
+				email = resultSet.getString("email");
+				tipoDoEstabelecimento = resultSet
+						.getString("tipoDoEstabelecimento");
+				idZona = resultSet.getInt("idZona");
+				rating = resultSet.getDouble("rating");
+			} else {
+				throw new NullPointerException();
+			}
+
+			resultSet = dbConnection
+					.select("SELECT designacao,cidade FROM Zona WHERE idZona="
+							+ idZona);
+
+			if (resultSet.next()) {
+				nomeZona = resultSet.getString("designacao");
+				cidade = resultSet.getString("cidade");
+			} else {
+				throw new NullPointerException();
+			}
+
+			return new Estabelecimento(coordenadasGPS, idZona, designacao,
+					formaDeChegar, establishmentID, informacoesHorario, morada,
+					rating, tipoDoEstabelecimento, email, nomeZona, cidade);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public String getCoordenadasGPS() {
@@ -254,5 +338,21 @@ public class Estabelecimento {
 
 	public void setIdZona(int idZona) {
 		this.idZona = idZona;
+	}
+
+	public String getTipoDoEstabelecimento() {
+		return tipoDoEstabelecimento;
+	}
+
+	public String getEmailUtilizadorQueRecomenda() {
+		return email;
+	}
+
+	public String getNomeZona() {
+		return nomeZona;
+	}
+
+	public String getCidade() {
+		return cidade;
 	}
 }
