@@ -48,7 +48,7 @@ public class DBConnection {
 			resultSet = prepStat.executeQuery();
 		} catch (SQLException e) {
 			printSQLException(e);
-		}
+		} 
 
 		return resultSet;
 	}

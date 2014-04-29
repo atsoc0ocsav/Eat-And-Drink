@@ -41,6 +41,8 @@ public class Zona {
 			e.printStackTrace();
 		}
 
+		dbConnection.closeDBConnection();
+		
 		return zonas;
 	}
 

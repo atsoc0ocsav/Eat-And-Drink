@@ -34,6 +34,8 @@ public class Cidade {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		dbConnection.closeDBConnection();
 
 		return cidades;
 	}

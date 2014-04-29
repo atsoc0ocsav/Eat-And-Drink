@@ -50,43 +50,17 @@ public class Estabelecimento {
 	public ArrayList<Estabelecimento> select(String cidade, String zona,
 			String tipo, double aval, String prato, String evento, String nome) {
 
-		ArrayList<Estabelecimento> estabelecimentos = new ArrayList<Estabelecimento>();
-
+		String sqlExpression;
+		
 		if (cidade.equals("") && zona.equals("") && tipo.equals("")
 				&& aval == 0.0 && prato.equals("") && evento.equals("")
 				&& nome.equals("")) {
 
-			ResultSet resultSet = dbConnection
-					.select("SELECT * FROM Estabelecimento");
+			sqlExpression = "SELECT * FROM Estabelecimento";
 
-			try {
-				while (resultSet.next()) {
-					String coordenadasGPS = resultSet
-							.getString("coordenadasGps");
-					String designacao = resultSet.getString("designacao");
-					String formaDeChegar = resultSet
-							.getString("formaDeLaChegar");
-					int idEstabelecimento = resultSet
-							.getInt("idEstabelecimento");
-					String informacoesHorario = resultSet
-							.getString("informacoesHorario");
-					String morada = resultSet.getString("morada");
-					int idZona = resultSet.getInt("idZona");
-					double rating = resultSet.getDouble("rating");
-
-					Estabelecimento estabelecimento = new Estabelecimento(
-							coordenadasGPS, idZona, designacao, formaDeChegar,
-							idEstabelecimento, informacoesHorario, morada,
-							rating, null, null, null, null);
-					estabelecimentos.add(estabelecimento);
-				}
-
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		} else {
 
-			String sqlExpression = "SELECT * FROM Estabelecimento WHERE";
+			sqlExpression = "SELECT * FROM Estabelecimento WHERE";
 
 			// Caso em que tudo é null menos o nome e a avaliação
 			if (cidade.equals("") && zona.equals("") && tipo.equals("")
@@ -220,36 +194,47 @@ public class Estabelecimento {
 					}
 				}
 			}
+		}
+		
+		ResultSet resultSet = dbConnection.select(sqlExpression);
+		
+		ArrayList<Estabelecimento> estabelecimentos = prepareResult(resultSet); 
+		
+		dbConnection.closeDBConnection();
+		
+		return estabelecimentos;
+	}
 
-			ResultSet resultSet = dbConnection.select(sqlExpression);
-			try {
-				while (resultSet.next()) {
-					String coordenadasGPS = resultSet
-							.getString("coordenadasGps");
-					String designacao = resultSet.getString("designacao");
-					String formaDeChegar = resultSet
-							.getString("formaDeLaChegar");
-					int idEstabelecimento = resultSet
-							.getInt("idEstabelecimento");
-					String informacoesHorario = resultSet
-							.getString("informacoesHorario");
-					String morada = resultSet.getString("morada");
-					int idZona = resultSet.getInt("idZona");
-					double rating = resultSet.getDouble("rating");
+	private ArrayList<Estabelecimento> prepareResult(ResultSet resultSet) {
+		ArrayList<Estabelecimento> estabelecimentos = new ArrayList<Estabelecimento>();
+		try {
+			while (resultSet.next()) {
+				String coordenadasGPS = resultSet
+						.getString("coordenadasGps");
+				String designacao = resultSet.getString("designacao");
+				String formaDeChegar = resultSet
+						.getString("formaDeLaChegar");
+				int idEstabelecimento = resultSet
+						.getInt("idEstabelecimento");
+				String informacoesHorario = resultSet
+						.getString("informacoesHorario");
+				String morada = resultSet.getString("morada");
+				int idZona = resultSet.getInt("idZona");
+				double rating = resultSet.getDouble("rating");
 
-					Estabelecimento estabelecimento = new Estabelecimento(
-							coordenadasGPS, idZona, designacao, formaDeChegar,
-							idEstabelecimento, informacoesHorario, morada,
-							rating, null, null, null, null);
-					estabelecimentos.add(estabelecimento);
-				}
-
-			} catch (SQLException e) {
-				e.printStackTrace();
+				Estabelecimento estabelecimento = new Estabelecimento(
+						coordenadasGPS, idZona, designacao, formaDeChegar,
+						idEstabelecimento, informacoesHorario, morada,
+						rating, null, null, null, null);
+				estabelecimentos.add(estabelecimento);
 			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return estabelecimentos;
 	}
+
 
 	public Estabelecimento select(int establishmentID) {
 		try {

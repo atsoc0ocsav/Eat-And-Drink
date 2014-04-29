@@ -109,7 +109,7 @@ public class ecraEstabelecimentoDetalhes {
 		frame = new JFrame();
 		frame.setTitle("Eat & Drink Estabelecimentos - Estabelecimento \""
 				+ designacao_estabelecimento + "\"");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setBounds(100, 100, 816, 523);
 		contentPane = frame.getContentPane();
 		contentPane.setLayout(null);
