@@ -403,6 +403,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 
 	private void corresponderZonasACidade() {
 		comboBoxZonas.removeAllItems();
+		comboBoxZonas.insertItemAt(" ", 0);
 		if (comboBoxCidades.getSelectedIndex() > 0) {
 			String sel = (String) comboBoxCidades.getSelectedItem();
 			for (Zona zona : zonas) {
@@ -515,14 +516,18 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 
 	private boolean validaAval() {
 		String textoAval = textField_avaliacao.getText();
-		if (textoAval.matches("[0-9]{0,3}|[0-9]{0,3}.[0-9]{0,2}")) {
-			Double aval = Double.parseDouble(textoAval);
-			if (aval <= 100 && aval >= 0)
-				return true;
-			else
+		if (!textoAval.equals("")) {
+			if (textoAval.matches("[0-9]{0,3}|[0-9]{0,3}.[0-9]{0,2}")) {
+				Double aval = Double.parseDouble(textoAval);
+				if (aval <= 100 && aval >= 0)
+					return true;
+				else
+					return false;
+			} else {
 				return false;
+			}
 		} else {
-			return false;
+			return true;
 		}
 	}
 
