@@ -101,7 +101,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 
 		setTitle("Eat & Drink Estabelecimentos - Consulta");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(180, 35, 930, 700);
+		setBounds(180, 35, 930, 707);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -250,14 +250,14 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		panel_InScrollPanelPratos.add(listTipoDePratos, BorderLayout.CENTER);
 
 		panel_resultadoPesquisa = new JPanel();
-		panel_resultadoPesquisa.setBounds(10, 310, 904, 362);
+		panel_resultadoPesquisa.setBounds(10, 310, 904, 358);
 		panel_resultadoPesquisa.setBorder(BorderFactory
 				.createTitledBorder("Resultados da Pesquisa"));
 		contentPane.add(panel_resultadoPesquisa);
 		panel_resultadoPesquisa.setLayout(null);
 
 		buttonVerDetalhes = new JButton("Ver Detalhes");
-		buttonVerDetalhes.setBounds(764, 328, 108, 23);
+		buttonVerDetalhes.setBounds(764, 324, 108, 23);
 		panel_resultadoPesquisa.add(buttonVerDetalhes);
 
 		scrollPaneResultadosPesquisa = new JScrollPane();
