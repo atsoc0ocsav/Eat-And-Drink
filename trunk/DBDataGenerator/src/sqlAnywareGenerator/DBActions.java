@@ -61,8 +61,16 @@ public class DBActions {
 		ArrayList<String[]> cities = parser.cvsFileParser(CITIES_LIST, ";");
 
 		for (String[] city : cities) {
+			StringBuilder cityName = new StringBuilder(city[1]);
+
+			cityName.setCharAt(0, city[1].charAt(0));
+			for (int index = 1; index < city[1].length(); index++) {
+				char c = city[1].charAt(index);
+				cityName.setCharAt(index, Character.toLowerCase(c));
+			}
+
 			dbConnection.executeUpdate("INSERT INTO Cidade(Cidade) VALUES ('"
-					+ city[1] + "')");
+					+ cityName.toString() + "')");
 		}
 
 		dbConnection.commit();
@@ -89,14 +97,39 @@ public class DBActions {
 		}
 
 		for (String[] zone : zones) {
-			dbConnection
-					.executeUpdate("INSERT INTO Zona(idZona,Cidade,Designação) VALUES ('"
-							+ currentID
-							+ "','"
-							+ zone[0]
-							+ "','"
-							+ zone[1].split("[ (]")[0] + "')");
-			currentID++;
+			try {
+				StringBuilder zoneName = new StringBuilder(zone[1]);
+				
+				zoneName.setCharAt(0, zone[1].charAt(0));
+
+				for (int index = 1; index < zone[1].length(); index++) {
+					char c = zone[1].charAt(index);
+					zoneName.setCharAt(index, Character.toLowerCase(c));
+				}
+
+				StringBuilder cityName = new StringBuilder(zone[0]);
+				cityName.setCharAt(0, zone[0].charAt(0));
+
+				for (int index = 1; index < zone[0].length(); index++) {
+					char c = zone[0].charAt(index);
+					cityName.setCharAt(index, Character.toLowerCase(c));
+				}
+
+				dbConnection
+						.executeUpdate("INSERT INTO Zona(idZona,Cidade,Designação) VALUES ('"
+								+ currentID
+								+ "','"
+								+ cityName.toString()
+								+ "','"
+								+ zoneName.toString() + "')");
+				currentID++;
+			} catch (ArrayIndexOutOfBoundsException e) {
+				e.printStackTrace();
+				System.err.println("Zone[0]:"+zone[0]);
+				
+				System.exit(1);
+			}
+			
 		}
 
 		dbConnection.commit();
