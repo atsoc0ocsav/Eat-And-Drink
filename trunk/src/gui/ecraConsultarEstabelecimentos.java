@@ -427,8 +427,8 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		ArrayList<Estabelecimento> estabelecimentos = null;
 
 		if (todos) {
-			estabelecimentos = ctrConsulta.consultarEstabelecimentos(null,
-					null, null, 0.0, null, null, null);
+			estabelecimentos = ctrConsulta.consultarEstabelecimentos("",
+					"", "", 0.0, "", "", "");
 			showConsultResult(estabelecimentos);
 		} else {
 //			if (validaAval()) {
