@@ -5,13 +5,9 @@ import java.awt.Button;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Label;
-import java.awt.Panel;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -19,10 +15,15 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
@@ -36,15 +37,11 @@ import dados.TipoDeEvento;
 import dados.TipoDePrato;
 import dados.Zona;
 
-import javax.swing.JList;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-
 public class ecraConsultarEstabelecimentos extends JFrame {
 
 	private static final long serialVersionUID = 4212115798640187383L;
 	private JPanel contentPane;
-	private Panel panelFiltros;
+	private JPanel panelFiltros;
 	private JComboBox<String> comboBoxCidades;
 	private JComboBox<String> comboBoxZonas;
 	private JComboBox<String> comboBoxTiposDeEstablecimento;
@@ -62,7 +59,6 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	private TextField textField_nome;
 	private JPanel panel_resultadoPesquisa;
 	private JScrollPane scrollPaneResultadosPesquisa;
-	private JPanel panel_resultadosDivisoes;
 	private Button buttonFiltroTodos;
 	private Button buttonAplicarFiltro;
 
@@ -93,9 +89,19 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	public ecraConsultarEstabelecimentos() {
 		ctrConsulta = new ctrlConsultarEstabelecimentos();
 
+		try {
+			UIManager.setLookAndFeel(UIManager
+					.getCrossPlatformLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e) {
+			System.out
+					.println("Not able to set LookAndFeel for the current OS");
+			e.printStackTrace();
+		}
+
 		setTitle("Eat & Drink Estabelecimentos - Consulta");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(180, 35, 1050, 674);
+		setBounds(180, 35, 930, 700);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -103,51 +109,74 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 
 		JLabel lblEatDrink = DefaultComponentFactory.getInstance().createTitle(
 				"Eat and Drink");
-		lblEatDrink.setBounds(226, 11, 632, 31);
+		lblEatDrink.setBounds(262, 11, 400, 31);
 		lblEatDrink.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEatDrink.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		contentPane.add(lblEatDrink);
 
-		panelFiltros = new Panel();
-		panelFiltros.setBounds(10, 95, 197, 136);
+		panelFiltros = new JPanel();
+		panelFiltros.setBounds(10, 42, 904, 265);
+		panelFiltros.setBorder(BorderFactory
+				.createTitledBorder("Filtros de Pesquisa"));
 		contentPane.add(panelFiltros);
 		panelFiltros.setLayout(null);
 
 		JLabel lblCidade = new JLabel("Cidade");
 		lblCidade.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblCidade.setBounds(10, 0, 87, 23);
-		lblCidade.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCidade.setBounds(10, 21, 79, 23);
+		lblCidade.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelFiltros.add(lblCidade);
 
 		comboBoxCidades = new JComboBox<String>();
-		comboBoxCidades.setBounds(87, 0, 100, 23);
+		comboBoxCidades.setBounds(99, 21, 135, 23);
 		panelFiltros.add(comboBoxCidades);
 
 		JLabel lblZonaFiltro = new JLabel("Zona");
 		lblZonaFiltro.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblZonaFiltro.setBounds(10, 48, 87, 23);
-		lblZonaFiltro.setHorizontalAlignment(SwingConstants.CENTER);
+		lblZonaFiltro.setBounds(10, 61, 79, 23);
+		lblZonaFiltro.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelFiltros.add(lblZonaFiltro);
 
 		comboBoxZonas = new JComboBox<String>();
-		comboBoxZonas.setBounds(87, 48, 100, 23);
+		comboBoxZonas.setBounds(99, 61, 135, 23);
 		panelFiltros.add(comboBoxZonas);
 
 		JLabel lblTipo = new JLabel("Tipo");
 		lblTipo.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblTipo.setBounds(10, 96, 87, 23);
-		lblTipo.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTipo.setBounds(10, 101, 79, 23);
+		lblTipo.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelFiltros.add(lblTipo);
 
 		comboBoxTiposDeEstablecimento = new JComboBox<String>();
-		comboBoxTiposDeEstablecimento.setBounds(87, 96, 100, 23);
+		comboBoxTiposDeEstablecimento.setBounds(99, 101, 135, 23);
 		panelFiltros.add(comboBoxTiposDeEstablecimento);
 
+		JLabel label_avaliacao = new JLabel("Avalia\u00E7\u00E3o >=");
+		label_avaliacao.setHorizontalAlignment(SwingConstants.RIGHT);
+		label_avaliacao.setBounds(10, 181, 79, 22);
+		panelFiltros.add(label_avaliacao);
+		label_avaliacao.setFont(new Font("Tahoma", Font.BOLD, 11));
+
+		textField_avaliacao = new TextField();
+		textField_avaliacao.setBounds(99, 181, 45, 22);
+		panelFiltros.add(textField_avaliacao);
+		textField_avaliacao.setText("00.0");
+
+		textField_nome = new TextField();
+		textField_nome.setBounds(99, 141, 135, 22);
+		panelFiltros.add(textField_nome);
+
+		JLabel label_nome = new JLabel("Nome");
+		label_nome.setHorizontalAlignment(SwingConstants.RIGHT);
+		label_nome.setBounds(10, 141, 79, 22);
+		panelFiltros.add(label_nome);
+		label_nome.setFont(new Font("Tahoma", Font.BOLD, 11));
+
 		panelTipoEventos = new JPanel();
-		panelTipoEventos.setBounds(32, 445, 480, 160);
+		panelTipoEventos.setBounds(244, 15, 326, 240);
+		panelFiltros.add(panelTipoEventos);
 		panelTipoEventos.setBorder(BorderFactory
 				.createTitledBorder("Tipo de Eventos"));
-		contentPane.add(panelTipoEventos);
 		panelTipoEventos.setLayout(new BorderLayout(0, 0));
 
 		panel_TipoEventosBotoes = new JPanel();
@@ -178,12 +207,19 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		listTipoDeEventos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		panel_InScrollPaneEventos.add(listTipoDeEventos);
 
+		buttonAplicarFiltro = new Button("Aplicar Filtro");
+		buttonAplicarFiltro.setBounds(41, 222, 91, 22);
+		panelFiltros.add(buttonAplicarFiltro);
+
+		buttonFiltroTodos = new Button("Todos");
+		buttonFiltroTodos.setBounds(154, 222, 60, 22);
+		panelFiltros.add(buttonFiltroTodos);
+
 		panelTipoPratos = new JPanel();
-		panelTipoPratos.setBounds(523, 445, 480, 160);
+		panelTipoPratos.setBounds(568, 15, 326, 240);
+		panelFiltros.add(panelTipoPratos);
 		panelTipoPratos.setBorder(BorderFactory
 				.createTitledBorder("Tipo de Pratos"));
-		contentPane.add(panelTipoEventos);
-		contentPane.add(panelTipoPratos);
 		panelTipoPratos.setLayout(new BorderLayout(0, 0));
 
 		panel_TipoPratosBotoes = new JPanel();
@@ -213,75 +249,26 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		listTipoDePratos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		panel_InScrollPanelPratos.add(listTipoDePratos, BorderLayout.CENTER);
 
-		buttonAplicarFiltro = new Button("Aplicar Filtro");
-		buttonAplicarFiltro.setBounds(32, 367, 91, 22);
-		contentPane.add(buttonAplicarFiltro);
-
-		buttonFiltroTodos = new Button("Todos");
-		buttonFiltroTodos.setBounds(141, 367, 60, 22);
-		contentPane.add(buttonFiltroTodos);
-
-		textField_avaliacao = new TextField();
-		textField_avaliacao.setText("00.0");
-		textField_avaliacao.setBounds(163, 261, 38, 22);
-		contentPane.add(textField_avaliacao);
-
-		Label label_avaliacao = new Label("Avaliação");
-		label_avaliacao.setFont(new Font("Tahoma", Font.BOLD, 11));
-		label_avaliacao.setBounds(70, 261, 60, 22);
-		contentPane.add(label_avaliacao);
-
-		Label label_sinal = new Label(">=");
-		label_sinal.setFont(new Font("Tahoma", Font.BOLD, 13));
-		label_sinal.setBounds(131, 261, 26, 22);
-		contentPane.add(label_sinal);
-
-		textField_nome = new TextField();
-		textField_nome.setBounds(121, 314, 80, 22);
-		contentPane.add(textField_nome);
-
-		Label label_nome = new Label("Nome");
-		label_nome.setFont(new Font("Tahoma", Font.BOLD, 11));
-		label_nome.setBounds(81, 314, 62, 22);
-		contentPane.add(label_nome);
-
 		panel_resultadoPesquisa = new JPanel();
-		panel_resultadoPesquisa.setBounds(207, 45, 827, 394);
+		panel_resultadoPesquisa.setBounds(10, 310, 904, 362);
 		panel_resultadoPesquisa.setBorder(BorderFactory
 				.createTitledBorder("Resultados da Pesquisa"));
 		contentPane.add(panel_resultadoPesquisa);
 		panel_resultadoPesquisa.setLayout(null);
 
 		buttonVerDetalhes = new JButton("Ver Detalhes");
-		buttonVerDetalhes.setBounds(714, 200, 108, 23);
+		buttonVerDetalhes.setBounds(764, 328, 108, 23);
 		panel_resultadoPesquisa.add(buttonVerDetalhes);
 
 		scrollPaneResultadosPesquisa = new JScrollPane();
 		scrollPaneResultadosPesquisa.setViewportBorder(new LineBorder(
 				new Color(0, 0, 0)));
-		scrollPaneResultadosPesquisa.setBounds(10, 44, 701, 339);
+		scrollPaneResultadosPesquisa.setBounds(10, 17, 884, 300);
 		panel_resultadoPesquisa.add(scrollPaneResultadosPesquisa);
 
 		table = new JTable(modeloTabelaConsulta);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPaneResultadosPesquisa.setViewportView(table);
-
-		panel_resultadosDivisoes = new JPanel();
-		panel_resultadosDivisoes.setBounds(10, 17, 701, 31);
-		panel_resultadoPesquisa.add(panel_resultadosDivisoes);
-		panel_resultadosDivisoes.setLayout(new GridLayout(0, 3, 0, 0));
-
-		JLabel lblNome = new JLabel("Nome");
-		lblNome.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_resultadosDivisoes.add(lblNome);
-
-		JLabel lblZona = new JLabel("Zona");
-		lblZona.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_resultadosDivisoes.add(lblZona);
-
-		JLabel lblAvaliao = new JLabel("Avaliação");
-		lblAvaliao.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_resultadosDivisoes.add(lblAvaliao);
 
 		addListeners();
 
