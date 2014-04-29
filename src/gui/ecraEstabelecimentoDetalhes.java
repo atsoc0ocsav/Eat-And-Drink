@@ -110,7 +110,7 @@ public class ecraEstabelecimentoDetalhes {
 		frame.setTitle("Eat & Drink Estabelecimentos - Estabelecimento \""
 				+ designacao_estabelecimento + "\"");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setBounds(100, 100, 816, 523);
+		frame.setBounds(100, 100, 930, 599);
 		contentPane = frame.getContentPane();
 		contentPane.setLayout(null);
 		frame.setResizable(false);
@@ -130,7 +130,7 @@ public class ecraEstabelecimentoDetalhes {
 	 */
 	private void addLabels() {
 		JLabel lbl_EatDrink = new JLabel("Eat and Drink");
-		lbl_EatDrink.setBounds(89, 11, 632, 31);
+		lbl_EatDrink.setBounds(145, 11, 632, 31);
 		lbl_EatDrink.setHorizontalAlignment(SwingConstants.CENTER);
 		lbl_EatDrink.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		contentPane.add(lbl_EatDrink);
@@ -147,12 +147,12 @@ public class ecraEstabelecimentoDetalhes {
 
 		JLabel lbl_Cidade = new JLabel("Cidade");
 		lbl_Cidade.setHorizontalAlignment(SwingConstants.RIGHT);
-		lbl_Cidade.setBounds(279, 83, 47, 14);
+		lbl_Cidade.setBounds(320, 83, 47, 14);
 		contentPane.add(lbl_Cidade);
 
 		JLabel lbl_Zona = new JLabel("Zona");
 		lbl_Zona.setHorizontalAlignment(SwingConstants.RIGHT);
-		lbl_Zona.setBounds(506, 83, 46, 14);
+		lbl_Zona.setBounds(581, 83, 46, 14);
 		contentPane.add(lbl_Zona);
 
 		JLabel lbl_Morada = new JLabel("Morada");
@@ -161,7 +161,7 @@ public class ecraEstabelecimentoDetalhes {
 
 		JLabel lbl_Horario = new JLabel("Hor\u00E1rio");
 		lbl_Horario.setHorizontalAlignment(SwingConstants.RIGHT);
-		lbl_Horario.setBounds(488, 53, 64, 14);
+		lbl_Horario.setBounds(563, 53, 64, 14);
 		contentPane.add(lbl_Horario);
 	}
 
@@ -172,37 +172,37 @@ public class ecraEstabelecimentoDetalhes {
 	private void addTextFields() {
 		textField_Estabelecimento = new JTextField();
 		textField_Estabelecimento.setEditable(false);
-		textField_Estabelecimento.setBounds(177, 50, 319, 20);
+		textField_Estabelecimento.setBounds(177, 50, 390, 20);
 		contentPane.add(textField_Estabelecimento);
 		textField_Estabelecimento.setColumns(10);
 
 		textField_Tipo = new JTextField();
 		textField_Tipo.setEditable(false);
-		textField_Tipo.setBounds(109, 80, 160, 20);
+		textField_Tipo.setBounds(109, 80, 190, 20);
 		contentPane.add(textField_Tipo);
 		textField_Tipo.setColumns(10);
 
 		textField_Cidade = new JTextField();
 		textField_Cidade.setEditable(false);
-		textField_Cidade.setBounds(336, 80, 160, 20);
+		textField_Cidade.setBounds(377, 80, 190, 20);
 		contentPane.add(textField_Cidade);
 		textField_Cidade.setColumns(10);
 
 		textField_Zona = new JTextField();
 		textField_Zona.setEditable(false);
-		textField_Zona.setBounds(561, 80, 160, 20);
+		textField_Zona.setBounds(637, 80, 190, 20);
 		contentPane.add(textField_Zona);
 		textField_Zona.setColumns(10);
 
 		textField_Morada = new JTextField();
 		textField_Morada.setEditable(false);
-		textField_Morada.setBounds(124, 110, 597, 20);
+		textField_Morada.setBounds(124, 110, 703, 20);
 		contentPane.add(textField_Morada);
 		textField_Morada.setColumns(10);
 
 		textField_Horario = new JTextField();
 		textField_Horario.setEditable(false);
-		textField_Horario.setBounds(562, 50, 159, 20);
+		textField_Horario.setBounds(637, 50, 190, 20);
 		contentPane.add(textField_Horario);
 		textField_Horario.setColumns(10);
 	}
@@ -212,12 +212,9 @@ public class ecraEstabelecimentoDetalhes {
 	 * main JPanel)
 	 */
 	private void addButtons() {
-		JButton btn_AplicarFiltro = new JButton("Aplicar Filtro");
-		btn_AplicarFiltro.setBounds(49, 461, 110, 23);
-		contentPane.add(btn_AplicarFiltro);
 
 		JButton btn_Sair = new JButton("Sair");
-		btn_Sair.setBounds(645, 461, 110, 23);
+		btn_Sair.setBounds(773, 537, 110, 23);
 		contentPane.add(btn_Sair);
 	}
 
@@ -226,7 +223,7 @@ public class ecraEstabelecimentoDetalhes {
 	 */
 	private void addEvaluationPanel() {
 		JPanel panel_Avaliacao = new JPanel();
-		panel_Avaliacao.setBounds(10, 156, 190, 81);
+		panel_Avaliacao.setBounds(10, 156, 259, 81);
 		panel_Avaliacao.setBorder(BorderFactory
 				.createTitledBorder("Avalia\u00E7\u00E3o"));
 		contentPane.add(panel_Avaliacao);
@@ -260,7 +257,7 @@ public class ecraEstabelecimentoDetalhes {
 	 */
 	private void addEventPanel() {
 		JPanel panel_Eventos = new JPanel();
-		panel_Eventos.setBounds(10, 248, 190, 202);
+		panel_Eventos.setBounds(10, 248, 259, 278);
 		panel_Eventos.setBorder(BorderFactory.createTitledBorder("Eventos"));
 		contentPane.add(panel_Eventos);
 		panel_Eventos.setLayout(null);
@@ -268,7 +265,7 @@ public class ecraEstabelecimentoDetalhes {
 		JScrollPane scrollPane_Eventos = new JScrollPane();
 		scrollPane_Eventos
 				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_Eventos.setBounds(10, 19, 170, 172);
+		scrollPane_Eventos.setBounds(10, 19, 239, 248);
 		panel_Eventos.add(scrollPane_Eventos);
 
 		table_Eventos = new JTable();
@@ -284,7 +281,7 @@ public class ecraEstabelecimentoDetalhes {
 	 */
 	private void addDishesPanel() {
 		JPanel panel_Pratos = new JPanel();
-		panel_Pratos.setBounds(204, 156, 596, 294);
+		panel_Pratos.setBounds(267, 156, 647, 370);
 		panel_Pratos.setBorder(BorderFactory.createTitledBorder("Pratos"));
 		contentPane.add(panel_Pratos);
 		panel_Pratos.setLayout(null);
@@ -292,57 +289,57 @@ public class ecraEstabelecimentoDetalhes {
 		// Labels Constructors
 		JLabel lbl_Nome = new JLabel("Nome");
 		lbl_Nome.setHorizontalAlignment(SwingConstants.RIGHT);
-		lbl_Nome.setBounds(349, 22, 65, 14);
+		lbl_Nome.setBounds(411, 22, 65, 14);
 		panel_Pratos.add(lbl_Nome);
 
 		JLabel lbl_Descricao = new JLabel("Descri\u00E7\u00E3o");
 		lbl_Descricao.setHorizontalAlignment(SwingConstants.RIGHT);
-		lbl_Descricao.setBounds(349, 55, 65, 14);
+		lbl_Descricao.setBounds(398, 55, 78, 14);
 		panel_Pratos.add(lbl_Descricao);
 
 		JLabel lbl_Preco = new JLabel("Pre\u00E7o");
 		lbl_Preco.setHorizontalAlignment(SwingConstants.RIGHT);
-		lbl_Preco.setBounds(349, 232, 65, 14);
+		lbl_Preco.setBounds(411, 308, 65, 14);
 		panel_Pratos.add(lbl_Preco);
 
 		JLabel lbl_Euro = new JLabel("\u20AC");
-		lbl_Euro.setBounds(509, 232, 65, 14);
+		lbl_Euro.setBounds(592, 308, 65, 14);
 		panel_Pratos.add(lbl_Euro);
 
 		// Text Fields and Area Constructors
 		textField_Nome_Prato = new JTextField();
-		textField_Nome_Prato.setBounds(418, 19, 168, 20);
+		textField_Nome_Prato.setBounds(486, 19, 151, 20);
 		panel_Pratos.add(textField_Nome_Prato);
 		textField_Nome_Prato.setColumns(10);
 
 		textField_Preco = new JTextField();
-		textField_Preco.setBounds(418, 229, 81, 20);
+		textField_Preco.setBounds(486, 305, 96, 20);
 		panel_Pratos.add(textField_Preco);
 		textField_Preco.setColumns(10);
 
 		TextArea textArea_Descricao = new TextArea("", 20, 10,
 				TextArea.SCROLLBARS_VERTICAL_ONLY);
-		textArea_Descricao.setBounds(418, 52, 168, 165);
+		textArea_Descricao.setBounds(486, 52, 151, 242);
 		panel_Pratos.add(textArea_Descricao);
 
 		// Buttons Constructors
 		JButton btnFotografias = new JButton("Fotografias");
-		btnFotografias.setBounds(134, 260, 110, 23);
+		btnFotografias.setBounds(133, 336, 110, 23);
 		panel_Pratos.add(btnFotografias);
 
 		JButton btn_Comentarios_Prato = new JButton("Coment\u00E1rios");
-		btn_Comentarios_Prato.setBounds(10, 260, 110, 23);
+		btn_Comentarios_Prato.setBounds(13, 336, 110, 23);
 		panel_Pratos.add(btn_Comentarios_Prato);
 
 		JButton btn_Adicionar = new JButton("Adicionar");
-		btn_Adicionar.setBounds(441, 260, 110, 23);
+		btn_Adicionar.setBounds(506, 336, 110, 23);
 		panel_Pratos.add(btn_Adicionar);
 
 		// Main JTable Constructors (including JScrollPane)
 		JScrollPane scrollPane_Pratos = new JScrollPane();
 		scrollPane_Pratos
 				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_Pratos.setBounds(10, 19, 343, 230);
+		scrollPane_Pratos.setBounds(10, 19, 404, 306);
 		panel_Pratos.add(scrollPane_Pratos);
 
 		table_Pratos = new JTable();
