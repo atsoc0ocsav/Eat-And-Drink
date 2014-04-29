@@ -4,6 +4,8 @@ import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.TextArea;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -216,6 +218,14 @@ public class ecraEstabelecimentoDetalhes {
 		JButton btn_Sair = new JButton("Sair");
 		btn_Sair.setBounds(773, 537, 110, 23);
 		contentPane.add(btn_Sair);
+
+		btn_Sair.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				frame.dispose();
+			}
+		});
 	}
 
 	/**
@@ -371,6 +381,6 @@ public class ecraEstabelecimentoDetalhes {
 		textField_Zona.setText(e.getNomeZona());
 		textField_Morada.setText(e.getMorada());
 		textField_Horario.setText(e.getInformacoesHorario());
-		textField_Global.setText(e.getRating()+"");
+		textField_Global.setText(e.getRating() + "");
 	}
 }
