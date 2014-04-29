@@ -53,31 +53,14 @@ public class Estabelecimento {
 		String sqlExpression;
 		
 		if (cidade.equals("") && zona.equals("") && tipo.equals("")
-				&& aval == 0.0 && prato.equals("") && evento.equals("")
+			&& prato.equals("") && evento.equals("")
 				&& nome.equals("")) {
 
-			sqlExpression = "SELECT * FROM Estabelecimento";
+			sqlExpression = "SELECT * FROM Estabelecimento WHERE Estabelecimento.rating >= " + aval;
 
 		} else {
 
-			sqlExpression = "SELECT * FROM Estabelecimento WHERE";
-
-			// Caso em que tudo é null menos o nome e a avaliação
-			if (cidade.equals("") && zona.equals("") && tipo.equals("")
-					&& prato.equals("") && evento.equals("")
-					&& !nome.equals("")) {
-				sqlExpression += " Estabelecimento.designacao = '" + nome
-						+ "' AND Estabelecimento.rating >= " + aval;
-
-				// Caso em que tudo é null a avaliação
-			} else if (cidade.equals("") && zona.equals("") && tipo.equals("")
-					&& prato.equals("") && evento.equals("") && nome.equals("")) {
-
-				sqlExpression += " Estabelecimento.rating >= " + aval;
-
-				// Restantes casos
-			} else {
-				sqlExpression = "SELECT * FROM Estabelecimento, Zona WHERE";
+			sqlExpression = "SELECT * FROM Estabelecimento, Zona WHERE";
 
 				if (!cidade.equals("")) {
 					sqlExpression += " Estabelecimento.idZona = Zona.idZona AND Zona.cidade = '"
@@ -182,19 +165,18 @@ public class Estabelecimento {
 							}
 						} else {
 							if (!nome.equals("")) {
-								sqlExpression += " Estabelecimento.designacao = '"
+								sqlExpression = "SELECT * FROM Estabelecimento WHERE Estabelecimento.designacao = '"
 										+ nome + "' AND";
 								sqlExpression += " Estabelecimento.rating >= "
 										+ aval;
 							} else {
-								sqlExpression += " Estabelecimento.rating >= "
+								sqlExpression = "SELECT * FROM Estabelecimento WHERE Estabelecimento.rating >= "
 										+ aval;
 							}
 						}
 					}
 				}
 			}
-		}
 		
 		ResultSet resultSet = dbConnection.select(sqlExpression);
 		
