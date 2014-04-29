@@ -28,7 +28,7 @@ public class ecraEstabelecimentoDetalhes {
 	// GUI Variables
 	private JFrame frame;
 	private String designacao_estabelecimento = " ";
-	private Estabelecimento estabelecimento;
+	private Estabelecimento e;
 	private JTextField textField_Estabelecimento;
 	private JTextField textField_Tipo;
 	private JTextField textField_Cidade;
@@ -75,12 +75,12 @@ public class ecraEstabelecimentoDetalhes {
 				buildGUI();
 			} else {
 				controladorDetalherEstabelecimento = new ctrlDetalhesEstabelecimento();
-				estabelecimento = controladorDetalherEstabelecimento
+				e = controladorDetalherEstabelecimento
 						.consultarDetalhesEstabelecimento(establishmentID);
-				designacao_estabelecimento = estabelecimento.getDesignacao();
+				designacao_estabelecimento = e.getDesignacao();
 
 				buildGUI();
-
+				addDataToGUI();
 			}
 			display();
 		} catch (ClassNotFoundException | InstantiationException
@@ -135,7 +135,7 @@ public class ecraEstabelecimentoDetalhes {
 		lbl_EatDrink.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		contentPane.add(lbl_EatDrink);
 
-		JLabel lbl_Estabelecimento = new JLabel("Estabelecimentos");
+		JLabel lbl_Estabelecimento = new JLabel("Estabelecimento");
 		lbl_Estabelecimento.setHorizontalAlignment(SwingConstants.LEFT);
 		lbl_Estabelecimento.setBounds(73, 53, 116, 14);
 		contentPane.add(lbl_Estabelecimento);
@@ -147,12 +147,12 @@ public class ecraEstabelecimentoDetalhes {
 
 		JLabel lbl_Cidade = new JLabel("Cidade");
 		lbl_Cidade.setHorizontalAlignment(SwingConstants.RIGHT);
-		lbl_Cidade.setBounds(227, 83, 47, 14);
+		lbl_Cidade.setBounds(279, 83, 47, 14);
 		contentPane.add(lbl_Cidade);
 
 		JLabel lbl_Zona = new JLabel("Zona");
 		lbl_Zona.setHorizontalAlignment(SwingConstants.RIGHT);
-		lbl_Zona.setBounds(397, 83, 46, 14);
+		lbl_Zona.setBounds(506, 83, 46, 14);
 		contentPane.add(lbl_Zona);
 
 		JLabel lbl_Morada = new JLabel("Morada");
@@ -161,7 +161,7 @@ public class ecraEstabelecimentoDetalhes {
 
 		JLabel lbl_Horario = new JLabel("Hor\u00E1rio");
 		lbl_Horario.setHorizontalAlignment(SwingConstants.RIGHT);
-		lbl_Horario.setBounds(556, 83, 64, 14);
+		lbl_Horario.setBounds(488, 53, 64, 14);
 		contentPane.add(lbl_Horario);
 	}
 
@@ -172,25 +172,25 @@ public class ecraEstabelecimentoDetalhes {
 	private void addTextFields() {
 		textField_Estabelecimento = new JTextField();
 		textField_Estabelecimento.setEditable(false);
-		textField_Estabelecimento.setBounds(177, 50, 544, 20);
+		textField_Estabelecimento.setBounds(177, 50, 319, 20);
 		contentPane.add(textField_Estabelecimento);
 		textField_Estabelecimento.setColumns(10);
 
 		textField_Tipo = new JTextField();
 		textField_Tipo.setEditable(false);
-		textField_Tipo.setBounds(109, 80, 91, 20);
+		textField_Tipo.setBounds(109, 80, 160, 20);
 		contentPane.add(textField_Tipo);
 		textField_Tipo.setColumns(10);
 
 		textField_Cidade = new JTextField();
 		textField_Cidade.setEditable(false);
-		textField_Cidade.setBounds(284, 80, 91, 20);
+		textField_Cidade.setBounds(336, 80, 160, 20);
 		contentPane.add(textField_Cidade);
 		textField_Cidade.setColumns(10);
 
 		textField_Zona = new JTextField();
 		textField_Zona.setEditable(false);
-		textField_Zona.setBounds(453, 80, 91, 20);
+		textField_Zona.setBounds(561, 80, 160, 20);
 		contentPane.add(textField_Zona);
 		textField_Zona.setColumns(10);
 
@@ -202,7 +202,7 @@ public class ecraEstabelecimentoDetalhes {
 
 		textField_Horario = new JTextField();
 		textField_Horario.setEditable(false);
-		textField_Horario.setBounds(630, 80, 91, 20);
+		textField_Horario.setBounds(562, 50, 159, 20);
 		contentPane.add(textField_Horario);
 		textField_Horario.setColumns(10);
 	}
@@ -243,11 +243,13 @@ public class ecraEstabelecimentoDetalhes {
 		lbl_ASeguir.setHorizontalAlignment(SwingConstants.LEFT);
 
 		textField_Global = new JTextField();
+		textField_Global.setEditable(false);
 		textField_Global.setBounds(94, 16, 49, 20);
 		panel_Avaliacao.add(textField_Global);
 		textField_Global.setColumns(10);
 
 		textField_ASeguir = new JTextField();
+		textField_ASeguir.setEditable(false);
 		textField_ASeguir.setBounds(94, 49, 49, 20);
 		panel_Avaliacao.add(textField_ASeguir);
 		textField_ASeguir.setColumns(10);
@@ -359,5 +361,19 @@ public class ecraEstabelecimentoDetalhes {
 	 */
 	public void display() {
 		frame.setVisible(true);
+	}
+
+	/**
+	 * Adds the establishment data (i.e., the information in establishment
+	 * variable) and puts it on the graphic components
+	 */
+	private void addDataToGUI() {
+		textField_Estabelecimento.setText(e.getDesignacao());
+		textField_Tipo.setText(e.getTipoDoEstabelecimento());
+		textField_Cidade.setText(e.getCidade());
+		textField_Zona.setText(e.getNomeZona());
+		textField_Morada.setText(e.getMorada());
+		textField_Horario.setText(e.getInformacoesHorario());
+		textField_Global.setText(e.getRating()+"");
 	}
 }
