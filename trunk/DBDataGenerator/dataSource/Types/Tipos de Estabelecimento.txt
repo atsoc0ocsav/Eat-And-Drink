@@ -4,5 +4,4 @@ Padaria
 Quiosque
 Restaurante
 Snack-Bar
-Strip-Club
-Mãe Kikas
+Café
