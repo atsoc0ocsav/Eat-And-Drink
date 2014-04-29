@@ -1,6 +1,7 @@
 package main;
 
 import gui.ecraConsultarEstabelecimentos;
+import gui.ecraEstabelecimentoDetalhes;
 
 public class Main {
 
