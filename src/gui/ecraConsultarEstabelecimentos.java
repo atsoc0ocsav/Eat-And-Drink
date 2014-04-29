@@ -406,9 +406,11 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	}
 
 	private void verDetalhes() {
-		if (table.getSelectedRow() != -1) {
-			new ecraEstabelecimentoDetalhes(estabelecimentos.get(
-					table.getSelectedRow()).getIdEstabelecimento());
+		if (estabelecimentos != null) {
+			if (table.getSelectedRow() != -1) {
+				new ecraEstabelecimentoDetalhes(estabelecimentos.get(
+						table.getSelectedRow()).getIdEstabelecimento());
+			}
 		}
 	}
 
@@ -479,7 +481,9 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		if (todos) {
 			estabelecimentos = ctrConsulta.consultarEstabelecimentos("", "",
 					"", 0.0, "", "", "");
+			this.estabelecimentos = estabelecimentos;
 			showConsultResult(estabelecimentos);
+
 		} else {
 			if (validaAval()) {
 				String cidade = "";
