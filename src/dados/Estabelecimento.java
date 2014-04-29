@@ -73,18 +73,103 @@ public class Estabelecimento {
 				e.printStackTrace();
 			}
 		} else {
+			
+			String sqlExpression = "SELECT * FROM Estabelecimento, Zona WHERE ";
+			
+			if(!cidade.equals("")) {
+				sqlExpression += " Estabelecimento.idZona = Zona.idZona AND Zona.cidade = '" + cidade + "' AND";
+				
+				if(!zona.equals("")) {
+					sqlExpression += " Estabelecimento.idZona = Zona.idZona AND Zona.designacao = '" + zona + "' AND";
+				
+					if(!tipo.equals("")) {
+						sqlExpression += " Estabelecimento.tipoDoEstabelecimento = '" + tipo + "' AND";
+					
+						if(!nome.equals("")) {
+							sqlExpression += " Estabelecimento.designacao = '" + nome + "' AND";	
+							sqlExpression += " Estabelecimento.rating >= " + aval;
+						}
+						else {
+							sqlExpression += " Estabelecimento.rating >= " + aval;
+						}
+					} else {
+						if(!nome.equals("")) {
+							sqlExpression += " Estabelecimento.designacao = '" + nome + "' AND";	
+							sqlExpression += " Estabelecimento.rating >= " + aval;
+						}
+						else {
+							sqlExpression += " Estabelecimento.rating >= " + aval;
+						}
+					}
+				} else {
+					if(!tipo.equals("")) {
+						sqlExpression += " Estabelecimento.tipoDoEstabelecimento = '" + tipo + "' AND";
+					
+						if(!nome.equals("")) {
+							sqlExpression += " Estabelecimento.designacao = '" + nome + "' AND";	
+							sqlExpression += " Estabelecimento.rating >= " + aval;
+						}
+						else {
+							sqlExpression += " Estabelecimento.rating >= " + aval;
+						}
+					} else {
+						if(!nome.equals("")) {
+							sqlExpression += " Estabelecimento.designacao = '" + nome + "' AND";	
+							sqlExpression += " Estabelecimento.rating >= " + aval;
+						}
+						else {
+							sqlExpression += " Estabelecimento.rating >= " + aval;
+						}
+					}
+				}
+			} else {
+				if(!zona.equals("")) {
+					sqlExpression += " Estabelecimento.idZona = Zona.idZona AND Zona.designacao = '" + zona + "' AND";
+				
+					if(!tipo.equals("")) {
+						sqlExpression += " Estabelecimento.tipoDoEstabelecimento = '" + tipo + "' AND";
+					
+						if(!nome.equals("")) {
+							sqlExpression += " Estabelecimento.designacao = '" + nome + "' AND";	
+							sqlExpression += " Estabelecimento.rating >= " + aval;
+						}
+						else {
+							sqlExpression += " Estabelecimento.rating >= " + aval;
+						}
+					} else {
+						if(!nome.equals("")) {
+							sqlExpression += " Estabelecimento.designacao = '" + nome + "' AND";
+							sqlExpression += " Estabelecimento.rating >= " + aval;	
+						}
+						else {
+							sqlExpression += " Estabelecimento.rating >= " + aval;
+						}
+					}
+				} else {
+					if(!tipo.equals("")) {
+						sqlExpression += " Estabelecimento.tipoDoEstabelecimento = '" + tipo + "' AND";
+					
+						if(!nome.equals("")) {
+							sqlExpression += " Estabelecimento.designacao = '" + nome + "' AND";	
+							sqlExpression += " Estabelecimento.rating >= " + aval;
+						}
+						else {
+							sqlExpression += " Estabelecimento.rating >= " + aval;
+						}
+					} else {
+						if(!nome.equals("")) {
+							sqlExpression += " Estabelecimento.designacao = '" + nome + "' AND";
+							sqlExpression += " Estabelecimento.rating >= " + aval;	
+						}
+						else {
+							sqlExpression += " Estabelecimento.rating >= " + aval;
+						}
+					}
+				}
+			}
+			
 			ResultSet resultSet = dbConnection
-					.select("SELECT * "
-							+ "FROM Estabelecimento, Zona "
-							+ "WHERE Estabelecimento.idZona = Zona.idZona AND Zona.cidade = '"
-							+ cidade
-							+ "' OR "
-							+ "Estabelecimento.idZona = Zona.idZona AND Zona.designacao = '"
-							+ zona + "' OR "
-							+ "Estabelecimento.tipoDoEstabelecimento = '"
-							+ tipo + "' OR " + "Estabelecimento.rating >= '"
-							+ aval + "' OR " + "Estabelecimento.designacao = '"
-							+ nome + "'");
+					.select(sqlExpression);
 			try {
 				while (resultSet.next()) {
 					String coordenadasGPS = resultSet

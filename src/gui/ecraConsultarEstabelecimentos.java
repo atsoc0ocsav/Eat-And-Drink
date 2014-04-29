@@ -431,7 +431,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 					null, null, 0.0, null, null, null);
 			showConsultResult(estabelecimentos);
 		} else {
-			if (validaAval()) {
+//			if (validaAval()) {
 				String cidade = "";
 				if (comboBoxCidades.getSelectedIndex() != -1) {
 					cidade = cidades.get(comboBoxCidades.getSelectedIndex())
@@ -462,27 +462,27 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 						eventos, nome);
 
 				showConsultResult(estabelecimentos);
-			} else {
-				JOptionPane
-						.showMessageDialog(
-								this,
-								"O campo avaliação só pode estar preenchido com números de 0 a 100 com uma casa decimal opcional");
-			}
+//			} else {
+//				JOptionPane
+//						.showMessageDialog(
+//								this,
+//								"O campo avaliação só pode estar preenchido com números de 0 a 100 com uma casa decimal opcional");
+//			}
 		}
 	}
 
-	private boolean validaAval() {
-		String textoAval = textField_avaliacao.getText();
-		if (textoAval.matches("[0-9]{1,3}|[0-9]{1,3},[0-9]{1}")) {
-			Double aval = Double.parseDouble(textoAval);
-			if (aval <= 100 && aval >= 0)
-				return true;
-			else
-				return false;
-		} else {
-			return false;
-		}
-	}
+//	private boolean validaAval() {
+//		String textoAval = textField_avaliacao.getText();
+//		if (textoAval.matches("[0-9]{1,3}|[0-9]{1,3},[0-9]{1}")) {
+//			Double aval = Double.parseDouble(textoAval);
+//			if (aval <= 100 && aval >= 0)
+//				return true;
+//			else
+//				return false;
+//		} else {
+//			return false;
+//		}
+//	}
 
 	private String juntarpratos() {
 		String pratos = "";
