@@ -30,6 +30,8 @@ public class DBConnection {
 		} catch (ClassNotFoundException | InstantiationException
 				| IllegalAccessException ex) {
 			System.err.println("Driver \"sybase.jdbc4.sqlanywhere.IDriver\"");
+
+			System.exit(1);
 		}
 
 		try {
@@ -37,10 +39,12 @@ public class DBConnection {
 			connection.setAutoCommit(false);
 			System.out.println("Connection Succesfull Established!\n");
 		} catch (SQLException e) {
-			System.out.println("Erro ao estabelecer a ligação.");
-			System.out.println("SQL Exception: " + e.getMessage());
-			System.out.println("SQL State: " + e.getSQLState());
-			System.out.println("Error Code: " + e.getErrorCode());
+			System.err.println("Erro ao estabelecer a ligação.");
+			System.err.println("SQL Exception: " + e.getMessage());
+			System.err.println("SQL State: " + e.getSQLState());
+			System.err.println("Error Code: " + e.getErrorCode());
+			
+			System.exit(1);
 		}
 	}
 
@@ -70,14 +74,16 @@ public class DBConnection {
 	 */
 	public void printSQLException(SQLException e) {
 		if (DEBUG_MODE) {
-			System.out.println("SQLException: " + e.getMessage());
-			System.out.println("SQLState: " + e.getSQLState());
-			System.out.println("VendorError: " + e.getErrorCode());
+			System.err.println("\n---------------------------------------------------------");
+			System.err.println("SQLException: " + e.getMessage());
+			System.err.println("SQLState: " + e.getSQLState());
+			System.err.println("VendorError: " + e.getErrorCode());
 			if (e.getCause() != null) {
-				System.out.println("Cause: " + e.getCause().toString());
+				System.err.println("Cause: " + e.getCause().toString());
 			} else {
-				System.out.println("Cause: null");
+				System.err.println("Cause: null");
 			}
+			System.err.println("---------------------------------------------------------");
 		}
 	}
 
