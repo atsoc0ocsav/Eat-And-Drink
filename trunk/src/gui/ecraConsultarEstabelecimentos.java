@@ -10,10 +10,11 @@ import java.awt.Panel;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -44,11 +45,11 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	private static final long serialVersionUID = 4212115798640187383L;
 	private JPanel contentPane;
 	private Panel panelFiltros;
-	private JComboBox comboBoxCidades;
-	private JComboBox comboBoxZonas;
-	private JComboBox comboBoxTiposDeEstablecimento;
-	private JComboBox comboBoxTiposDePrato;
-	private JComboBox comboBoxTiposDeEvento;
+	private JComboBox<String> comboBoxCidades;
+	private JComboBox<String> comboBoxZonas;
+	private JComboBox<String> comboBoxTiposDeEstablecimento;
+	private JComboBox<String> comboBoxTiposDePrato;
+	private JComboBox<String> comboBoxTiposDeEvento;
 	private JPanel panelTipoEventos;
 	private JPanel panel_TipoEventosBotoes;
 	private JScrollPane scrollPaneEventos;
@@ -70,9 +71,9 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 
 	private ctrlConsultarEstabelecimentos ctrConsulta;
 
-	private JList listTipoDeEventos;
+	private JList<String> listTipoDeEventos;
 	private ListaDeTiposDataModel modeloListaDeEventos = new ListaDeTiposDataModel();
-	private JList listTipoDePratos;
+	private JList<String> listTipoDePratos;
 	private ListaDeTiposDataModel modeloListaDePratos = new ListaDeTiposDataModel();
 
 	private ArrayList<Cidade> cidades;
@@ -81,10 +82,13 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	private ArrayList<TipoDeEvento> tiposDeEvento;
 	private ArrayList<TipoDePrato> tiposDePrato;
 
+	private ArrayList<Estabelecimento> estabelecimentos;
+
 	private Button buttonAddPratos;
 	private Button buttonRemoverPratos;
 	private Button buttonAddEventos;
 	private Button buttonRemoveEventos;
+	private JButton buttonVerDetalhes;
 
 	public ecraConsultarEstabelecimentos() {
 		ctrConsulta = new ctrlConsultarEstabelecimentos();
@@ -115,7 +119,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		lblCidade.setHorizontalAlignment(SwingConstants.CENTER);
 		panelFiltros.add(lblCidade);
 
-		comboBoxCidades = new JComboBox();
+		comboBoxCidades = new JComboBox<String>();
 		comboBoxCidades.setBounds(87, 0, 100, 23);
 		panelFiltros.add(comboBoxCidades);
 
@@ -125,7 +129,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		lblZonaFiltro.setHorizontalAlignment(SwingConstants.CENTER);
 		panelFiltros.add(lblZonaFiltro);
 
-		comboBoxZonas = new JComboBox();
+		comboBoxZonas = new JComboBox<String>();
 		comboBoxZonas.setBounds(87, 48, 100, 23);
 		panelFiltros.add(comboBoxZonas);
 
@@ -135,7 +139,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		lblTipo.setHorizontalAlignment(SwingConstants.CENTER);
 		panelFiltros.add(lblTipo);
 
-		comboBoxTiposDeEstablecimento = new JComboBox();
+		comboBoxTiposDeEstablecimento = new JComboBox<String>();
 		comboBoxTiposDeEstablecimento.setBounds(87, 96, 100, 23);
 		panelFiltros.add(comboBoxTiposDeEstablecimento);
 
@@ -150,7 +154,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		panelTipoEventos.add(panel_TipoEventosBotoes, BorderLayout.SOUTH);
 		panel_TipoEventosBotoes.setLayout(new GridLayout(0, 3, 0, 0));
 
-		comboBoxTiposDeEvento = new JComboBox();
+		comboBoxTiposDeEvento = new JComboBox<String>();
 		comboBoxTiposDeEvento.setToolTipText("Tipo de Eventos");
 		panel_TipoEventosBotoes.add(comboBoxTiposDeEvento);
 
@@ -170,7 +174,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		scrollPaneEventos.setViewportView(panel_InScrollPaneEventos);
 		panel_InScrollPaneEventos.setLayout(new BorderLayout(0, 0));
 
-		listTipoDeEventos = new JList(modeloListaDeEventos);
+		listTipoDeEventos = new JList<String>(modeloListaDeEventos);
 		listTipoDeEventos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		panel_InScrollPaneEventos.add(listTipoDeEventos);
 
@@ -186,7 +190,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		panelTipoPratos.add(panel_TipoPratosBotoes, BorderLayout.SOUTH);
 		panel_TipoPratosBotoes.setLayout(new GridLayout(0, 3, 0, 0));
 
-		comboBoxTiposDePrato = new JComboBox();
+		comboBoxTiposDePrato = new JComboBox<String>();
 		panel_TipoPratosBotoes.add(comboBoxTiposDePrato);
 
 		buttonAddPratos = new Button("Adicionar");
@@ -205,7 +209,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		scrollPanePratos.setViewportView(panel_InScrollPanelPratos);
 		panel_InScrollPanelPratos.setLayout(new BorderLayout(0, 0));
 
-		listTipoDePratos = new JList(modeloListaDePratos);
+		listTipoDePratos = new JList<String>(modeloListaDePratos);
 		listTipoDePratos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		panel_InScrollPanelPratos.add(listTipoDePratos, BorderLayout.CENTER);
 
@@ -218,6 +222,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		contentPane.add(buttonFiltroTodos);
 
 		textField_avaliacao = new TextField();
+		textField_avaliacao.setText("00.0");
 		textField_avaliacao.setBounds(163, 261, 38, 22);
 		contentPane.add(textField_avaliacao);
 
@@ -247,9 +252,9 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		contentPane.add(panel_resultadoPesquisa);
 		panel_resultadoPesquisa.setLayout(null);
 
-		JButton btnVerDetalhes = new JButton("Ver Detalhes");
-		btnVerDetalhes.setBounds(714, 200, 108, 23);
-		panel_resultadoPesquisa.add(btnVerDetalhes);
+		buttonVerDetalhes = new JButton("Ver Detalhes");
+		buttonVerDetalhes.setBounds(714, 200, 108, 23);
+		panel_resultadoPesquisa.add(buttonVerDetalhes);
 
 		scrollPaneResultadosPesquisa = new JScrollPane();
 		scrollPaneResultadosPesquisa.setViewportBorder(new LineBorder(
@@ -258,6 +263,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		panel_resultadoPesquisa.add(scrollPaneResultadosPesquisa);
 
 		table = new JTable(modeloTabelaConsulta);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPaneResultadosPesquisa.setViewportView(table);
 
 		panel_resultadosDivisoes = new JPanel();
@@ -289,6 +295,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	private void fillComboBoxesWithData() {
 		this.cidades = ctrConsulta.getCidades();
 
+		comboBoxCidades.insertItemAt(" ", 0);
 		for (Cidade cidade : cidades) {
 			comboBoxCidades.insertItemAt(cidade.getName(),
 					comboBoxCidades.getItemCount());
@@ -296,6 +303,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 
 		this.zonas = ctrConsulta.getZonas();
 
+		comboBoxZonas.insertItemAt(" ", 0);
 		for (Zona zona : zonas) {
 			comboBoxZonas.insertItemAt(zona.getDesignacao(),
 					comboBoxZonas.getItemCount());
@@ -303,6 +311,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 
 		this.tiposdeEstablecimento = ctrConsulta.getTiposDeEstablecimento();
 
+		comboBoxTiposDeEstablecimento.insertItemAt(" ", 0);
 		for (TipoDeEstablecimento tipoEsblecimento : tiposdeEstablecimento) {
 			comboBoxTiposDeEstablecimento.insertItemAt(
 					tipoEsblecimento.getTipoDeEstablecimento(),
@@ -378,6 +387,47 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 			}
 		});
 
+		comboBoxCidades.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				corresponderZonasACidade();
+			}
+		});
+
+		buttonVerDetalhes.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				verDetalhes();
+			}
+		});
+
+	}
+
+	private void verDetalhes() {
+		if (table.getSelectedRow() != -1) {
+			new ecraEstabelecimentoDetalhes(estabelecimentos.get(
+					table.getSelectedRow()).getIdEstabelecimento());
+		}
+	}
+
+	private void corresponderZonasACidade() {
+		comboBoxZonas.removeAllItems();
+		if (comboBoxCidades.getSelectedIndex() > 0) {
+			String sel = (String) comboBoxCidades.getSelectedItem();
+			for (Zona zona : zonas) {
+				String cidadeZona = zona.getCidade();
+				if (cidadeZona.equals(sel))
+					comboBoxZonas.insertItemAt(zona.getDesignacao(),
+							comboBoxZonas.getItemCount());
+			}
+		} else {
+			for (Zona zona : zonas) {
+				comboBoxZonas.insertItemAt(zona.getDesignacao(),
+						comboBoxZonas.getItemCount());
+			}
+		}
 	}
 
 	private void removerPrato() {
@@ -427,24 +477,24 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		ArrayList<Estabelecimento> estabelecimentos = null;
 
 		if (todos) {
-			estabelecimentos = ctrConsulta.consultarEstabelecimentos("",
-					"", "", 0.0, "", "", "");
+			estabelecimentos = ctrConsulta.consultarEstabelecimentos("", "",
+					"", 0.0, "", "", "");
 			showConsultResult(estabelecimentos);
 		} else {
-//			if (validaAval()) {
+			if (validaAval()) {
 				String cidade = "";
-				if (comboBoxCidades.getSelectedIndex() != -1) {
+				if (comboBoxCidades.getSelectedIndex() > 0) {
 					cidade = cidades.get(comboBoxCidades.getSelectedIndex())
 							.getName();
 				}
 				String zona = "";
-				if (comboBoxZonas.getSelectedIndex() != -1) {
+				if (comboBoxZonas.getSelectedIndex() > 0) {
 					zona = zonas.get(comboBoxZonas.getSelectedIndex())
 							.getDesignacao();
 				}
 
 				String tipoDeEstablecimento = "";
-				if (comboBoxTiposDeEstablecimento.getSelectedIndex() != -1) {
+				if (comboBoxTiposDeEstablecimento.getSelectedIndex() > 0) {
 					tipoDeEstablecimento = tiposdeEstablecimento.get(
 							comboBoxTiposDeEstablecimento.getSelectedIndex())
 							.getTipoDeEstablecimento();
@@ -461,28 +511,29 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 						cidade, zona, tipoDeEstablecimento, aval, pratos,
 						eventos, nome);
 
+				this.estabelecimentos = estabelecimentos;
 				showConsultResult(estabelecimentos);
-//			} else {
-//				JOptionPane
-//						.showMessageDialog(
-//								this,
-//								"O campo avaliação só pode estar preenchido com números de 0 a 100 com uma casa decimal opcional");
-//			}
+			} else {
+				JOptionPane
+						.showMessageDialog(
+								this,
+								"O campo avaliação só pode estar preenchido com números de 0 a 100 com uma casa decimal opcional");
+			}
 		}
 	}
 
-//	private boolean validaAval() {
-//		String textoAval = textField_avaliacao.getText();
-//		if (textoAval.matches("[0-9]{1,3}|[0-9]{1,3},[0-9]{1}")) {
-//			Double aval = Double.parseDouble(textoAval);
-//			if (aval <= 100 && aval >= 0)
-//				return true;
-//			else
-//				return false;
-//		} else {
-//			return false;
-//		}
-//	}
+	private boolean validaAval() {
+		String textoAval = textField_avaliacao.getText();
+		if (textoAval.matches("[0-9]{0,3}|[0-9]{0,3}.[0-9]{0,2}")) {
+			Double aval = Double.parseDouble(textoAval);
+			if (aval <= 100 && aval >= 0)
+				return true;
+			else
+				return false;
+		} else {
+			return false;
+		}
+	}
 
 	private String juntarpratos() {
 		String pratos = "";

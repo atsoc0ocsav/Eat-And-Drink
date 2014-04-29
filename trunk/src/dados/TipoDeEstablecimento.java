@@ -38,6 +38,8 @@ public class TipoDeEstablecimento {
 			e.printStackTrace();
 		}
 
+		dbConnection.closeDBConnection();
+		
 		return tiposDeEstablecimento;
 	}
 

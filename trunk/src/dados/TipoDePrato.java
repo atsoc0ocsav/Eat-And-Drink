@@ -36,6 +36,8 @@ public class TipoDePrato {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		dbConnection.closeDBConnection();
 
 		return tiposDePrato;
 	}

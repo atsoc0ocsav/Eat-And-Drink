@@ -37,6 +37,8 @@ public class TipoDeEvento {
 			e.printStackTrace();
 		}
 
+		dbConnection.closeDBConnection();
+		
 		return tiposDeEvento;
 	}
 
