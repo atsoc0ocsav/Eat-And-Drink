@@ -41,8 +41,8 @@ public class Estabelecimento {
 
 		ArrayList<Estabelecimento> estabelecimentos = new ArrayList<Estabelecimento>();
 
-		if (cidade == null && zona == null && tipo == null && aval == 0.0
-				&& prato == null && evento == null && nome == null) {
+		if (cidade.equals("") && zona.equals("") && tipo.equals("") && aval == 0.0
+				&& prato.equals("") && evento.equals("") && nome.equals("")) {
 
 			ResultSet resultSet = dbConnection
 					.select("SELECT * FROM Estabelecimento");
@@ -74,7 +74,22 @@ public class Estabelecimento {
 			}
 		} else {
 			
-			String sqlExpression = "SELECT * FROM Estabelecimento, Zona WHERE ";
+			String sqlExpression = "SELECT * FROM Estabelecimento WHERE";
+						
+			// Caso em que tudo é null menos o nome e a avaliação
+			if(cidade.equals("") && zona.equals("") && tipo.equals("") && 
+					prato.equals("") && evento.equals("") && !nome.equals("")) {
+				sqlExpression += " Estabelecimento.designacao = '" + nome + "' AND Estabelecimento.rating >= " + aval;	
+				
+			// Caso em que tudo é null a avaliação
+			} else if (cidade.equals("") && zona.equals("") && tipo.equals("") && 
+					prato.equals("") && evento.equals("") && nome.equals("")) {
+				
+				sqlExpression += " Estabelecimento.rating >= " + aval;
+				
+			// Restantes casos	
+			} else {			
+				sqlExpression = "SELECT * FROM Estabelecimento, Zona WHERE";
 			
 			if(!cidade.equals("")) {
 				sqlExpression += " Estabelecimento.idZona = Zona.idZona AND Zona.cidade = '" + cidade + "' AND";
@@ -167,6 +182,7 @@ public class Estabelecimento {
 					}
 				}
 			}
+		}
 			
 			ResultSet resultSet = dbConnection
 					.select(sqlExpression);
