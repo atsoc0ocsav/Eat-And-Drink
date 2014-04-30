@@ -285,6 +285,7 @@ public class ecraEstabelecimentoDetalhes {
 		panel_Eventos.add(scrollPane_Eventos);
 
 		table_Eventos = new JTable(eventsTableModel);
+		table_Eventos.setEnabled(false);
 		scrollPane_Eventos.setViewportView(table_Eventos);
 
 		Evento event = new Evento();
