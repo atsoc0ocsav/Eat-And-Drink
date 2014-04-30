@@ -48,7 +48,7 @@ public class Estabelecimento {
 	}
 
 	public ArrayList<Estabelecimento> select(String cidade, String zona,
-			String tipo, double aval, String prato, String evento, String nome) {
+			String tipo, double aval, String pratos, String eventos, String nome) {
 
 		String sqlExpression;
 		String sqlZona;
@@ -57,17 +57,17 @@ public class Estabelecimento {
 		String sqlSelect = "SELECT * FROM Estabelecimento";
 
 		if (cidade.equals("") && zona.equals("") && tipo.equals("")
-				&& prato.equals("") && evento.equals("") && nome.equals("")) {
+				&& pratos.equals("") && eventos.equals("") && nome.equals("")) {
 
 			sqlSelect = "SELECT * FROM Estabelecimento WHERE Estabelecimento.rating >= "
 					+ aval;
 
 		} else {
-			
+
 			sqlExpression = "";
 			sqlZona = ", Zona";
-			sqlPrato = ", Menu do Estabelecimento, Prato";
-			sqlEvento = ", Evento Oferecido, Tipo de Evento";
+			sqlPrato = ", menuDoEstabelecimento, Prato, TipoDePrato";
+			sqlEvento = ", eventoOferecido, TipoDeEvento";
 
 			if (!cidade.equals("")) {
 				sqlExpression += " Estabelecimento.idZona = Zona.idZona AND Zona.cidade = '"
@@ -88,14 +88,48 @@ public class Estabelecimento {
 				sqlExpression += " Estabelecimento.designacao LIKE '%" + nome
 						+ "%' AND";
 			}
-			
+
 			if (!cidade.equals("") || !zona.equals("")) {
-				sqlSelect += sqlZona + " WHERE " + sqlExpression + " Estabelecimento.rating >= " + aval;
-				System.out.println(sqlSelect);
-			} else {
-				sqlSelect += " WHERE " + sqlExpression + " Estabelecimento.rating >= " + aval;
-				System.out.println(sqlSelect);
+				sqlSelect += sqlZona;
 			}
+
+			if (!pratos.equals("")) {
+				sqlSelect += sqlPrato;
+				sqlExpression += " Estabelecimento.idEstabelecimento = menuDoEstabelecimento.idEstabelecimento AND "
+						+ "menuDoEstabelecimento.idPrato = Prato.idPrato AND Prato.tipoDePrato = TipoDePrato.tipoDePrato AND "
+						+ "( ";
+				String[] strP = pratos.split(";");
+				for (int i = 0; i < strP.length; i++) {
+					sqlExpression += " TipoDePrato.descricao = '" + strP[i]
+							+ "'";
+					if (i + 1 < strP.length) {
+						sqlExpression += "AND";
+					}
+				}
+				sqlExpression += ") AND ";
+			}
+
+			if (!eventos.equals("")) {
+				sqlSelect += sqlEvento;
+				sqlExpression += " Estabelecimento.idEstabelecimento = eventoOferecido.idEstabelecimento AND "
+						+ "eventoOferecido.tipoDoEvento = TipoDeEvento.tipoDoEvento AND "
+						+ "(";
+				String[] strE = eventos.split(";");
+				for (int i = 0; i < strE.length; i++) {
+					sqlExpression += " TipoDeEvento.descricao = '" + strE[i]
+							+ "'";
+					if (i + 1 < strE.length) {
+						sqlExpression += "AND";
+					}
+				}
+				sqlExpression += ") AND ";
+			}
+
+			sqlSelect += " WHERE" + sqlExpression
+					+ " Estabelecimento.rating >= " + aval;
+
+			System.out.println(sqlSelect);
+
 		}
 
 		ResultSet resultSet = dbConnection.select(sqlSelect);
