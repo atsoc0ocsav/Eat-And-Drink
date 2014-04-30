@@ -27,6 +27,8 @@ import controlo.ctrlDetalhesEstabelecimento;
 import dados.Estabelecimento;
 import dados.Evento;
 import dados.Prato;
+import dados.TipoDePrato;
+
 import javax.swing.JComboBox;
 
 public class ecraEstabelecimentoDetalhes {
@@ -426,7 +428,7 @@ public class ecraEstabelecimentoDetalhes {
 	 * 
 	 */
 	public class MealsTableModel extends AbstractTableModel {
-		private String[] columnNames = { "Nome", "Pre\u00E7o" };
+		private String[] columnNames = { "Nome", "Pre\u00E7o", "Tipo de Prato" };
 		private Object[][] data = new Object[0][0];
 
 		@Override
@@ -486,12 +488,22 @@ public class ecraEstabelecimentoDetalhes {
 	}
 
 	private void showPratos(ArrayList<Prato> pratos) {
-		Object[][] resultado = new Object[pratos.size()][2];
+		Object[][] resultado = new Object[pratos.size()][3];
+		TipoDePrato t = new TipoDePrato();
+		ArrayList<TipoDePrato> tiposDePrato = new ArrayList<TipoDePrato>();
+		tiposDePrato = t.getTiposDePrato();
 
 		for (int i = 0; i < pratos.size(); i++) {
 			Prato x = pratos.get(i);
 			resultado[i][0] = x.getDescricao();
 			resultado[i][1] = x.getPreco();
+			
+			for (TipoDePrato tt : tiposDePrato) 
+				if (tt.getTipoDePrato() == x.getTipoDePrato()) {
+					resultado[i][2] = tt.getDescricao();
+					break;
+				}
+			
 		}
 
 		mealsTableModel.changeData(resultado);
