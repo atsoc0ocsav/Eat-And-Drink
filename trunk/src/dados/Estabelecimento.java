@@ -51,46 +51,54 @@ public class Estabelecimento {
 			String tipo, double aval, String prato, String evento, String nome) {
 
 		String sqlExpression;
+		String sqlZona;
+		String sqlPrato;
+		String sqlEvento;
+		String sqlSelect = "SELECT * FROM Estabelecimento";
 
 		if (cidade.equals("") && zona.equals("") && tipo.equals("")
 				&& prato.equals("") && evento.equals("") && nome.equals("")) {
 
-			sqlExpression = "SELECT * FROM Estabelecimento WHERE Estabelecimento.rating >= "
+			sqlSelect = "SELECT * FROM Estabelecimento WHERE Estabelecimento.rating >= "
 					+ aval;
 
 		} else {
-
-			sqlExpression = "SELECT * FROM Estabelecimento";
+			
+			sqlExpression = "";
+			sqlZona = ", Zona";
+			sqlPrato = ", Menu do Estabelecimento, Prato";
+			sqlEvento = ", Evento Oferecido, Tipo de Evento";
 
 			if (!cidade.equals("")) {
-				sqlExpression += ", Zona WHERE Estabelecimento.idZona = Zona.idZona AND Zona.cidade = '"
+				sqlExpression += " Estabelecimento.idZona = Zona.idZona AND Zona.cidade = '"
 						+ cidade + "' AND";
 			}
 
 			if (!zona.equals("")) {
-				sqlExpression += ", Zona WHERE Estabelecimento.idZona = Zona.idZona AND Zona.designacao = '"
+				sqlExpression += " Estabelecimento.idZona = Zona.idZona AND Zona.designacao = '"
 						+ zona + "' AND";
 			}
 
 			if (!tipo.equals("")) {
-				sqlExpression += ", Zona WHERE Estabelecimento.tipoDoEstabelecimento = '"
+				sqlExpression += " Estabelecimento.tipoDoEstabelecimento = '"
 						+ tipo + "' AND";
 			}
 
-			if (cidade.equals("") && zona.equals("") && tipo.equals("")
-					&& prato.equals("") && evento.equals("")
-					&& !nome.equals("")) {
-				sqlExpression += " WHERE Estabelecimento.designacao = '" + nome
-						+ "' AND";
-			} else if (!nome.equals("")) {
+			if (!nome.equals("")) {
 				sqlExpression += " Estabelecimento.designacao = '" + nome
 						+ "' AND";
 			}
 			
-			sqlExpression += " Estabelecimento.rating >= " + aval;
+			if (!cidade.equals("") || !zona.equals("")) {
+				sqlSelect += sqlZona + " WHERE " + sqlExpression + " Estabelecimento.rating >= " + aval;
+				System.out.println(sqlSelect);
+			} else {
+				System.out.println(sqlSelect);
+				sqlSelect += " WHERE " + sqlExpression + " Estabelecimento.rating >= " + aval;
+			}
 		}
 
-		ResultSet resultSet = dbConnection.select(sqlExpression);
+		ResultSet resultSet = dbConnection.select(sqlSelect);
 
 		ArrayList<Estabelecimento> estabelecimentos = prepareResult(resultSet);
 
