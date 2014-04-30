@@ -59,8 +59,8 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	private JTextField textField_nome;
 	private JPanel panel_resultadoPesquisa;
 	private JScrollPane scrollPaneResultadosPesquisa;
-	private Button buttonFiltroTodos;
-	private Button buttonAplicarFiltro;
+	private JButton buttonFiltroTodos;
+	private JButton buttonAplicarFiltro;
 
 	private consultaEstablecimentosTableDataModel modeloTabelaConsulta = new consultaEstablecimentosTableDataModel();
 	private JTable table;
@@ -207,11 +207,11 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		listTipoDeEventos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		panel_InScrollPaneEventos.add(listTipoDeEventos);
 
-		buttonAplicarFiltro = new Button("Aplicar Filtro");
+		buttonAplicarFiltro = new JButton("Aplicar Filtro");
 		buttonAplicarFiltro.setBounds(41, 222, 91, 22);
 		panelFiltros.add(buttonAplicarFiltro);
 
-		buttonFiltroTodos = new Button("Todos");
+		buttonFiltroTodos = new JButton("Todos");
 		buttonFiltroTodos.setBounds(154, 222, 60, 22);
 		panelFiltros.add(buttonFiltroTodos);
 
