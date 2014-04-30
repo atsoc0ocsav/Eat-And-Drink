@@ -21,11 +21,13 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.AbstractTableModel;
 
 import controlo.ctrlDetalhesEstabelecimento;
 import dados.Estabelecimento;
+import dados.Evento;
 import dados.Prato;
+import javax.swing.JComboBox;
 
 public class ecraEstabelecimentoDetalhes {
 
@@ -49,6 +51,9 @@ public class ecraEstabelecimentoDetalhes {
 
 	// Data Variables
 	private ctrlDetalhesEstabelecimento controladorDetalherEstabelecimento;
+	private MealsTableModel mealsTableModel = new MealsTableModel();
+	private EventTableModel eventsTableModel = new EventTableModel();
+	private JComboBox comboBox_TipoEvento;
 
 	/**
 	 * Launch only this GUI (for debug purpose)
@@ -58,7 +63,7 @@ public class ecraEstabelecimentoDetalhes {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					new ecraEstabelecimentoDetalhes(-1);
+					new ecraEstabelecimentoDetalhes(10);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -89,7 +94,6 @@ public class ecraEstabelecimentoDetalhes {
 			display();
 		} catch (ClassNotFoundException | InstantiationException
 				| IllegalAccessException | UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -280,12 +284,55 @@ public class ecraEstabelecimentoDetalhes {
 		scrollPane_Eventos.setBounds(10, 19, 239, 248);
 		panel_Eventos.add(scrollPane_Eventos);
 
-		table_Eventos = new JTable();
-		table_Eventos.setModel(new DefaultTableModel(new Object[][] {
-				{ "asdsa", null }, { null, "asdsa" }, { "asdsa", null }, },
-				new String[] { "New column", "New column" }));
-		table_Eventos.getColumnModel().getColumn(1).setResizable(false);
+		table_Eventos = new JTable(eventsTableModel);
 		scrollPane_Eventos.setViewportView(table_Eventos);
+
+		Evento event = new Evento();
+		ArrayList<Evento> eventos = event.select(e.getIdEstabelecimento());
+		showEventos(eventos);
+	}
+
+	/**
+	 * Event JTable data model
+	 * 
+	 */
+	public class EventTableModel extends AbstractTableModel {
+		private String[] columnNames = { "Evento" };
+		private Object[][] data = new Object[0][0];
+
+		@Override
+		public Object getValueAt(int row, int col) {
+			return data[row][col];
+		}
+
+		@Override
+		public int getRowCount() {
+			return data.length;
+		}
+
+		@Override
+		public String getColumnName(int col) {
+			return columnNames[col];
+		}
+
+		@Override
+		public boolean isCellEditable(int row, int column) {
+			return false;
+		}
+
+		public void changeData(Object[][] data) {
+			this.data = data;
+		}
+
+		@Override
+		public int getColumnCount() {
+			return columnNames.length;
+		}
+
+		@Override
+		public Class getColumnClass(int c) {
+			return getValueAt(0, c).getClass();
+		}
 	}
 
 	/**
@@ -309,6 +356,11 @@ public class ecraEstabelecimentoDetalhes {
 		lbl_Descricao.setBounds(398, 55, 78, 14);
 		panel_Pratos.add(lbl_Descricao);
 
+		JLabel lbl_Tipo = new JLabel("Tipo");
+		lbl_Tipo.setHorizontalAlignment(SwingConstants.RIGHT);
+		lbl_Tipo.setBounds(430, 277, 46, 14);
+		panel_Pratos.add(lbl_Tipo);
+
 		JLabel lbl_Preco = new JLabel("Pre\u00E7o");
 		lbl_Preco.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_Preco.setBounds(411, 308, 65, 14);
@@ -331,7 +383,7 @@ public class ecraEstabelecimentoDetalhes {
 
 		TextArea textArea_Descricao = new TextArea("", 20, 10,
 				TextArea.SCROLLBARS_VERTICAL_ONLY);
-		textArea_Descricao.setBounds(486, 52, 151, 242);
+		textArea_Descricao.setBounds(486, 52, 151, 216);
 		panel_Pratos.add(textArea_Descricao);
 
 		// Buttons Constructors
@@ -347,6 +399,10 @@ public class ecraEstabelecimentoDetalhes {
 		btn_Adicionar.setBounds(506, 336, 110, 23);
 		panel_Pratos.add(btn_Adicionar);
 
+		comboBox_TipoEvento = new JComboBox();
+		comboBox_TipoEvento.setBounds(486, 274, 151, 20);
+		panel_Pratos.add(comboBox_TipoEvento);
+
 		// Main JTable Constructors (including JScrollPane)
 		JScrollPane scrollPane_Pratos = new JScrollPane();
 		scrollPane_Pratos
@@ -354,15 +410,57 @@ public class ecraEstabelecimentoDetalhes {
 		scrollPane_Pratos.setBounds(10, 19, 404, 306);
 		panel_Pratos.add(scrollPane_Pratos);
 
-		table_Pratos = new JTable();
-		table_Pratos.setEnabled(false);
+		table_Pratos = new JTable(mealsTableModel);
 		table_Pratos.setFillsViewportHeight(true);
 		table_Pratos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane_Pratos.setViewportView(table_Pratos);
-		
+
 		Prato p = new Prato();
 		ArrayList<Prato> pratos = p.select(e.getIdEstabelecimento());
 		showPratos(pratos);
+	}
+
+	/**
+	 * Dishes JTable data model
+	 * 
+	 */
+	public class MealsTableModel extends AbstractTableModel {
+		private String[] columnNames = { "Nome", "Pre\u00E7o" };
+		private Object[][] data = new Object[0][0];
+
+		@Override
+		public Object getValueAt(int row, int col) {
+			return data[row][col];
+		}
+
+		@Override
+		public int getRowCount() {
+			return data.length;
+		}
+
+		@Override
+		public String getColumnName(int col) {
+			return columnNames[col];
+		}
+
+		@Override
+		public boolean isCellEditable(int row, int column) {
+			return false;
+		}
+
+		public void changeData(Object[][] data) {
+			this.data = data;
+		}
+
+		@Override
+		public int getColumnCount() {
+			return columnNames.length;
+		}
+
+		@Override
+		public Class getColumnClass(int c) {
+			return getValueAt(0, c).getClass();
+		}
 	}
 
 	/**
@@ -385,7 +483,7 @@ public class ecraEstabelecimentoDetalhes {
 		textField_Horario.setText(e.getInformacoesHorario());
 		textField_Global.setText(e.getRating() + "");
 	}
-	
+
 	private void showPratos(ArrayList<Prato> pratos) {
 		Object[][] resultado = new Object[pratos.size()][2];
 
@@ -394,9 +492,21 @@ public class ecraEstabelecimentoDetalhes {
 			resultado[i][0] = x.getDescricao();
 			resultado[i][1] = x.getPreco();
 		}
-		table_Pratos.setModel(new DefaultTableModel(resultado, new String[] { "Nome",
-			"Preço" }));
-//		table_Pratos.changeData(resultado);
-//		table_Pratos.fireTableDataChanged();
+
+		mealsTableModel.changeData(resultado);
+		mealsTableModel.fireTableDataChanged();
+	}
+
+	private void showEventos(ArrayList<Evento> eventos) {
+		Object[][] resultado = new Object[eventos.size()][2];
+
+		for (int i = 0; i < eventos.size(); i++) {
+			Evento x = eventos.get(i);
+			resultado[i][0] = x.getDescricao();
+			resultado[i][1] = null;
+		}
+
+		eventsTableModel.changeData(resultado);
+		eventsTableModel.fireTableDataChanged();
 	}
 }
