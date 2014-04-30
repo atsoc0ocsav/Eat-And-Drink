@@ -42,6 +42,10 @@ public class TipoDePrato {
 		return tiposDePrato;
 	}
 
+	public int tipoDePrato() {
+		return tipoDePrato;
+	}
+	
 	public int getTipoDePrato() {
 		return tipoDePrato;
 	}
