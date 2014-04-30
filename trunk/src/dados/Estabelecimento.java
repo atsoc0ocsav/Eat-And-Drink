@@ -212,6 +212,8 @@ public class Estabelecimento {
 				throw new NullPointerException();
 			}
 
+			dbConnection.closeDBConnection();
+			
 			return new Estabelecimento(coordenadasGPS, idZona, designacao,
 					formaDeChegar, establishmentID, informacoesHorario, morada,
 					rating, tipoDoEstabelecimento, email, nomeZona, cidade);
