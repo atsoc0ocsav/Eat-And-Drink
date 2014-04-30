@@ -128,7 +128,7 @@ public class Estabelecimento {
 			sqlSelect += " WHERE" + sqlExpression
 					+ " Estabelecimento.rating >= " + aval;
 
-			System.out.println(sqlSelect);
+			//System.out.println(sqlSelect);
 
 		}
 

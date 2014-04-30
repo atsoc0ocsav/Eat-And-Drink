@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -22,14 +23,13 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import controlo.ctrlDetalhesEstabelecimento;
 import dados.Estabelecimento;
 import dados.Evento;
 import dados.Prato;
 import dados.TipoDePrato;
-
-import javax.swing.JComboBox;
 
 public class ecraEstabelecimentoDetalhes {
 
@@ -45,17 +45,16 @@ public class ecraEstabelecimentoDetalhes {
 	private JTextField textField_Horario;
 	private JTextField textField_Nome_Prato;
 	private JTextField textField_Preco;
-	private JTextField textField_Global;
-	private JTextField textField_ASeguir;
+	private JTextField textField_Rating;
 	private JTable table_Pratos;
 	private JTable table_Eventos;
 	private Container contentPane;
+	private JComboBox<String> comboBox_TipoEvento;
 
 	// Data Variables
 	private ctrlDetalhesEstabelecimento controladorDetalherEstabelecimento;
 	private MealsTableModel mealsTableModel = new MealsTableModel();
 	private EventTableModel eventsTableModel = new EventTableModel();
-	private JComboBox comboBox_TipoEvento;
 
 	/**
 	 * Launch only this GUI (for debug purpose)
@@ -129,7 +128,6 @@ public class ecraEstabelecimentoDetalhes {
 		addLabels();
 		addTextFields();
 		addButtons();
-		addEvaluationPanel();
 		addEventPanel();
 		addDishesPanel();
 	}
@@ -149,6 +147,11 @@ public class ecraEstabelecimentoDetalhes {
 		lbl_Estabelecimento.setHorizontalAlignment(SwingConstants.LEFT);
 		lbl_Estabelecimento.setBounds(73, 53, 116, 14);
 		contentPane.add(lbl_Estabelecimento);
+
+		JLabel lbl_Rating = new JLabel("Rating");
+		lbl_Rating.setBounds(459, 53, 49, 14);
+		frame.getContentPane().add(lbl_Rating);
+		lbl_Rating.setHorizontalAlignment(SwingConstants.RIGHT);
 
 		JLabel lbl_Tipo = new JLabel("Tipo");
 		lbl_Tipo.setHorizontalAlignment(SwingConstants.LEFT);
@@ -182,9 +185,15 @@ public class ecraEstabelecimentoDetalhes {
 	private void addTextFields() {
 		textField_Estabelecimento = new JTextField();
 		textField_Estabelecimento.setEditable(false);
-		textField_Estabelecimento.setBounds(177, 50, 390, 20);
+		textField_Estabelecimento.setBounds(177, 50, 272, 20);
 		contentPane.add(textField_Estabelecimento);
 		textField_Estabelecimento.setColumns(10);
+
+		textField_Rating = new JTextField();
+		textField_Rating.setBounds(518, 50, 49, 20);
+		frame.getContentPane().add(textField_Rating);
+		textField_Rating.setEditable(false);
+		textField_Rating.setColumns(10);
 
 		textField_Tipo = new JTextField();
 		textField_Tipo.setEditable(false);
@@ -237,45 +246,11 @@ public class ecraEstabelecimentoDetalhes {
 	}
 
 	/**
-	 * Generates the Establishment Evaluation JPanel
-	 */
-	private void addEvaluationPanel() {
-		JPanel panel_Avaliacao = new JPanel();
-		panel_Avaliacao.setBounds(10, 156, 259, 81);
-		panel_Avaliacao.setBorder(BorderFactory
-				.createTitledBorder("Avalia\u00E7\u00E3o"));
-		contentPane.add(panel_Avaliacao);
-		panel_Avaliacao.setLayout(null);
-
-		JLabel lbl_Global = new JLabel("Global");
-		lbl_Global.setBounds(35, 19, 49, 14);
-		panel_Avaliacao.add(lbl_Global);
-		lbl_Global.setHorizontalAlignment(SwingConstants.LEFT);
-
-		JLabel lbl_ASeguir = new JLabel("A Seguir");
-		lbl_ASeguir.setBounds(35, 52, 58, 14);
-		panel_Avaliacao.add(lbl_ASeguir);
-		lbl_ASeguir.setHorizontalAlignment(SwingConstants.LEFT);
-
-		textField_Global = new JTextField();
-		textField_Global.setEditable(false);
-		textField_Global.setBounds(94, 16, 49, 20);
-		panel_Avaliacao.add(textField_Global);
-		textField_Global.setColumns(10);
-
-		textField_ASeguir = new JTextField();
-		textField_ASeguir.setEditable(false);
-		textField_ASeguir.setBounds(94, 49, 49, 20);
-		panel_Avaliacao.add(textField_ASeguir);
-		textField_ASeguir.setColumns(10);
-	}
-
-	/**
 	 * Generates the Events Panel
 	 */
 	private void addEventPanel() {
 		JPanel panel_Eventos = new JPanel();
-		panel_Eventos.setBounds(10, 248, 259, 278);
+		panel_Eventos.setBounds(10, 156, 259, 370);
 		panel_Eventos.setBorder(BorderFactory.createTitledBorder("Eventos"));
 		contentPane.add(panel_Eventos);
 		panel_Eventos.setLayout(null);
@@ -283,7 +258,7 @@ public class ecraEstabelecimentoDetalhes {
 		JScrollPane scrollPane_Eventos = new JScrollPane();
 		scrollPane_Eventos
 				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_Eventos.setBounds(10, 19, 239, 248);
+		scrollPane_Eventos.setBounds(10, 19, 239, 340);
 		panel_Eventos.add(scrollPane_Eventos);
 
 		table_Eventos = new JTable(eventsTableModel);
@@ -299,6 +274,7 @@ public class ecraEstabelecimentoDetalhes {
 	 * Event JTable data model
 	 * 
 	 */
+	@SuppressWarnings("serial")
 	public class EventTableModel extends AbstractTableModel {
 		private String[] columnNames = { "Evento" };
 		private Object[][] data = new Object[0][0];
@@ -330,11 +306,6 @@ public class ecraEstabelecimentoDetalhes {
 		@Override
 		public int getColumnCount() {
 			return columnNames.length;
-		}
-
-		@Override
-		public Class getColumnClass(int c) {
-			return getValueAt(0, c).getClass();
 		}
 	}
 
@@ -402,7 +373,7 @@ public class ecraEstabelecimentoDetalhes {
 		btn_Adicionar.setBounds(506, 336, 110, 23);
 		panel_Pratos.add(btn_Adicionar);
 
-		comboBox_TipoEvento = new JComboBox();
+		comboBox_TipoEvento = new JComboBox<String>();
 		comboBox_TipoEvento.setBounds(486, 274, 151, 20);
 		panel_Pratos.add(comboBox_TipoEvento);
 
@@ -427,6 +398,7 @@ public class ecraEstabelecimentoDetalhes {
 	 * Dishes JTable data model
 	 * 
 	 */
+	@SuppressWarnings("serial")
 	public class MealsTableModel extends AbstractTableModel {
 		private String[] columnNames = { "Nome", "Pre\u00E7o", "Tipo de Prato" };
 		private Object[][] data = new Object[0][0];
@@ -459,11 +431,6 @@ public class ecraEstabelecimentoDetalhes {
 		public int getColumnCount() {
 			return columnNames.length;
 		}
-
-		@Override
-		public Class getColumnClass(int c) {
-			return getValueAt(0, c).getClass();
-		}
 	}
 
 	/**
@@ -484,7 +451,7 @@ public class ecraEstabelecimentoDetalhes {
 		textField_Zona.setText(e.getNomeZona());
 		textField_Morada.setText(e.getMorada());
 		textField_Horario.setText(e.getInformacoesHorario());
-		textField_Global.setText(e.getRating() + "");
+		textField_Rating.setText(e.getRating() + "");
 	}
 
 	private void showPratos(ArrayList<Prato> pratos) {
@@ -496,17 +463,22 @@ public class ecraEstabelecimentoDetalhes {
 		for (int i = 0; i < pratos.size(); i++) {
 			Prato x = pratos.get(i);
 			resultado[i][0] = x.getDescricao();
-			resultado[i][1] = x.getPreco();
-			
-			for (TipoDePrato tt : tiposDePrato) 
+			resultado[i][1] = x.getPreco()+"€";
+
+			for (TipoDePrato tt : tiposDePrato)
 				if (tt.getTipoDePrato() == x.getTipoDePrato()) {
 					resultado[i][2] = tt.getDescricao();
 					break;
 				}
-			
+
 		}
 
 		mealsTableModel.changeData(resultado);
+		
+		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+		rightRenderer.setHorizontalAlignment( JLabel.RIGHT );
+		table_Pratos.getColumnModel().getColumn(1).setCellRenderer( rightRenderer );
+		
 		mealsTableModel.fireTableDataChanged();
 	}
 

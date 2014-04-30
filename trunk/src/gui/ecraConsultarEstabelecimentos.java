@@ -5,7 +5,6 @@ import java.awt.Button;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -20,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
@@ -55,8 +55,8 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	private JPanel panel_TipoPratosBotoes;
 	private JScrollPane scrollPanePratos;
 	private JPanel panel_InScrollPanelPratos;
-	private TextField textField_avaliacao;
-	private TextField textField_nome;
+	private JTextField textField_avaliacao;
+	private JTextField textField_nome;
 	private JPanel panel_resultadoPesquisa;
 	private JScrollPane scrollPaneResultadosPesquisa;
 	private Button buttonFiltroTodos;
@@ -157,12 +157,12 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		panelFiltros.add(label_avaliacao);
 		label_avaliacao.setFont(new Font("Tahoma", Font.BOLD, 11));
 
-		textField_avaliacao = new TextField();
+		textField_avaliacao = new JTextField();
 		textField_avaliacao.setBounds(99, 181, 45, 22);
 		panelFiltros.add(textField_avaliacao);
 		textField_avaliacao.setText("00.0");
 
-		textField_nome = new TextField();
+		textField_nome = new JTextField();
 		textField_nome.setBounds(99, 141, 135, 22);
 		panelFiltros.add(textField_nome);
 
@@ -439,7 +439,8 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		if (i != -1) {
 			modeloListaDePratos.add((String) comboBoxTiposDePrato
 					.getSelectedItem());
-			comboBoxTiposDePrato.removeItemAt(i);;
+			comboBoxTiposDePrato.removeItemAt(i);
+			;
 			buttonRemoverPratos.setEnabled(true);
 		}
 	}
