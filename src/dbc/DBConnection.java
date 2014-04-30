@@ -26,7 +26,7 @@ public class DBConnection {
 			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			conn.setAutoCommit(false);
 		} catch (SQLException e) {
-			System.err.println("Erro ao estabelecer a ligação à base de dados");
+			System.err.println("Erro ao estabelecer a ligação à base de dados\n");
 			printSQLException(e);
 		}
 	}
