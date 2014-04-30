@@ -387,16 +387,15 @@ public class ecraEstabelecimentoDetalhes {
 	}
 	
 	private void showPratos(ArrayList<Prato> pratos) {
-		Object[][] resultado = new Object[pratos.size()][3];
+		Object[][] resultado = new Object[pratos.size()][2];
 
 		for (int i = 0; i < pratos.size(); i++) {
 			Prato x = pratos.get(i);
-			resultado[i][0] = x.getNome();
+			resultado[i][0] = x.getDescricao();
 			resultado[i][1] = x.getPreco();
-			resultado[i][2] = 1;
 		}
-		table_Pratos.setModel(new DefaultTableModel(resultado, new String[] { "New column",
-			"New column", "New column" }));
+		table_Pratos.setModel(new DefaultTableModel(resultado, new String[] { "Nome",
+			"Preço" }));
 //		table_Pratos.changeData(resultado);
 //		table_Pratos.fireTableDataChanged();
 	}
