@@ -423,6 +423,9 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	private void removerPrato() {
 		int i = listTipoDePratos.getSelectedIndex();
 		if (i != -1) {
+			comboBoxTiposDePrato.insertItemAt(
+					listTipoDePratos.getSelectedValue(),
+					comboBoxTiposDePrato.getItemCount());
 			modeloListaDePratos.remove(i);
 			if (modeloListaDePratos.getSize() == 0) {
 				buttonRemoverPratos.setEnabled(false);
@@ -434,17 +437,19 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	private void adicionarPrato() {
 		int i = comboBoxTiposDePrato.getSelectedIndex();
 		if (i != -1) {
-			String x = tiposDePrato.get(i).getDescricao();
-			if (!modeloListaDePratos.exists(x)) {
-				modeloListaDePratos.add(x);
-				buttonRemoverPratos.setEnabled(true);
-			}
+			modeloListaDePratos.add((String) comboBoxTiposDePrato
+					.getSelectedItem());
+			comboBoxTiposDePrato.removeItemAt(i);;
+			buttonRemoverPratos.setEnabled(true);
 		}
 	}
 
 	private void removerEvento() {
 		int i = listTipoDeEventos.getSelectedIndex();
 		if (i != -1) {
+			comboBoxTiposDeEvento.insertItemAt(
+					listTipoDePratos.getSelectedValue(),
+					comboBoxTiposDeEvento.getItemCount());
 			modeloListaDeEventos.remove(i);
 			if (modeloListaDeEventos.getSize() == 0) {
 				buttonRemoveEventos.setEnabled(false);
@@ -455,11 +460,10 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 	private void adicionarEvento() {
 		int i = comboBoxTiposDeEvento.getSelectedIndex();
 		if (i != -1) {
-			String x = tiposDeEvento.get(i).getDescricao();
-			if (!modeloListaDeEventos.exists(x)) {
-				modeloListaDeEventos.add(x);
-				buttonRemoveEventos.setEnabled(true);
-			}
+			modeloListaDeEventos.add((String) comboBoxTiposDeEvento
+					.getSelectedItem());
+			comboBoxTiposDeEvento.removeItemAt(i);
+			buttonRemoveEventos.setEnabled(true);
 		}
 	}
 
@@ -485,7 +489,8 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 
 				String tipoDeEstablecimento = "";
 				if (comboBoxTiposDeEstablecimento.getSelectedIndex() > 0) {
-					tipoDeEstablecimento = (String) comboBoxTiposDeEstablecimento.getSelectedItem();
+					tipoDeEstablecimento = (String) comboBoxTiposDeEstablecimento
+							.getSelectedItem();
 				}
 
 				double aval = 0.0;

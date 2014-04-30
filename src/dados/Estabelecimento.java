@@ -85,16 +85,16 @@ public class Estabelecimento {
 			}
 
 			if (!nome.equals("")) {
-				sqlExpression += " Estabelecimento.designacao = '" + nome
-						+ "' AND";
+				sqlExpression += " Estabelecimento.designacao LIKE '%" + nome
+						+ "%' AND";
 			}
 			
 			if (!cidade.equals("") || !zona.equals("")) {
 				sqlSelect += sqlZona + " WHERE " + sqlExpression + " Estabelecimento.rating >= " + aval;
 				System.out.println(sqlSelect);
 			} else {
-				System.out.println(sqlSelect);
 				sqlSelect += " WHERE " + sqlExpression + " Estabelecimento.rating >= " + aval;
+				System.out.println(sqlSelect);
 			}
 		}
 
