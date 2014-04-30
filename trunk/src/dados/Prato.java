@@ -31,9 +31,10 @@ public class Prato {
 	
 	public ArrayList<Prato> select(int idEstabelecimento) {
 
-		String sqlExpression = "SELECT * FROM menuDoEstabelecimento, Prato" +
-				" WHERE menuDoEstabelecimento.idEstabelecimento = " + idEstabelecimento + " " +
-						"AND menuDoEstabelecimento.idPrato = Prato.idPrato;";
+		String sqlExpression = "SELECT * FROM menuDoEstabelecimento, Prato, TipoDePrato " +
+				"WHERE menuDoEstabelecimento.idEstabelecimento = " + idEstabelecimento +  
+				"AND menuDoEstabelecimento.idPrato = Prato.idPrato " +
+				"AND Prato.tipoDePrato = TipoDePrato.tipoDePrato;" ;
 		
 		ResultSet resultSet = dbConnection.select(sqlExpression);
 		
