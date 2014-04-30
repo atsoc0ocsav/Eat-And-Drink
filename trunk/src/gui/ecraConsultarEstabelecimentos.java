@@ -537,7 +537,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		for (int i = 0; i < modeloListaDePratos.getSize(); i++) {
 			pratos += modeloListaDePratos.getElementAt(i);
 			if (i + 1 < modeloListaDePratos.getSize())
-				pratos += " ";
+				pratos += ";";
 		}
 
 		return pratos;
@@ -549,9 +549,8 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		for (int i = 0; i < modeloListaDeEventos.getSize(); i++) {
 			eventos += modeloListaDeEventos.getElementAt(i);
 			if (i + 1 < modeloListaDeEventos.getSize())
-				eventos += " ";
+				eventos += ";";
 		}
-
 		return eventos;
 	}
 
