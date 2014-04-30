@@ -476,20 +476,16 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 			if (validaAval()) {
 				String cidade = "";
 				if (comboBoxCidades.getSelectedIndex() > 0) {
-					cidade = cidades.get(comboBoxCidades.getSelectedIndex())
-							.getName();
+					cidade = (String) comboBoxCidades.getSelectedItem();
 				}
 				String zona = "";
 				if (comboBoxZonas.getSelectedIndex() > 0) {
-					zona = zonas.get(comboBoxZonas.getSelectedIndex())
-							.getDesignacao();
+					zona = (String) comboBoxZonas.getSelectedItem();
 				}
 
 				String tipoDeEstablecimento = "";
 				if (comboBoxTiposDeEstablecimento.getSelectedIndex() > 0) {
-					tipoDeEstablecimento = tiposdeEstablecimento.get(
-							comboBoxTiposDeEstablecimento.getSelectedIndex())
-							.getTipoDeEstablecimento();
+					tipoDeEstablecimento = (String) comboBoxTiposDeEstablecimento.getSelectedItem();
 				}
 
 				double aval = 0.0;
