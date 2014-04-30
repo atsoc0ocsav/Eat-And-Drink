@@ -24,7 +24,7 @@ public class Main {
 			dbAction.addUsersToDB(10000);
 			dbAction.addEstablishmentsToDB(1000);
 			dbAction.addFollowersToDB(500);
-			dbAction.addAvailableEventsToDB(500);
+			dbAction.addAvailableEventsToDB(2000);
 			dbAction.addEstablishmentScheduleToDB();
 			dbAction.addEstablishmentMenusToDB(10);
 			dbAction.addRecomendedMealsToDB(500);
@@ -35,7 +35,7 @@ public class Main {
 			System.out.println("\n---------------------------------------");
 			System.out.println("Task Duration: "
 					+ (System.currentTimeMillis() - time) + " ms");
-		} catch (SQLException | NoSuchAlgorithmException e) {
+		} catch (SQLException | NoSuchAlgorithmException  e) {
 			e.printStackTrace();
 		}
 	}
