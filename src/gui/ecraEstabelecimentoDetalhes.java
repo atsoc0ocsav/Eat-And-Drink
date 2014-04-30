@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -24,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 
 import controlo.ctrlDetalhesEstabelecimento;
 import dados.Estabelecimento;
+import dados.Prato;
 
 public class ecraEstabelecimentoDetalhes {
 
@@ -357,10 +359,10 @@ public class ecraEstabelecimentoDetalhes {
 		table_Pratos.setFillsViewportHeight(true);
 		table_Pratos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane_Pratos.setViewportView(table_Pratos);
-		table_Pratos.setModel(new DefaultTableModel(new Object[][] {
-				{ "xzcx", null, "zxcxz", null },
-				{ null, "zxczxc", null, null }, }, new String[] { "New column",
-				"New column", "New column", "New column" }));
+		
+		Prato p = new Prato();
+		ArrayList<Prato> pratos = p.select(e.getIdEstabelecimento());
+		showPratos(pratos);
 	}
 
 	/**
@@ -382,5 +384,20 @@ public class ecraEstabelecimentoDetalhes {
 		textField_Morada.setText(e.getMorada());
 		textField_Horario.setText(e.getInformacoesHorario());
 		textField_Global.setText(e.getRating() + "");
+	}
+	
+	private void showPratos(ArrayList<Prato> pratos) {
+		Object[][] resultado = new Object[pratos.size()][3];
+
+		for (int i = 0; i < pratos.size(); i++) {
+			Prato x = pratos.get(i);
+			resultado[i][0] = x.getNome();
+			resultado[i][1] = x.getPreco();
+			resultado[i][2] = 1;
+		}
+		table_Pratos.setModel(new DefaultTableModel(resultado, new String[] { "New column",
+			"New column", "New column" }));
+//		table_Pratos.changeData(resultado);
+//		table_Pratos.fireTableDataChanged();
 	}
 }
