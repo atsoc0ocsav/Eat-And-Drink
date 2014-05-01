@@ -23,7 +23,7 @@ public class Cidade {
 
 		ArrayList<Cidade> cidades = new ArrayList<Cidade>();
 
-		ResultSet resultSet = dbConnection.select("SELECT * FROM Cidade");
+		ResultSet resultSet = dbConnection.select("SELECT * FROM Cidade ORDER BY cidade");
 
 		try {
 			while (resultSet.next()) {
