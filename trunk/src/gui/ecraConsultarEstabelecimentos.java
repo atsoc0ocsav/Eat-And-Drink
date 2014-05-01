@@ -208,11 +208,11 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		panel_InScrollPaneEventos.add(listTipoDeEventos);
 
 		buttonAplicarFiltro = new JButton("Aplicar Filtro");
-		buttonAplicarFiltro.setBounds(41, 222, 91, 22);
+		buttonAplicarFiltro.setBounds(20, 222, 110, 22);
 		panelFiltros.add(buttonAplicarFiltro);
 
 		buttonFiltroTodos = new JButton("Todos");
-		buttonFiltroTodos.setBounds(154, 222, 60, 22);
+		buttonFiltroTodos.setBounds(142, 222, 79, 22);
 		panelFiltros.add(buttonFiltroTodos);
 
 		panelTipoPratos = new JPanel();
@@ -422,14 +422,28 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 
 	private void removerPrato() {
 		int i = listTipoDePratos.getSelectedIndex();
-		if (i != -1) {
+		if (i != -1 && i < modeloListaDePratos.getSize()) {
+			int s = comboBoxTiposDePrato.getItemCount();
+			int x = s;
+			if (s != 0) {
+				for (int j = 0; j < s; j++) {
+					int c = comboBoxTiposDePrato.getItemAt(j).compareTo(
+							listTipoDePratos.getSelectedValue());
+					if (c > 0) {
+						x = j;
+						break;
+					}
+				}
+			}
 			comboBoxTiposDePrato.insertItemAt(
-					listTipoDePratos.getSelectedValue(),
-					comboBoxTiposDePrato.getItemCount());
+					listTipoDePratos.getSelectedValue(), x);
+			comboBoxTiposDePrato.setEnabled(true);
 			modeloListaDePratos.remove(i);
 			if (modeloListaDePratos.getSize() == 0) {
 				buttonRemoverPratos.setEnabled(false);
+				listTipoDePratos.setSelectedIndex(-1);
 			}
+			listTipoDePratos.setSelectedIndex(0);
 		}
 
 	}
@@ -440,21 +454,37 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 			modeloListaDePratos.add((String) comboBoxTiposDePrato
 					.getSelectedItem());
 			comboBoxTiposDePrato.removeItemAt(i);
-			;
 			buttonRemoverPratos.setEnabled(true);
+			if (comboBoxTiposDePrato.getItemCount() == 0)
+				comboBoxTiposDePrato.setEnabled(false);
 		}
 	}
 
 	private void removerEvento() {
 		int i = listTipoDeEventos.getSelectedIndex();
-		if (i != -1) {
+		if (i != -1 && i < modeloListaDeEventos.getSize()) {
+			int s = comboBoxTiposDeEvento.getItemCount();
+			int x = s;
+			if (s != 0) {
+				for (int j = 0; j < s; j++) {
+					int c = comboBoxTiposDeEvento.getItemAt(j).compareTo(
+							listTipoDeEventos.getSelectedValue());
+					System.out.println(Integer.toString(c));
+					if (c > 0) {
+						x = j;
+						break;
+					}
+				}
+			}
 			comboBoxTiposDeEvento.insertItemAt(
-					listTipoDeEventos.getSelectedValue(),
-					comboBoxTiposDeEvento.getItemCount());
+					listTipoDeEventos.getSelectedValue(), x);
+			comboBoxTiposDeEvento.setEnabled(true);
 			modeloListaDeEventos.remove(i);
 			if (modeloListaDeEventos.getSize() == 0) {
 				buttonRemoveEventos.setEnabled(false);
+				listTipoDeEventos.setSelectedIndex(-1);
 			}
+			listTipoDeEventos.setSelectedIndex(0);
 		}
 	}
 
@@ -465,6 +495,8 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 					.getSelectedItem());
 			comboBoxTiposDeEvento.removeItemAt(i);
 			buttonRemoveEventos.setEnabled(true);
+			if (comboBoxTiposDeEvento.getItemCount() == 0)
+				comboBoxTiposDeEvento.setEnabled(false);
 		}
 	}
 

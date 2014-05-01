@@ -24,7 +24,7 @@ public class TipoDeEstablecimento {
 		ArrayList<TipoDeEstablecimento> tiposDeEstablecimento = new ArrayList<TipoDeEstablecimento>();
 
 		ResultSet resultSet = dbConnection
-				.select("SELECT * FROM TipoDeEstabelecimento");
+				.select("SELECT * FROM TipoDeEstabelecimento ORDER BY tipoDoEstabelecimento");
 
 		try {
 			while (resultSet.next()) {

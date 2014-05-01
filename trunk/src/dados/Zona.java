@@ -27,7 +27,7 @@ public class Zona {
 
 		ArrayList<Zona> zonas = new ArrayList<Zona>();
 
-		ResultSet resultSet = dbConnection.select("SELECT * FROM Zona");
+		ResultSet resultSet = dbConnection.select("SELECT * FROM Zona ORDER BY designacao");
 
 		try {
 			while (resultSet.next()) {

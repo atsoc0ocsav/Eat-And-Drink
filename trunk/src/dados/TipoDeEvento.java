@@ -24,7 +24,7 @@ public class TipoDeEvento {
 	public ArrayList<TipoDeEvento> getTiposDeEvento() {
 		ArrayList<TipoDeEvento> tiposDeEvento = new ArrayList<TipoDeEvento>();
 
-		ResultSet resultSet = dbConnection.select("SELECT * FROM TipoDeEvento");
+		ResultSet resultSet = dbConnection.select("SELECT * FROM TipoDeEvento ORDER BY descricao");
 
 		try {
 			while (resultSet.next()) {
