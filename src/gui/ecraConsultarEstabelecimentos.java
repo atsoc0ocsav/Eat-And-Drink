@@ -449,7 +449,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		int i = listTipoDeEventos.getSelectedIndex();
 		if (i != -1) {
 			comboBoxTiposDeEvento.insertItemAt(
-					listTipoDePratos.getSelectedValue(),
+					listTipoDeEventos.getSelectedValue(),
 					comboBoxTiposDeEvento.getItemCount());
 			modeloListaDeEventos.remove(i);
 			if (modeloListaDeEventos.getSize() == 0) {
