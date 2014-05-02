@@ -26,6 +26,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import controlo.ctrlDetalhesEstabelecimento;
+import dados.Cidade;
 import dados.Estabelecimento;
 import dados.Evento;
 import dados.Prato;
@@ -64,7 +65,7 @@ public class ecraEstabelecimentoDetalhes {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					new ecraEstabelecimentoDetalhes(10);
+					new ecraEstabelecimentoDetalhes(5);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -372,6 +373,15 @@ public class ecraEstabelecimentoDetalhes {
 		JButton btn_Adicionar = new JButton("Adicionar");
 		btn_Adicionar.setBounds(506, 336, 110, 23);
 		panel_Pratos.add(btn_Adicionar);
+		
+		btn_Adicionar.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println(comboBox_TipoEvento.getSelectedIndex());
+				
+			}
+		});
 
 		comboBox_TipoEvento = new JComboBox<String>();
 		comboBox_TipoEvento.setBounds(486, 274, 151, 20);
@@ -452,6 +462,14 @@ public class ecraEstabelecimentoDetalhes {
 		textField_Morada.setText(e.getMorada());
 		textField_Horario.setText(e.getInformacoesHorario());
 		textField_Rating.setText(e.getRating() + "");
+		
+		TipoDePrato t = new TipoDePrato();
+		ArrayList<TipoDePrato> tiposDePrato = new ArrayList<TipoDePrato>();
+		tiposDePrato = t.getTiposDePrato();
+		if (tiposDePrato.size() > 0)
+			for (TipoDePrato tt : tiposDePrato) {
+				comboBox_TipoEvento.insertItemAt(tt.getDescricao(), tt.getTipoDePrato());
+			}
 	}
 
 	private void showPratos(ArrayList<Prato> pratos) {
