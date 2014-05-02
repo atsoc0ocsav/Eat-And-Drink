@@ -3,13 +3,14 @@ package dados;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import dbc.DBConnection;
 
 public class Prato {
 	
 	private String nome;
-	private float preco;
+	private double preco;
 	private int idPrato;
 	private String descricao ;
 	private int tipoDePrato;
@@ -20,10 +21,10 @@ public class Prato {
 		dbConnection = new DBConnection();
 	}
 	
-	public Prato(float preco, int idPrato, String descricao, int tipoDePrato) {
+	public Prato(double prec, int idPrato, String descricao, int tipoDePrato) {
 		dbConnection = new DBConnection();
 		
-		this.preco = preco;
+		this.preco = prec;
 		this.idPrato = idPrato;
 		this.descricao = descricao;
 		this.tipoDePrato = tipoDePrato;
@@ -67,7 +68,7 @@ public class Prato {
 		return nome;
 	}
 
-	public float getPreco() {
+	public double getPreco() {
 		return preco;
 	}
 
@@ -85,6 +86,47 @@ public class Prato {
 
 	public DBConnection getDbConnection() {
 		return dbConnection;
+	}
+
+	public boolean insere(int estabelecimentoId, Prato p) {
+		
+		ResultSet rs = dbConnection
+				.select("SELECT FIRST idPrato FROM Prato ORDER BY idPrato DESC");
+
+		int currentID = 0;
+		try {
+			if (rs.next()) 
+				currentID = rs.getInt(1) + 1;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		String sqlExpression = "INSERT INTO Prato (descricao, idPrato, preco, tipoDePrato) VALUES " +
+				"( '" + p.getDescricao() + 
+				"', " + currentID +
+				", " + p.getPreco() + 
+				", " + p.getTipoDePrato() + "); ";
+				
+		//System.out.println(sqlExpression);
+		
+		dbConnection.insert(sqlExpression);
+		
+		dbConnection.closeDBConnection();
+		
+		
+		sqlExpression = "INSERT INTO MenuDoEstabelecimento (idEstabelecimento, idPrato) VALUES " +
+				"( '" + estabelecimentoId + 
+				"', " + currentID + "); ";
+				
+		//System.out.println(sqlExpression);
+		
+		dbConnection.insert(sqlExpression);
+		
+		dbConnection.closeDBConnection();
+		
+		return true;
+		
 	}
 
 	

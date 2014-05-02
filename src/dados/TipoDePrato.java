@@ -24,7 +24,7 @@ public class TipoDePrato {
 	public ArrayList<TipoDePrato> getTiposDePrato() {
 		ArrayList<TipoDePrato> tiposDePrato = new ArrayList<TipoDePrato>();
 
-		ResultSet resultSet = dbConnection.select("SELECT * FROM TipoDePrato ORDER BY tipoDePrato");
+		ResultSet resultSet = dbConnection.select("SELECT * FROM TipoDePrato ORDER BY descricao");
 
 		try {
 			while (resultSet.next()) {

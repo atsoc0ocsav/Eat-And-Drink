@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -47,21 +48,24 @@ public class ecraEstabelecimentoDetalhes {
 	private JTextField textField_Nome_Prato;
 	private JTextField textField_Preco;
 	private JTextField textField_Rating;
+	private TextArea textArea_Descricao;
 	private JTable table_Pratos;
 	private JTable table_Eventos;
 	private Container contentPane;
 	private JComboBox<String> comboBox_TipoEvento;
 
 	// Data Variables
-	private ctrlDetalhesEstabelecimento controladorDetalherEstabelecimento;
+	private ctrlDetalhesEstabelecimento ctrDetalherEstabelecimento;
 	private MealsTableModel mealsTableModel = new MealsTableModel();
 	private EventTableModel eventsTableModel = new EventTableModel();
+	private ArrayList<TipoDePrato> tiposDePrato = new ArrayList<TipoDePrato>();
 
 	/**
 	 * Launch only this GUI (for debug purpose)
 	 * 
 	 */
 	public static void main(String[] args) {
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -85,8 +89,8 @@ public class ecraEstabelecimentoDetalhes {
 				designacao_estabelecimento = "Estabelecimento de Teste";
 				buildGUI();
 			} else {
-				controladorDetalherEstabelecimento = new ctrlDetalhesEstabelecimento();
-				e = controladorDetalherEstabelecimento
+				ctrDetalherEstabelecimento = new ctrlDetalhesEstabelecimento();
+				e = ctrDetalherEstabelecimento
 						.consultarDetalhesEstabelecimento(establishmentID);
 				designacao_estabelecimento = e.getDesignacao();
 
@@ -356,7 +360,7 @@ public class ecraEstabelecimentoDetalhes {
 		panel_Pratos.add(textField_Preco);
 		textField_Preco.setColumns(10);
 
-		TextArea textArea_Descricao = new TextArea("", 20, 10,
+		textArea_Descricao = new TextArea("", 20, 10,
 				TextArea.SCROLLBARS_VERTICAL_ONLY);
 		textArea_Descricao.setBounds(486, 52, 151, 216);
 		panel_Pratos.add(textArea_Descricao);
@@ -378,7 +382,38 @@ public class ecraEstabelecimentoDetalhes {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println(comboBox_TipoEvento.getSelectedIndex());
+				String tipoDePrato = (String) comboBox_TipoEvento.getSelectedItem();
+				
+				int tipoDePratoTemp = 0;
+				for (TipoDePrato t : tiposDePrato) {
+					if (t.getDescricao().equals(tipoDePrato)) {
+						tipoDePratoTemp = t.getTipoDePrato();
+						break;
+					}
+				}
+				
+				String descr = textArea_Descricao.getText();
+				String textoAval = textField_Preco.getText();
+				double prec = 0.0;
+				if (!textoAval.equals("")) {
+					if (textoAval.matches("[0-9]{0,3}|[0-9]{0,3}.[0-9]{0,2}")) {
+						prec = Double.parseDouble(textoAval);
+						if ( prec <= 0) {
+							JOptionPane.showMessageDialog( null, "O preço tem que ser maior que 0");
+							return;
+						} 
+					} else {
+						JOptionPane.showMessageDialog(null, "O preço inserido não é válido");
+						return;
+					}
+				}
+				
+				Prato p = new Prato(prec, 0, descr, tipoDePratoTemp);
+				
+				ctrDetalherEstabelecimento.insere(e.getIdEstabelecimento(), p);
+				
+				ArrayList<Prato> pratos = p.select(e.getIdEstabelecimento());
+				showPratos(pratos);
 				
 			}
 		});
@@ -464,11 +499,10 @@ public class ecraEstabelecimentoDetalhes {
 		textField_Rating.setText(e.getRating() + "");
 		
 		TipoDePrato t = new TipoDePrato();
-		ArrayList<TipoDePrato> tiposDePrato = new ArrayList<TipoDePrato>();
 		tiposDePrato = t.getTiposDePrato();
 		if (tiposDePrato.size() > 0)
 			for (TipoDePrato tt : tiposDePrato) {
-				comboBox_TipoEvento.insertItemAt(tt.getDescricao(), tt.getTipoDePrato());
+				comboBox_TipoEvento.insertItemAt(tt.getDescricao(), comboBox_TipoEvento.getItemCount());
 			}
 	}
 
