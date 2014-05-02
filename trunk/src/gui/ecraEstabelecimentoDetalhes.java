@@ -384,15 +384,23 @@ public class ecraEstabelecimentoDetalhes {
 			public void actionPerformed(ActionEvent arg0) {
 				String tipoDePrato = (String) comboBox_TipoEvento.getSelectedItem();
 				
-				int tipoDePratoTemp = 0;
+				int tipoDePratoTemp = -1;
 				for (TipoDePrato t : tiposDePrato) {
 					if (t.getDescricao().equals(tipoDePrato)) {
 						tipoDePratoTemp = t.getTipoDePrato();
 						break;
 					}
 				}
+				if (tipoDePratoTemp == -1) {
+					JOptionPane.showMessageDialog( null, "Tipo de Prato não válido.");
+					return;
+				}
 				
 				String descr = textArea_Descricao.getText();
+				if (descr.equals("")) {
+					JOptionPane.showMessageDialog( null, "Descrição não válida.");
+					return;
+				}
 				String textoAval = textField_Preco.getText();
 				double prec = 0.0;
 				if (!textoAval.equals("")) {
@@ -406,6 +414,9 @@ public class ecraEstabelecimentoDetalhes {
 						JOptionPane.showMessageDialog(null, "O preço inserido não é válido");
 						return;
 					}
+				} else {
+					JOptionPane.showMessageDialog(null, "O preço inserido não é válido");
+					return;
 				}
 				
 				Prato p = new Prato(prec, 0, descr, tipoDePratoTemp);
@@ -414,6 +425,10 @@ public class ecraEstabelecimentoDetalhes {
 				
 				ArrayList<Prato> pratos = p.select(e.getIdEstabelecimento());
 				showPratos(pratos);
+				
+				textArea_Descricao.setText("");
+				textField_Preco.setText("");
+				comboBox_TipoEvento.setSelectedIndex(-1);
 				
 			}
 		});
