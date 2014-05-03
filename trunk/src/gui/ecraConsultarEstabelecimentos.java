@@ -527,7 +527,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 				}
 
 				double aval = 0.0;
-				if (!textField_avaliacao.getText().equals("")) {
+				if (!textField_avaliacao.getText().equals("")||!textField_avaliacao.getText().matches("\\s*")) {
 					aval = Double.parseDouble(textField_avaliacao.getText());
 				}
 				String eventos = juntarEventos();
@@ -543,15 +543,15 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 				JOptionPane
 						.showMessageDialog(
 								this,
-								"O campo avaliação só pode estar preenchido com números de 0 a 100 com uma casa decimal opcional");
+								"O campo avaliação só pode estar preenchido com números de 0 a 100 com duas casas decimais opcionais");
 			}
 		}
 	}
 
 	private boolean validaAval() {
 		String textoAval = textField_avaliacao.getText();
-		if (!textoAval.equals("")) {
-			if (textoAval.matches("[0-9]{0,3}|[0-9]{0,3}.[0-9]{0,2}")) {
+		if (!textoAval.equals("") || !textoAval.matches("\\s*")) {
+			if (textoAval.matches("\\d{1,3}$|\\d{1,3}\\.\\d{1,2}$")) {
 				Double aval = Double.parseDouble(textoAval);
 				if (aval <= 100 && aval >= 0)
 					return true;
