@@ -55,12 +55,12 @@ public class ecraEstabelecimentoDetalhes {
 	private JComboBox<String> comboBox_TipoEvento;
 
 	// Data Variables
-	private ctrlDetalhesEstabelecimento ctrDetalherEstabelecimento;
+	private ctrlDetalhesEstabelecimento ctrDetalhesEstabelecimento;
 	private MealsTableModel mealsTableModel = new MealsTableModel();
 	private EventTableModel eventsTableModel = new EventTableModel();
 	private ArrayList<TipoDePrato> tiposDePrato = new ArrayList<TipoDePrato>();
 	private ArrayList<Prato> pratos = new ArrayList<>();
-	private FotografiasEComentarios moduloFotosEComentarios=new FotografiasEComentarios();
+	private FotografiasEComentarios moduloFotosEComentarios = new FotografiasEComentarios();
 
 	/**
 	 * Launch only this GUI (for debug purpose)
@@ -90,8 +90,8 @@ public class ecraEstabelecimentoDetalhes {
 			designacao_estabelecimento = "Estabelecimento de Teste";
 			buildGUI();
 		} else {
-			ctrDetalherEstabelecimento = new ctrlDetalhesEstabelecimento();
-			e = ctrDetalherEstabelecimento
+			ctrDetalhesEstabelecimento = new ctrlDetalhesEstabelecimento();
+			e = ctrDetalhesEstabelecimento
 					.consultarDetalhesEstabelecimento(establishmentID);
 			designacao_estabelecimento = e.getDesignacao();
 
@@ -136,7 +136,7 @@ public class ecraEstabelecimentoDetalhes {
 		addTextFields();
 		addButtons();
 		addEventPanel();
-		addDishesPanel();
+		addMealsPanel();
 	}
 
 	/**
@@ -319,7 +319,7 @@ public class ecraEstabelecimentoDetalhes {
 	/**
 	 * Generates the Dishes (menus) list
 	 */
-	private void addDishesPanel() {
+	private void addMealsPanel() {
 		JPanel panel_Pratos = new JPanel();
 		panel_Pratos.setBounds(267, 156, 647, 370);
 		panel_Pratos.setBorder(BorderFactory.createTitledBorder("Pratos"));
@@ -378,10 +378,9 @@ public class ecraEstabelecimentoDetalhes {
 			}
 		});
 
-		JButton btn_Adicionar = new JButton("Adicionar");
-		btn_Adicionar.setBounds(506, 336, 110, 23);
+		JButton btn_Adicionar = new JButton("Adicionar Prato");
+		btn_Adicionar.setBounds(496, 336, 131, 23);
 		panel_Pratos.add(btn_Adicionar);
-
 		btn_Adicionar.addActionListener(new ActionListener() {
 
 			@Override
@@ -391,8 +390,17 @@ public class ecraEstabelecimentoDetalhes {
 			}
 		});
 
-		JButton btn_Remover = new JButton("Remover");
-		
+		JButton btn_RemoverPrato = new JButton("Remover Prato");
+		btn_RemoverPrato.setBounds(253, 336, 131, 23);
+		panel_Pratos.add(btn_RemoverPrato);
+		btn_RemoverPrato.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				removePrato();
+			}
+		});
+
 		comboBox_TipoEvento = new JComboBox<String>();
 		comboBox_TipoEvento.setBounds(486, 274, 151, 20);
 		panel_Pratos.add(comboBox_TipoEvento);
@@ -526,8 +534,8 @@ public class ecraEstabelecimentoDetalhes {
 	private void verComentarios() {
 		if (pratos != null) {
 			if (table_Pratos.getSelectedRow() != -1) {
-				 moduloFotosEComentarios.showComentarios(pratos.get(
-				 table_Pratos.getSelectedRow()).getIdPrato());
+				moduloFotosEComentarios.showComentarios(pratos.get(
+						table_Pratos.getSelectedRow()).getIdPrato());
 			} else {
 				JOptionPane
 						.showMessageDialog(null, "Nenhum prato seleccionado");
@@ -541,8 +549,8 @@ public class ecraEstabelecimentoDetalhes {
 	private void verFotografias() {
 		if (pratos != null) {
 			if (table_Pratos.getSelectedRow() != -1) {
-				 moduloFotosEComentarios.showFotografias(pratos.get(
-				 table_Pratos.getSelectedRow()).getIdPrato());
+				moduloFotosEComentarios.showFotografias(pratos.get(
+						table_Pratos.getSelectedRow()).getIdPrato());
 			} else {
 				JOptionPane
 						.showMessageDialog(null, "Nenhum prato seleccionado");
@@ -596,7 +604,7 @@ public class ecraEstabelecimentoDetalhes {
 
 		Prato p = new Prato(prec, 0, descr, tipoDePratoTemp);
 
-		ctrDetalherEstabelecimento.insere(e.getIdEstabelecimento(), p);
+		ctrDetalhesEstabelecimento.insere(e.getIdEstabelecimento(), p);
 
 		pratos = p.select(e.getIdEstabelecimento());
 		showPratos();
@@ -604,5 +612,40 @@ public class ecraEstabelecimentoDetalhes {
 		textArea_Descricao.setText("");
 		textField_Preco.setText("");
 		comboBox_TipoEvento.setSelectedIndex(-1);
+	}
+
+	/**
+	 * Removes a meal from the meals list (presented on a JTable)
+	 */
+	private void removePrato() {
+		if (pratos != null) {
+			if (table_Pratos.getSelectedRow() != -1) {
+				Prato prato = pratos.get(table_Pratos.getSelectedRow());
+
+				String descricao = prato.getDescricao();
+				String preco = String.format("%.2f", prato.getPreco()) + "€";
+				String tipoDePrato = tiposDePrato.get(prato.getTipoDePrato())
+						.getDescricao();
+
+				int resposta = JOptionPane.showConfirmDialog(null,
+						"Adicionou este prato?\nDescrição: "+descricao+"\nTipo de Prato: "+tipoDePrato+"\nPreço: "+preco, "Confirmar Remoção de Prato",
+						JOptionPane.YES_NO_OPTION);
+				
+				if (resposta == JOptionPane.YES_OPTION) {
+					ctrDetalhesEstabelecimento.removePrato(prato.getIdPrato());
+					
+					pratos = new Prato().select(e.getIdEstabelecimento());
+					showPratos();
+				} else {
+					JOptionPane
+					.showMessageDialog(null, "Nenhum prato removido!");
+				}
+			} else {
+				JOptionPane
+						.showMessageDialog(null, "Nenhum prato seleccionado");
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "Nenhum prato na lista");
+		}
 	}
 }
