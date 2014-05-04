@@ -391,6 +391,8 @@ public class ecraEstabelecimentoDetalhes {
 			}
 		});
 
+		JButton btn_Remover = new JButton("Remover");
+		
 		comboBox_TipoEvento = new JComboBox<String>();
 		comboBox_TipoEvento.setBounds(486, 274, 151, 20);
 		panel_Pratos.add(comboBox_TipoEvento);
