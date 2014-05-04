@@ -483,7 +483,7 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 				for (int j = 0; j < s; j++) {
 					int c = comboBoxTiposDeEvento.getItemAt(j).compareTo(
 							listTipoDeEventos.getSelectedValue());
-					System.out.println(Integer.toString(c));
+					//System.out.println(Integer.toString(c));
 					if (c > 0) {
 						x = j;
 						break;
