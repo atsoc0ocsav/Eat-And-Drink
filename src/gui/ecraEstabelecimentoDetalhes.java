@@ -1,5 +1,7 @@
 package gui;
 
+import interfaceClasses.FotografiasEComentarios;
+
 import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -27,7 +29,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import controlo.ctrlDetalhesEstabelecimento;
-import dados.Cidade;
 import dados.Estabelecimento;
 import dados.Evento;
 import dados.Prato;
@@ -45,7 +46,6 @@ public class ecraEstabelecimentoDetalhes {
 	private JTextField textField_Zona;
 	private JTextField textField_Morada;
 	private JTextField textField_Horario;
-	private JTextField textField_Nome_Prato;
 	private JTextField textField_Preco;
 	private JTextField textField_Rating;
 	private TextArea textArea_Descricao;
@@ -59,13 +59,15 @@ public class ecraEstabelecimentoDetalhes {
 	private MealsTableModel mealsTableModel = new MealsTableModel();
 	private EventTableModel eventsTableModel = new EventTableModel();
 	private ArrayList<TipoDePrato> tiposDePrato = new ArrayList<TipoDePrato>();
+	private ArrayList<Prato> pratos = new ArrayList<>();
+	private FotografiasEComentarios moduloFotosEComentarios=new FotografiasEComentarios();
 
 	/**
 	 * Launch only this GUI (for debug purpose)
 	 * 
 	 */
 	public static void main(String[] args) {
-		
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -83,25 +85,20 @@ public class ecraEstabelecimentoDetalhes {
 	 * @param establishmentID
 	 */
 	public ecraEstabelecimentoDetalhes(int establishmentID) {
-		try {
-			// Debbug Mode
-			if (establishmentID == -1) {
-				designacao_estabelecimento = "Estabelecimento de Teste";
-				buildGUI();
-			} else {
-				ctrDetalherEstabelecimento = new ctrlDetalhesEstabelecimento();
-				e = ctrDetalherEstabelecimento
-						.consultarDetalhesEstabelecimento(establishmentID);
-				designacao_estabelecimento = e.getDesignacao();
+		// Debbug Mode
+		if (establishmentID == -1) {
+			designacao_estabelecimento = "Estabelecimento de Teste";
+			buildGUI();
+		} else {
+			ctrDetalherEstabelecimento = new ctrlDetalhesEstabelecimento();
+			e = ctrDetalherEstabelecimento
+					.consultarDetalhesEstabelecimento(establishmentID);
+			designacao_estabelecimento = e.getDesignacao();
 
-				buildGUI();
-				addDataToGUI();
-			}
-			display();
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException | UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
+			buildGUI();
+			addDataToGUI();
 		}
+		display();
 	}
 
 	/**
@@ -113,13 +110,18 @@ public class ecraEstabelecimentoDetalhes {
 	 * @throws ClassNotFoundException
 	 * @wbp.parser.entryPoint
 	 */
-	private void buildGUI() throws ClassNotFoundException,
-			InstantiationException, IllegalAccessException,
-			UnsupportedLookAndFeelException {
-
+	private void buildGUI() {
 		// Basic Setup of the Interface
-		UIManager.setLookAndFeel(UIManager
-				.getCrossPlatformLookAndFeelClassName());
+		try {
+			UIManager.setLookAndFeel(UIManager
+					.getCrossPlatformLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e) {
+			System.out
+					.println("Not able to set LookAndFeel for the current OS");
+			e.printStackTrace();
+		}
+
 		frame = new JFrame();
 		frame.setTitle("Eat & Drink Estabelecimentos - Estabelecimento \""
 				+ designacao_estabelecimento + "\"");
@@ -324,15 +326,9 @@ public class ecraEstabelecimentoDetalhes {
 		contentPane.add(panel_Pratos);
 		panel_Pratos.setLayout(null);
 
-		// Labels Constructors
-		JLabel lbl_Nome = new JLabel("Nome");
-		lbl_Nome.setHorizontalAlignment(SwingConstants.RIGHT);
-		lbl_Nome.setBounds(411, 22, 65, 14);
-		panel_Pratos.add(lbl_Nome);
-
 		JLabel lbl_Descricao = new JLabel("Descri\u00E7\u00E3o");
 		lbl_Descricao.setHorizontalAlignment(SwingConstants.RIGHT);
-		lbl_Descricao.setBounds(398, 55, 78, 14);
+		lbl_Descricao.setBounds(398, 19, 78, 14);
 		panel_Pratos.add(lbl_Descricao);
 
 		JLabel lbl_Tipo = new JLabel("Tipo");
@@ -349,12 +345,6 @@ public class ecraEstabelecimentoDetalhes {
 		lbl_Euro.setBounds(592, 308, 65, 14);
 		panel_Pratos.add(lbl_Euro);
 
-		// Text Fields and Area Constructors
-		textField_Nome_Prato = new JTextField();
-		textField_Nome_Prato.setBounds(486, 19, 151, 20);
-		panel_Pratos.add(textField_Nome_Prato);
-		textField_Nome_Prato.setColumns(10);
-
 		textField_Preco = new JTextField();
 		textField_Preco.setBounds(486, 305, 96, 20);
 		panel_Pratos.add(textField_Preco);
@@ -362,74 +352,42 @@ public class ecraEstabelecimentoDetalhes {
 
 		textArea_Descricao = new TextArea("", 20, 10,
 				TextArea.SCROLLBARS_VERTICAL_ONLY);
-		textArea_Descricao.setBounds(486, 52, 151, 216);
+		textArea_Descricao.setBounds(486, 19, 151, 249);
 		panel_Pratos.add(textArea_Descricao);
 
 		// Buttons Constructors
 		JButton btnFotografias = new JButton("Fotografias");
 		btnFotografias.setBounds(133, 336, 110, 23);
 		panel_Pratos.add(btnFotografias);
+		btnFotografias.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				verFotografias();
+			}
+		});
 
 		JButton btn_Comentarios_Prato = new JButton("Coment\u00E1rios");
 		btn_Comentarios_Prato.setBounds(13, 336, 110, 23);
 		panel_Pratos.add(btn_Comentarios_Prato);
+		btn_Comentarios_Prato.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				verComentarios();
+			}
+		});
 
 		JButton btn_Adicionar = new JButton("Adicionar");
 		btn_Adicionar.setBounds(506, 336, 110, 23);
 		panel_Pratos.add(btn_Adicionar);
-		
+
 		btn_Adicionar.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String tipoDePrato = (String) comboBox_TipoEvento.getSelectedItem();
-				
-				int tipoDePratoTemp = -1;
-				for (TipoDePrato t : tiposDePrato) {
-					if (t.getDescricao().equals(tipoDePrato)) {
-						tipoDePratoTemp = t.getTipoDePrato();
-						break;
-					}
-				}
-				if (tipoDePratoTemp == -1) {
-					JOptionPane.showMessageDialog( null, "Tipo de Prato não válido.");
-					return;
-				}
-				
-				String descr = textArea_Descricao.getText();
-				if (descr.equals("")) {
-					JOptionPane.showMessageDialog( null, "Descrição não válida.");
-					return;
-				}
-				String textoAval = textField_Preco.getText();
-				double prec = 0.0;
-				if (!textoAval.equals("")) {
-					if (textoAval.matches("[0-9]{0,3}|[0-9]{0,3}.[0-9]{0,2}")) {
-						prec = Double.parseDouble(textoAval);
-						if ( prec <= 0) {
-							JOptionPane.showMessageDialog( null, "O preço tem que ser maior que 0");
-							return;
-						} 
-					} else {
-						JOptionPane.showMessageDialog(null, "O preço inserido não é válido");
-						return;
-					}
-				} else {
-					JOptionPane.showMessageDialog(null, "O preço inserido não é válido");
-					return;
-				}
-				
-				Prato p = new Prato(prec, 0, descr, tipoDePratoTemp);
-				
-				ctrDetalherEstabelecimento.insere(e.getIdEstabelecimento(), p);
-				
-				ArrayList<Prato> pratos = p.select(e.getIdEstabelecimento());
-				showPratos(pratos);
-				
-				textArea_Descricao.setText("");
-				textField_Preco.setText("");
-				comboBox_TipoEvento.setSelectedIndex(-1);
-				
+				inserePrato();
+
 			}
 		});
 
@@ -450,8 +408,8 @@ public class ecraEstabelecimentoDetalhes {
 		scrollPane_Pratos.setViewportView(table_Pratos);
 
 		Prato p = new Prato();
-		ArrayList<Prato> pratos = p.select(e.getIdEstabelecimento());
-		showPratos(pratos);
+		pratos = p.select(e.getIdEstabelecimento());
+		showPratos();
 	}
 
 	/**
@@ -460,7 +418,8 @@ public class ecraEstabelecimentoDetalhes {
 	 */
 	@SuppressWarnings("serial")
 	public class MealsTableModel extends AbstractTableModel {
-		private String[] columnNames = { "Nome", "Pre\u00E7o", "Tipo de Prato" };
+		private String[] columnNames = { "Descri\u00E7ão", "Pre\u00E7o",
+				"Tipo de Prato" };
 		private Object[][] data = new Object[0][0];
 
 		@Override
@@ -512,40 +471,40 @@ public class ecraEstabelecimentoDetalhes {
 		textField_Morada.setText(e.getMorada());
 		textField_Horario.setText(e.getInformacoesHorario());
 		textField_Rating.setText(e.getRating() + "");
-		
-		TipoDePrato t = new TipoDePrato();
-		tiposDePrato = t.getTiposDePrato();
+
+		tiposDePrato = new TipoDePrato().getTiposDePrato();
 		if (tiposDePrato.size() > 0)
 			for (TipoDePrato tt : tiposDePrato) {
-				comboBox_TipoEvento.insertItemAt(tt.getDescricao(), comboBox_TipoEvento.getItemCount());
+				comboBox_TipoEvento.insertItemAt(tt.getDescricao(),
+						comboBox_TipoEvento.getItemCount());
 			}
 	}
 
-	private void showPratos(ArrayList<Prato> pratos) {
+	private void showPratos() {
 		Object[][] resultado = new Object[pratos.size()][3];
-		TipoDePrato t = new TipoDePrato();
-		ArrayList<TipoDePrato> tiposDePrato = new ArrayList<TipoDePrato>();
-		tiposDePrato = t.getTiposDePrato();
+		ArrayList<TipoDePrato> tiposDePrato = new TipoDePrato()
+				.getTiposDePrato();
 
 		for (int i = 0; i < pratos.size(); i++) {
 			Prato x = pratos.get(i);
 			resultado[i][0] = x.getDescricao();
-			resultado[i][1] = x.getPreco()+"€";
+			resultado[i][1] = String.format("%.2f", x.getPreco()) + "€";
 
-			for (TipoDePrato tt : tiposDePrato)
-				if (tt.getTipoDePrato() == x.getTipoDePrato()) {
-					resultado[i][2] = tt.getDescricao();
+			for (TipoDePrato t : tiposDePrato)
+				if (t.getTipoDePrato() == x.getTipoDePrato()) {
+					resultado[i][2] = t.getDescricao();
 					break;
 				}
 
 		}
 
 		mealsTableModel.changeData(resultado);
-		
+
 		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-		rightRenderer.setHorizontalAlignment( JLabel.RIGHT );
-		table_Pratos.getColumnModel().getColumn(1).setCellRenderer( rightRenderer );
-		
+		rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+		table_Pratos.getColumnModel().getColumn(1)
+				.setCellRenderer(rightRenderer);
+
 		mealsTableModel.fireTableDataChanged();
 	}
 
@@ -560,5 +519,88 @@ public class ecraEstabelecimentoDetalhes {
 
 		eventsTableModel.changeData(resultado);
 		eventsTableModel.fireTableDataChanged();
+	}
+
+	private void verComentarios() {
+		if (pratos != null) {
+			if (table_Pratos.getSelectedRow() != -1) {
+				 moduloFotosEComentarios.showComentarios(pratos.get(
+				 table_Pratos.getSelectedRow()).getIdPrato());
+			} else {
+				JOptionPane
+						.showMessageDialog(null, "Nenhum prato seleccionado");
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "Nenhum prato na lista");
+		}
+
+	}
+
+	private void verFotografias() {
+		if (pratos != null) {
+			if (table_Pratos.getSelectedRow() != -1) {
+				 moduloFotosEComentarios.showFotografias(pratos.get(
+				 table_Pratos.getSelectedRow()).getIdPrato());
+			} else {
+				JOptionPane
+						.showMessageDialog(null, "Nenhum prato seleccionado");
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "Nenhum prato na lista");
+		}
+
+	}
+
+	private void inserePrato() {
+		String tipoDePrato = (String) comboBox_TipoEvento.getSelectedItem();
+
+		int tipoDePratoTemp = -1;
+		for (TipoDePrato t : tiposDePrato) {
+			if (t.getDescricao().equals(tipoDePrato)) {
+				tipoDePratoTemp = t.getTipoDePrato();
+				break;
+			}
+		}
+		if (tipoDePratoTemp == -1) {
+			JOptionPane.showMessageDialog(null, "Tipo de Prato não válido.");
+			return;
+		}
+
+		String descr = textArea_Descricao.getText();
+		if (descr.equals("")) {
+			JOptionPane.showMessageDialog(null, "Descrição não válida.");
+			return;
+		}
+		String textoAval = textField_Preco.getText();
+		double prec = 0.0;
+		if (!textoAval.equals("")) {
+			if (textoAval.matches("[0-9]{0,3}|[0-9]{0,3}.[0-9]{0,2}")) {
+				prec = Double.parseDouble(textoAval);
+				if (prec <= 0) {
+					JOptionPane.showMessageDialog(null,
+							"O preço tem que ser maior que 0");
+					return;
+				}
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"O preço inserido não é válido");
+				return;
+			}
+		} else {
+			JOptionPane
+					.showMessageDialog(null, "O preço inserido não é válido");
+			return;
+		}
+
+		Prato p = new Prato(prec, 0, descr, tipoDePratoTemp);
+
+		ctrDetalherEstabelecimento.insere(e.getIdEstabelecimento(), p);
+
+		pratos = p.select(e.getIdEstabelecimento());
+		showPratos();
+
+		textArea_Descricao.setText("");
+		textField_Preco.setText("");
+		comboBox_TipoEvento.setSelectedIndex(-1);
 	}
 }
