@@ -128,6 +128,7 @@ public class Prato {
 		
 	}
 
-	
-
+	public void remove(int idPrato) {
+		dbConnection.delete("DELETE FROM Prato WHERE idPrato="+idPrato);
+	}
 }
