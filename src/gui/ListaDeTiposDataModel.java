@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.AbstractListModel;
 
+@SuppressWarnings("serial")
 public class ListaDeTiposDataModel extends AbstractListModel<String> {
 	private ArrayList<String> tipos = new ArrayList<String>();
 

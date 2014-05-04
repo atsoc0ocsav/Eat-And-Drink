@@ -2,6 +2,7 @@ package gui;
 
 import javax.swing.table.AbstractTableModel;
 
+@SuppressWarnings("serial")
 public class consultaEstablecimentosTableDataModel extends AbstractTableModel {
 	private String[] columnNames = { "Nome", "Zona", "Avaliação" };
 	private Object[][] data = new Object[0][0];
@@ -22,6 +23,7 @@ public class consultaEstablecimentosTableDataModel extends AbstractTableModel {
 		return data[row][col];
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Class getColumnClass(int c) {
 		return getValueAt(0, c).getClass();
 	}
