@@ -1,12 +1,7 @@
 package controlo;
 
-import dados.Cidade;
 import dados.Estabelecimento;
 import dados.Prato;
-import dados.TipoDeEstablecimento;
-import dados.TipoDeEvento;
-import dados.TipoDePrato;
-import dados.Zona;
 
 public class ctrlDetalhesEstabelecimento {
 	
@@ -27,11 +22,11 @@ public class ctrlDetalhesEstabelecimento {
 	}
 
 	public boolean insere(int idEstabelecimento, Prato p) {
-		
 		return prato.insere(idEstabelecimento, p);
-		
-		
-		
+	}
+
+	public void removePrato(int idPrato) {
+		prato.remove(idPrato);
 	}
 
 }
