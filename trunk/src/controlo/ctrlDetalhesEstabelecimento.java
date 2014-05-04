@@ -26,7 +26,7 @@ public class ctrlDetalhesEstabelecimento {
 	}
 
 	public void removePrato(int idPrato) {
-		prato.remove(idPrato);
+		new Prato().remove(idPrato);
 	}
 
 }

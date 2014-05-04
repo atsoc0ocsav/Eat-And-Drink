@@ -7,43 +7,44 @@ import java.util.ArrayList;
 import dbc.DBConnection;
 
 public class Prato {
-	
+
 	private String nome;
 	private double preco;
 	private int idPrato;
-	private String descricao ;
+	private String descricao;
 	private int tipoDePrato;
-	
+
 	private DBConnection dbConnection;
-	
+
 	public Prato() {
 		dbConnection = new DBConnection();
 	}
-	
+
 	public Prato(double prec, int idPrato, String descricao, int tipoDePrato) {
 		dbConnection = new DBConnection();
-		
+
 		this.preco = prec;
 		this.idPrato = idPrato;
 		this.descricao = descricao;
 		this.tipoDePrato = tipoDePrato;
 	}
-	
+
 	public ArrayList<Prato> select(int idEstabelecimento) {
 
-		String sqlExpression = "SELECT * FROM menuDoEstabelecimento, Prato " +
-				"WHERE menuDoEstabelecimento.idEstabelecimento = " + idEstabelecimento +  
-				"AND menuDoEstabelecimento.idPrato = Prato.idPrato;";
-		
+		String sqlExpression = "SELECT * FROM menuDoEstabelecimento, Prato "
+				+ "WHERE menuDoEstabelecimento.idEstabelecimento = "
+				+ idEstabelecimento
+				+ "AND menuDoEstabelecimento.idPrato = Prato.idPrato;";
+
 		ResultSet resultSet = dbConnection.select(sqlExpression);
-		
-		ArrayList<Prato> pratos = prepareResult(resultSet); 
-		
+
+		ArrayList<Prato> pratos = prepareResult(resultSet);
+
 		dbConnection.closeDBConnection();
-		
+
 		return pratos;
 	}
-	
+
 	private ArrayList<Prato> prepareResult(ResultSet resultSet) {
 		ArrayList<Prato> pratos = new ArrayList<Prato>();
 		try {
@@ -88,47 +89,49 @@ public class Prato {
 	}
 
 	public boolean insere(int estabelecimentoId, Prato p) {
-		
+
 		ResultSet rs = dbConnection
 				.select("SELECT FIRST idPrato FROM Prato ORDER BY idPrato DESC");
 
 		int currentID = 0;
 		try {
-			if (rs.next()) 
+			if (rs.next())
 				currentID = rs.getInt(1) + 1;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		String sqlExpression = "INSERT INTO Prato (descricao, idPrato, preco, tipoDePrato) VALUES " +
-				"( '" + p.getDescricao() + 
-				"', " + currentID +
-				", " + p.getPreco() + 
-				", " + p.getTipoDePrato() + "); ";
-				
-		//System.out.println(sqlExpression);
-		
+
+		String sqlExpression = "INSERT INTO Prato (descricao, idPrato, preco, tipoDePrato) VALUES "
+				+ "( '"
+				+ p.getDescricao()
+				+ "', "
+				+ currentID
+				+ ", "
+				+ p.getPreco() + ", " + p.getTipoDePrato() + "); ";
+
+		// System.out.println(sqlExpression);
+
 		dbConnection.insert(sqlExpression);
-		
+
 		dbConnection.closeDBConnection();
-		
-		
-		sqlExpression = "INSERT INTO MenuDoEstabelecimento (idEstabelecimento, idPrato) VALUES " +
-				"( '" + estabelecimentoId + 
-				"', " + currentID + "); ";
-				
-		//System.out.println(sqlExpression);
-		
+
+		sqlExpression = "INSERT INTO MenuDoEstabelecimento (idEstabelecimento, idPrato) VALUES "
+				+ "( '" + estabelecimentoId + "', " + currentID + "); ";
+
+		// System.out.println(sqlExpression);
+
 		dbConnection.insert(sqlExpression);
-		
+
 		dbConnection.closeDBConnection();
-		
+
 		return true;
-		
+
 	}
 
 	public void remove(int idPrato) {
-		dbConnection.delete("DELETE FROM Prato WHERE idPrato="+idPrato);
+		dbConnection.delete("DELETE FROM Prato WHERE idPrato=" + idPrato);
+
+		dbConnection.closeDBConnection();
 	}
 }
