@@ -6,38 +6,27 @@ import java.sql.SQLException;
 public class TestDB {
 
 	public static void main(String[] Args) {
+		DBConnection db;
 
-		DBConnection db = null;
 		boolean works = false;
-
 		try {
 			db = new DBConnection();
 			works = true;
+
+			if (works) {
+				System.out.println("It Works!");
+
+				// db.insert("");
+				// db.delete("");
+
+				showResult(db.select(""));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		if (works) {
-			System.out.println("It Works!");
-//			ResultSet result;
-//
-//			db.insert("");
-//
-//			result = db.select("");
-//
-//			showResult(result);
-//
-//			db.delete("");
-//
-//			result = db.select("");
-//
-//			showResult(result);
-		}
-
 	}
 
-	private static void showResult(ResultSet result) {
-
+	public static void showResult(ResultSet result) {
 		try {
 			while (result.next()) {
 				try {
