@@ -5,8 +5,11 @@ import java.awt.Button;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -269,6 +272,17 @@ public class ecraConsultarEstabelecimentos extends JFrame {
 		table = new JTable(modeloTabelaConsulta);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPaneResultadosPesquisa.setViewportView(table);
+		table.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent me) {
+		        JTable table =(JTable) me.getSource();
+		        Point p = me.getPoint();
+		        int row = table.rowAtPoint(p);
+		        if (me.getClickCount() == 2) {
+		        	new ecraEstabelecimentoDetalhes(estabelecimentos.get(
+							row).getIdEstabelecimento());
+		        }
+		    }
+		});
 
 		addListeners();
 
