@@ -26,7 +26,7 @@ public class DadosUtilizador {
 				query = "SELECT * FROM Utilizador, Zona WHERE Zona.cidade = '"
 						+ city + "'" + " AND Zona.idZona = Utilizador.idZona";
 			else if (city.equals("") && !school.equals("") && name.equals(""))
-				query = "SELECT * FROM Utilizador WHERE escola = '" + school
+				query = "SELECT * FROM Utilizador, Zona WHERE Zona.idZona = Utilizador.idZona AND Utilizador.escola = '" + school
 						+ "'";
 			else if (city.equals("") && school.equals("") && !name.equals(""))
 				query = "SELECT * FROM Utilizador, Zona WHERE nome LIKE '%"
@@ -110,8 +110,7 @@ public class DadosUtilizador {
 	public boolean gravarAlteracoes(String nome, String email, String cidade,
 			String escola) {
 		return database.update("UPDATE Utilizador SET nome = '" + nome
-				+ "', email = '" + email + "', cidade = '" + cidade
-				+ "' , escola = '" + escola + "' WHERE email = '" + email
+				+ "', email = '" + email + "', escola = '" + escola + "' WHERE email = '" + email
 				+ "';");
 	}
 

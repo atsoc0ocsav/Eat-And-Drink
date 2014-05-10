@@ -35,8 +35,8 @@ public class FormConsultaUtilizadores {
 	private FormDetalhesUtilizador formDetalhesUtilizador;
 	private GestorConsultaDeUtilizadores gestorConsultaDeUtilizadores;
 	
-	private String currentUsername = "Jorge Rosa";
-	private String currentEmail = "jorge@iscte.pt";
+	private String currentUsername = "Aaron Leffler";
+	private String currentEmail = "Aaron_Leffler@felicity.com";
 	private Utilizador selectedUser;
 
 	private Vector<String> cities = new Vector<String>();
