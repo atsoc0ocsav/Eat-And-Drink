@@ -1,7 +1,0 @@
-Bar
-Discoteca
-Padaria
-Quiosque
-Restaurante
-Snack-Bar
-Café
