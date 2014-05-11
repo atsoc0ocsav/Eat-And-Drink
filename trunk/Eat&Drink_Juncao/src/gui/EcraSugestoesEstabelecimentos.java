@@ -28,6 +28,7 @@ public class EcraSugestoesEstabelecimentos extends JFrame {
 	private JTable table;
 	private ctrlConsultarEstabelecimentos ctrlConsulta;
 	private ArrayList<Zona> zonas;
+	private ArrayList<Estabelecimento>  estabelecimentos;
 	private consultaEstablecimentosTableDataModel modeloTabelaConsulta = new consultaEstablecimentosTableDataModel();
 
 
@@ -39,7 +40,7 @@ public class EcraSugestoesEstabelecimentos extends JFrame {
 		this.ctrlConsulta = ctrlConsulta;
 		this.zonas = ctrlConsulta.getZonas();
 				
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 504, 552);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -66,18 +67,19 @@ public class EcraSugestoesEstabelecimentos extends JFrame {
 		panel_resultadoSugestoes.add(scrollPaneResultadosSugestoes);
 		
 		table = new JTable(modeloTabelaConsulta);
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Nome", "Zona", "Avalia\u00E7\u00E3o"
-			}
-		));
 		scrollPaneResultadosSugestoes.setViewportView(table);
 		
 		JButton btnVerDetalhes = new JButton("Ver Detalhes");
 		btnVerDetalhes.setBounds(82, 426, 93, 23);
 		panel_resultadoSugestoes.add(btnVerDetalhes);
+		
+		btnVerDetalhes.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				showDetalhesEstabelecimento();
+			}
+		});
 		
 		JButton btnSair = new JButton("Sair");
 		btnSair.setBounds(311, 426, 89, 23);
@@ -96,7 +98,6 @@ public class EcraSugestoesEstabelecimentos extends JFrame {
 		this.setVisible(true);
 	}
 
-
 	private void armazenaSugestoes(String email, ctrlConsultarEstabelecimentos ctrlConsulta) {
 		
 		ArrayList<Estabelecimento> array = ctrlConsulta.consultaSugestoes(email);	
@@ -104,6 +105,8 @@ public class EcraSugestoesEstabelecimentos extends JFrame {
 		for (int i = 0; i < array.size(); i++) {
 			System.out.println(array.get(i).toString());
 		}
+		
+		estabelecimentos = array;
 		
 		preencheTabela(array);		
 	}
@@ -132,6 +135,12 @@ public class EcraSugestoesEstabelecimentos extends JFrame {
 			}
 		}
 		return "-";
+	}
+	
+	private void showDetalhesEstabelecimento() {
+		int selected = table.getSelectedRow();
+		int id = estabelecimentos.get(selected).getIdEstabelecimento();
+		new ecraEstabelecimentoDetalhes(id);
 	}
 	
 }
