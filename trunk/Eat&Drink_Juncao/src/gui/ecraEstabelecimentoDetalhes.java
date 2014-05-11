@@ -62,6 +62,7 @@ public class ecraEstabelecimentoDetalhes {
 	private ArrayList<Prato> pratos = new ArrayList<>();
 	private FotografiasEComentarios moduloFotosEComentarios = new FotografiasEComentarios();
 
+	
 	/**
 	 * Launch only this GUI (for debug purpose)
 	 * 

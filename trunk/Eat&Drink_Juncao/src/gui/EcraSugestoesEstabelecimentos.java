@@ -1,47 +1,44 @@
 package gui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JButton;
+
+import controlo.ctrlConsultarEstabelecimentos;
+import dados.Estabelecimento;
+import dados.Zona;
 
 public class EcraSugestoesEstabelecimentos extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
+	private ctrlConsultarEstabelecimentos ctrlConsulta;
+	private ArrayList<Zona> zonas;
+	private consultaEstablecimentosTableDataModel modeloTabelaConsulta = new consultaEstablecimentosTableDataModel();
 
-//	/**
-//	 * Launch the application.
-//	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					EcraSugestoesEstabelecimentos frame = new EcraSugestoesEstabelecimentos("user");
-//					// frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
 
 	/**
 	 * Create the frame.
 	 */
-	public EcraSugestoesEstabelecimentos(String NomeUtil, String email) {
+	public EcraSugestoesEstabelecimentos(String NomeUtil, String email, ctrlConsultarEstabelecimentos ctrlConsulta) {
+		
+		this.ctrlConsulta = ctrlConsulta;
+		this.zonas = ctrlConsulta.getZonas();
+				
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 504, 552);
 		contentPane = new JPanel();
@@ -68,7 +65,7 @@ public class EcraSugestoesEstabelecimentos extends JFrame {
 		scrollPaneResultadosSugestoes.setBounds(10, 30, 463, 388);
 		panel_resultadoSugestoes.add(scrollPaneResultadosSugestoes);
 		
-		table = new JTable();
+		table = new JTable(modeloTabelaConsulta);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -84,9 +81,57 @@ public class EcraSugestoesEstabelecimentos extends JFrame {
 		
 		JButton btnSair = new JButton("Sair");
 		btnSair.setBounds(311, 426, 89, 23);
+		btnSair.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+			}
+		});
 		panel_resultadoSugestoes.add(btnSair);
-
+		
+		armazenaSugestoes(email, ctrlConsulta);
+		
 		this.setResizable(false);
 		this.setVisible(true);
 	}
+
+
+	private void armazenaSugestoes(String email, ctrlConsultarEstabelecimentos ctrlConsulta) {
+		
+		ArrayList<Estabelecimento> array = ctrlConsulta.consultaSugestoes(email);	
+		
+		for (int i = 0; i < array.size(); i++) {
+			System.out.println(array.get(i).toString());
+		}
+		
+		preencheTabela(array);		
+	}
+
+
+	private void preencheTabela(ArrayList<Estabelecimento> array) {
+		
+		Object[][] resultado = new Object[array.size()][3];
+
+		for (int i = 0; i < array.size(); i++) {
+			Estabelecimento x = array.get(i);
+			resultado[i][0] = x.getDesignacao();
+			resultado[i][1] = idZoneToDesignacao(x.getIdZona());
+			resultado[i][2] = x.getRating();
+			
+			modeloTabelaConsulta.changeData(resultado);
+			modeloTabelaConsulta.fireTableDataChanged();
+		}
+		
+	}
+	
+	private Object idZoneToDesignacao(int idZona) {
+		for (Zona zona : zonas) {
+			if (zona.getIdZona() == idZona) {
+				return zona.getDesignacao();
+			}
+		}
+		return "-";
+	}
+	
 }

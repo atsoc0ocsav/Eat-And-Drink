@@ -25,6 +25,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import controlo.GestorConsultaDeUtilizadores;
+import controlo.ctrlConsultarEstabelecimentos;
 import dados.Botao;
 import dados.Utilizador;
 
@@ -67,11 +68,12 @@ public class FormConsultaUtilizadores {
 	private JButton detailsButton = new JButton("Detalhes");
 	private JButton yourProfileButton = new JButton("Seu Perfil");
 	private JButton exitButton = new JButton("Sair");
+	private ctrlConsultarEstabelecimentos ctrlConsulta = new ctrlConsultarEstabelecimentos();
 	
 	public FormConsultaUtilizadores(JFrame window, Container container){
 		this.window = window;
 		this.container = container;
-		formDetalhesUtilizador = new FormDetalhesUtilizador(window, container, this);
+		formDetalhesUtilizador = new FormDetalhesUtilizador(window, container, this, ctrlConsulta);
 		gestorConsultaDeUtilizadores = new GestorConsultaDeUtilizadores();
 	}
 	
