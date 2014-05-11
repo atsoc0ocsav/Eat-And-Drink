@@ -58,4 +58,14 @@ public class ctrlConsultarEstabelecimentos {
 		return tipoDePrato.getTiposDePrato();
 	}
 
+	public ArrayList<Estabelecimento> consultaSugestoes(String email) {
+		
+		ArrayList<Estabelecimento> array = new ArrayList<Estabelecimento>();
+
+		array = estabelecimento.armazenaSugestoes(email);
+		
+		return array;
+
+	}
+
 }

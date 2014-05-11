@@ -128,8 +128,6 @@ public class Estabelecimento {
 			sqlSelect += " WHERE" + sqlExpression
 					+ " Estabelecimento.rating >= " + aval;
 
-			//System.out.println(sqlSelect);
-
 		}
 
 		ResultSet resultSet = dbConnection.select(sqlSelect);
@@ -213,7 +211,7 @@ public class Estabelecimento {
 			}
 
 			dbConnection.closeDBConnection();
-			
+
 			return new Estabelecimento(coordenadasGPS, idZona, designacao,
 					formaDeChegar, establishmentID, informacoesHorario, morada,
 					rating, tipoDoEstabelecimento, email, nomeZona, cidade);
@@ -273,5 +271,28 @@ public class Estabelecimento {
 
 	public String getCidade() {
 		return cidade;
+	}
+
+	public ArrayList<Estabelecimento> armazenaSugestoes(String email) {
+
+		String sqlSelect = "SELECT * FROM Utilizador, pratoRecomendado, Prato, Estabelecimento, menuDoEstabelecimento"
+				+ " WHERE "
+				+ "Utilizador.email = '"
+				+ email
+				+ "' AND pratoRecomendado.email = '"
+				+ email
+				+ "' AND "
+				+ "pratoRecomendado.idPrato = Prato.idPrato AND Prato.idPrato = menuDoEstabelecimento.idPrato AND "
+				+ "menuDoEstabelecimento.idEstabelecimento = Estabelecimento.idEstabelecimento";
+
+		System.out.println(sqlSelect);
+
+		ResultSet resultSet = dbConnection.select(sqlSelect);
+
+		ArrayList<Estabelecimento> array = prepareResult(resultSet);
+
+		dbConnection.closeDBConnection();
+
+		return array;
 	}
 }

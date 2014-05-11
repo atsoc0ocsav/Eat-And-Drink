@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import controlo.GestorDetalhesDeUtilizador;
+import controlo.ctrlConsultarEstabelecimentos;
 import dados.Botao;
 import dados.Utilizador;
 
@@ -29,6 +30,7 @@ public class FormDetalhesUtilizador {
 	private Container container;
 	private FormConsultaUtilizadores formConsultaUtilizadores;
 	private GestorDetalhesDeUtilizador gestorDetalhesDeUtilizador;
+	private ctrlConsultarEstabelecimentos ctrlConsulta;
 
 	private JPanel detailsPanel = new JPanel();
 	private JLabel photoLabel = new JLabel();
@@ -49,11 +51,12 @@ public class FormDetalhesUtilizador {
 	private JButton viewSuggestsButton = new JButton("Ver Sugestões");
 	private JButton goBackButton = new JButton("Voltar");
 	
-	public FormDetalhesUtilizador(JFrame window, Container container, FormConsultaUtilizadores formConsultaUtilizadores) {
+	public FormDetalhesUtilizador(JFrame window, Container container, FormConsultaUtilizadores formConsultaUtilizadores, ctrlConsultarEstabelecimentos ctrlConsulta) {
 		this.window = window;
 		this.container = container;
 		this.formConsultaUtilizadores = formConsultaUtilizadores;
 		gestorDetalhesDeUtilizador = new GestorDetalhesDeUtilizador();
+		this.ctrlConsulta = ctrlConsulta;
 	}
 
 	public void construirFormularioDetalhes(String username, String city, String school, String email){
@@ -111,7 +114,7 @@ public class FormDetalhesUtilizador {
 		viewSuggestsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new EcraSugestoesEstabelecimentos(formConsultaUtilizadores.getSelectedUser().getName(), formConsultaUtilizadores.getSelectedUser().getEmail());
+				new EcraSugestoesEstabelecimentos(formConsultaUtilizadores.getSelectedUser().getName(), formConsultaUtilizadores.getSelectedUser().getEmail(), ctrlConsulta);
 			}
 		});
 		
