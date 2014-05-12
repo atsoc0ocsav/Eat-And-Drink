@@ -114,7 +114,7 @@ public class FormDetalhesUtilizador {
 		viewSuggestsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new EcraSugestoesEstabelecimentos(formConsultaUtilizadores.getSelectedUser().getName(), formConsultaUtilizadores.getSelectedUser().getEmail(), ctrlConsulta);
+				new ecraSugestoesEstabelecimentos(formConsultaUtilizadores.getSelectedUser().getName(), formConsultaUtilizadores.getSelectedUser().getEmail(), ctrlConsulta);
 			}
 		});
 		
