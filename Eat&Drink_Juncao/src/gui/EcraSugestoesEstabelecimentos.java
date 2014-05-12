@@ -48,7 +48,7 @@ public class EcraSugestoesEstabelecimentos extends JFrame {
 		contentPane.setLayout(null);
 
 		JLabel lblEatDrink = new JLabel("Eat and Drink");
-		lblEatDrink.setBounds(5, 5, 531, 28);
+		lblEatDrink.setBounds(5, 5, 483, 28);
 		contentPane.add(lblEatDrink);
 		lblEatDrink.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEatDrink.setFont(new Font("Tahoma", Font.PLAIN, 23));
@@ -70,7 +70,7 @@ public class EcraSugestoesEstabelecimentos extends JFrame {
 		scrollPaneResultadosSugestoes.setViewportView(table);
 		
 		JButton btnVerDetalhes = new JButton("Ver Detalhes");
-		btnVerDetalhes.setBounds(82, 426, 93, 23);
+		btnVerDetalhes.setBounds(81, 426, 114, 23);
 		panel_resultadoSugestoes.add(btnVerDetalhes);
 		
 		btnVerDetalhes.addActionListener(new ActionListener() {
@@ -82,7 +82,7 @@ public class EcraSugestoesEstabelecimentos extends JFrame {
 		});
 		
 		JButton btnSair = new JButton("Sair");
-		btnSair.setBounds(311, 426, 89, 23);
+		btnSair.setBounds(307, 426, 89, 23);
 		btnSair.addActionListener(new ActionListener() {
 			
 			@Override
@@ -99,15 +99,8 @@ public class EcraSugestoesEstabelecimentos extends JFrame {
 	}
 
 	private void armazenaSugestoes(String email, ctrlConsultarEstabelecimentos ctrlConsulta) {
-		
 		ArrayList<Estabelecimento> array = ctrlConsulta.consultaSugestoes(email);	
-		
-		for (int i = 0; i < array.size(); i++) {
-			System.out.println(array.get(i).toString());
-		}
-		
 		estabelecimentos = array;
-		
 		preencheTabela(array);		
 	}
 

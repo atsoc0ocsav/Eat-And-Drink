@@ -285,12 +285,10 @@ public class Estabelecimento {
 				+ "pratoRecomendado.idPrato = Prato.idPrato AND Prato.idPrato = menuDoEstabelecimento.idPrato AND "
 				+ "menuDoEstabelecimento.idEstabelecimento = Estabelecimento.idEstabelecimento";
 
-		System.out.println(sqlSelect);
-
 		ResultSet resultSet = dbConnection.select(sqlSelect);
-
+		
 		ArrayList<Estabelecimento> array = prepareResult(resultSet);
-
+		
 		dbConnection.closeDBConnection();
 
 		return array;
