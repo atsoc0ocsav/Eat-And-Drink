@@ -22,24 +22,24 @@ import controlo.ctrlConsultarEstabelecimentos;
 import dados.Estabelecimento;
 import dados.Zona;
 
-public class EcraSugestoesEstabelecimentos extends JFrame {
+public class ecraSugestoesEstabelecimentos extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
 	private ctrlConsultarEstabelecimentos ctrlConsulta;
 	private ArrayList<Zona> zonas;
-	private ArrayList<Estabelecimento>  estabelecimentos;
+	private ArrayList<Estabelecimento> estabelecimentos;
 	private consultaEstablecimentosTableDataModel modeloTabelaConsulta = new consultaEstablecimentosTableDataModel();
-
 
 	/**
 	 * Create the frame.
 	 */
-	public EcraSugestoesEstabelecimentos(String NomeUtil, String email, ctrlConsultarEstabelecimentos ctrlConsulta) {
-		
+	public ecraSugestoesEstabelecimentos(String NomeUtil, String email,
+			ctrlConsultarEstabelecimentos ctrlConsulta) {
+
 		this.ctrlConsulta = ctrlConsulta;
 		this.zonas = ctrlConsulta.getZonas();
-				
+
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 504, 552);
 		contentPane = new JPanel();
@@ -55,58 +55,61 @@ public class EcraSugestoesEstabelecimentos extends JFrame {
 
 		JPanel panel_resultadoSugestoes = new JPanel();
 		panel_resultadoSugestoes.setBounds(5, 59, 483, 460);
-		panel_resultadoSugestoes.setBorder(BorderFactory
-				.createTitledBorder("Sugestões de Estabelecimentos do Utilizador " + NomeUtil));
+		panel_resultadoSugestoes
+				.setBorder(BorderFactory
+						.createTitledBorder("Sugestões de Estabelecimentos do Utilizador "
+								+ NomeUtil));
 		contentPane.add(panel_resultadoSugestoes);
 		panel_resultadoSugestoes.setLayout(null);
-		
+
 		JScrollPane scrollPaneResultadosSugestoes = new JScrollPane();
 		scrollPaneResultadosSugestoes.setViewportBorder(new LineBorder(
 				new Color(0, 0, 0)));
 		scrollPaneResultadosSugestoes.setBounds(10, 30, 463, 388);
 		panel_resultadoSugestoes.add(scrollPaneResultadosSugestoes);
-		
+
 		table = new JTable(modeloTabelaConsulta);
 		scrollPaneResultadosSugestoes.setViewportView(table);
-		
+
 		JButton btnVerDetalhes = new JButton("Ver Detalhes");
 		btnVerDetalhes.setBounds(81, 426, 114, 23);
 		panel_resultadoSugestoes.add(btnVerDetalhes);
-		
+
 		btnVerDetalhes.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				showDetalhesEstabelecimento();
 			}
 		});
-		
+
 		JButton btnSair = new JButton("Sair");
 		btnSair.setBounds(307, 426, 89, 23);
 		btnSair.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
 			}
 		});
 		panel_resultadoSugestoes.add(btnSair);
-		
+
 		armazenaSugestoes(email, ctrlConsulta);
-		
+
 		this.setResizable(false);
 		this.setVisible(true);
 	}
 
-	private void armazenaSugestoes(String email, ctrlConsultarEstabelecimentos ctrlConsulta) {
-		ArrayList<Estabelecimento> array = ctrlConsulta.consultaSugestoes(email);	
+	private void armazenaSugestoes(String email,
+			ctrlConsultarEstabelecimentos ctrlConsulta) {
+		ArrayList<Estabelecimento> array = ctrlConsulta
+				.consultaSugestoes(email);
 		estabelecimentos = array;
-		preencheTabela(array);		
+		preencheTabela(array);
 	}
 
-
 	private void preencheTabela(ArrayList<Estabelecimento> array) {
-		
+
 		Object[][] resultado = new Object[array.size()][3];
 
 		for (int i = 0; i < array.size(); i++) {
@@ -114,13 +117,13 @@ public class EcraSugestoesEstabelecimentos extends JFrame {
 			resultado[i][0] = x.getDesignacao();
 			resultado[i][1] = idZoneToDesignacao(x.getIdZona());
 			resultado[i][2] = x.getRating();
-			
+
 			modeloTabelaConsulta.changeData(resultado);
 			modeloTabelaConsulta.fireTableDataChanged();
 		}
-		
+
 	}
-	
+
 	private Object idZoneToDesignacao(int idZona) {
 		for (Zona zona : zonas) {
 			if (zona.getIdZona() == idZona) {
@@ -129,11 +132,13 @@ public class EcraSugestoesEstabelecimentos extends JFrame {
 		}
 		return "-";
 	}
-	
+
 	private void showDetalhesEstabelecimento() {
 		int selected = table.getSelectedRow();
-		int id = estabelecimentos.get(selected).getIdEstabelecimento();
-		new ecraEstabelecimentoDetalhes(id);
+		if (selected >= 0) {
+			int id = estabelecimentos.get(selected).getIdEstabelecimento();
+			new ecraEstabelecimentoDetalhes(id);
+		}
 	}
-	
+
 }

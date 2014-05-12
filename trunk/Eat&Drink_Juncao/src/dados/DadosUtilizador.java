@@ -26,8 +26,8 @@ public class DadosUtilizador {
 				query = "SELECT * FROM Utilizador, Zona WHERE Zona.cidade = '"
 						+ city + "'" + " AND Zona.idZona = Utilizador.idZona";
 			else if (city.equals("") && !school.equals("") && name.equals(""))
-				query = "SELECT * FROM Utilizador, Zona WHERE Zona.idZona = Utilizador.idZona AND Utilizador.escola = '" + school
-						+ "'";
+				query = "SELECT * FROM Utilizador, Zona WHERE Zona.idZona = Utilizador.idZona AND Utilizador.escola = '"
+						+ school + "'";
 			else if (city.equals("") && school.equals("") && !name.equals(""))
 				query = "SELECT * FROM Utilizador, Zona WHERE nome LIKE '%"
 						+ name + "%' AND Zona.idZona = Utilizador.idZona";
@@ -69,22 +69,23 @@ public class DadosUtilizador {
 		LinkedList<String> followUsers = new LinkedList<String>();
 		try {
 			rs = database.select(query);
-						
-			rs.next();
-			user = new Utilizador(rs.getString("email"), 0,
-					rs.getString("nome"), rs.getString("escola"),
-					rs.getString("cidade"), rs.getString("idZona"), " ");
 
-			rs = database.select("SELECT * FROM follow WHERE emailsgu = '"
-					+ rs.getString("email") + "'");
-			while (rs.next()) {
-				rsTemp = database
-						.select("SELECT * FROM Utilizador, Zona WHERE Zona.idZona = Utilizador.idZona AND email LIKE '%"
-								+ rs.getString("emailsguidor") + "%'");
-				rsTemp.next();
-				followUsers.add(rsTemp.getString("nome"));
+			if (rs.next()) {
+				user = new Utilizador(rs.getString("email"), 0,
+						rs.getString("nome"), rs.getString("escola"),
+						rs.getString("cidade"), rs.getString("idZona"), " ");
+
+				rs = database.select("SELECT * FROM follow WHERE emailsgu = '"
+						+ rs.getString("email") + "'");
+				while (rs.next()) {
+					rsTemp = database
+							.select("SELECT * FROM Utilizador, Zona WHERE Zona.idZona = Utilizador.idZona AND email LIKE '%"
+									+ rs.getString("emailsguidor") + "%'");
+					rsTemp.next();
+					followUsers.add(rsTemp.getString("nome"));
+				}
+				user.setFollowers(followUsers);
 			}
-			user.setFollowers(followUsers);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -110,8 +111,8 @@ public class DadosUtilizador {
 	public boolean gravarAlteracoes(String nome, String email, String cidade,
 			String escola) {
 		return database.update("UPDATE Utilizador SET nome = '" + nome
-				+ "', email = '" + email + "', escola = '" + escola + "' WHERE email = '" + email
-				+ "';");
+				+ "', email = '" + email + "', escola = '" + escola
+				+ "' WHERE email = '" + email + "';");
 	}
 
 	public boolean seguirUtilizador(String currentEmail, String email) {
