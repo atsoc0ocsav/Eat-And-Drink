@@ -21,7 +21,6 @@ public class Evento {
 
 	public Evento(int idEvento, String descricao) {
 		dbConnection = new DBConnection();
-
 		this.idEvento = idEvento;
 		this.descricao = descricao;
 	}
@@ -103,6 +102,14 @@ public class Evento {
 
 	public int getIdEvento() {
 		return idEvento;
+	}
+	
+	public String getHora(){
+		return hora;
+	}
+	
+	public String getData(){
+		return data;
 	}
 
 	public DBConnection getDbConnection() {
