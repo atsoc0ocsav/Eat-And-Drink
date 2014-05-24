@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class DBActions {
+	private static final boolean PRINT_ACTIVE = false;
+
 	// Files Locations
 	private static final String CITIES_LIST = "./dataSource/Geographical/Lista de Municípios.csv";
 	private static final String ZONES_LIST = "./dataSource/Geographical/Lista de Freguesias.csv";
@@ -120,8 +122,8 @@ public class DBActions {
 				System.out.println("Added " + INDEX_NAMES[index] + " index!");
 				activeIndexes[index] = true;
 			} else {
-				System.out
-						.println("The requested index already exixts in the database!");
+				System.out.println("The requested index (" + INDEX_NAMES[index]
+						+ ") already exixts in the database!");
 			}
 
 		} catch (SQLException e) {
@@ -160,8 +162,8 @@ public class DBActions {
 
 		dbConnection.executeUpdate("DELETE FROM Cidade");
 		dbConnection.commit();
-		
-		System.out.println("Information removed from database with success!");
+
+		System.out.println("Information from database removed with success!");
 	}
 
 	// Database information insert/create functions
@@ -185,8 +187,7 @@ public class DBActions {
 		}
 
 		dbConnection.commit();
-		System.out.println(cities.size()
-				+ " Cities Added with success to database");
+		print(cities.size() + " Cities Added with success to database");
 	}
 
 	/**
@@ -243,8 +244,7 @@ public class DBActions {
 		}
 
 		dbConnection.commit();
-		System.out.println(zones.size()
-				+ " Zones Added with success to database");
+		print(zones.size() + " Zones Added with success to database");
 	}
 
 	/**
@@ -261,7 +261,7 @@ public class DBActions {
 		}
 
 		dbConnection.commit();
-		System.out.println(types.size()
+		print(types.size()
 				+ " Establishment Types Added with success to database");
 	}
 
@@ -313,7 +313,7 @@ public class DBActions {
 			addEmailToPhoto(email, idPhoto);
 		}
 		dbConnection.commit();
-		System.out.println(usersQnt + " Users Added with success to database");
+		print(usersQnt + " Users Added with success to database");
 	}
 
 	/**
@@ -466,8 +466,7 @@ public class DBActions {
 		}
 
 		dbConnection.commit();
-		System.out.println(estabQnt
-				+ " Establishments Added with success to database");
+		print(estabQnt + " Establishments Added with success to database");
 	}
 
 	// Database information dummy getters (Selects)
@@ -588,5 +587,11 @@ public class DBActions {
 		}
 
 		return result;
+	}
+
+	private void print(String str) {
+		if (PRINT_ACTIVE)
+			System.out.println(str);
+
 	}
 }
