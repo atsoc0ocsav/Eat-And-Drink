@@ -21,7 +21,7 @@ public class DBActions {
 	private DBConnection dbConnection;
 
 	private boolean[] activeIndexes;
-	private static final String[] INDEX_NAMES = { "PK_ESTABELECIMENTO",
+	private static final String[] INDEX_NAMES = {
 			"FK_ESTABELE_TIPODOEST_TIPODEES", "FK_ESTABELE_SUGESTAO_UTILIZAD",
 			"FK_ESTABELE_LOCALDOES_ZONA" };
 
@@ -43,67 +43,125 @@ public class DBActions {
 	 * Creates the missing Zone column in user table and creates the foreign key
 	 */
 	public void createZoneFieldInUserTable() {
-		dbConnection
-				.executeUpdate("ALTER TABLE Utilizador ADD newcol INTEGER NOT NULL");
-		dbConnection.commit();
+		try {
+			ResultSet rs = dbConnection
+					.executeQuery("select column_name from syscolumn where table_id=(select table_id  from systable where table_name='Utilizador')");
 
-		dbConnection
-				.executeUpdate("ALTER TABLE Utilizador RENAME newcol TO idZona");
-		dbConnection.commit();
+			boolean exists = false;
+			while (rs.next()) {
+				if (rs.getString(1).equals("idZona"))
+					exists = true;
+			}
 
-		dbConnection
-				.executeUpdate("ALTER TABLE Utilizador ADD CONSTRAINT \"FK_UTILIZADOR_ZONA\" NOT NULL FOREIGN KEY (\"idZona\" ASC ) "
-						+ "REFERENCES Zona (\"idZona\") ON UPDATE CASCADE;");
-		dbConnection.commit();
+			if (!exists) {
+				dbConnection
+						.execute("ALTER TABLE Utilizador ADD \"newcol\" INTEGER NOT NULL");
+				dbConnection.commit();
 
-		System.out.println("Changes to the database made with sucess");
+				dbConnection
+						.execute("ALTER TABLE Utilizador RENAME \"newcol\" TO \"idZona\"");
+				dbConnection.commit();
+
+				dbConnection
+						.execute("ALTER TABLE Utilizador ADD CONSTRAINT \"FK_UTILIZADOR_ZONA\" NOT NULL FOREIGN KEY (\"idZona\" ASC ) "
+								+ "REFERENCES Zona (\"idZona\") ON UPDATE CASCADE;");
+				dbConnection.commit();
+
+				System.out.println("Changes to the database made with sucess!");
+			} else {
+				System.out
+						.println("No Changes needed to make to the database!");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void addIndices(int index) {
-		switch (index) {
-		case 0:
-			dbConnection.executeUpdate("CREATE INDEX \"" + INDEX_NAMES[0]
-					+ "\" ON Estabelecimento (idEstabelecimento)");
-			dbConnection.commit();
-			activeIndexes[0] = true;
-			break;
+		try {
+			ArrayList<String> indexInTable = getIndicesInTable("Estabelecimento");
 
-		case 1:
-			// Insert index on establishment type column
-			dbConnection.executeUpdate("CREATE INDEX \"" + INDEX_NAMES[1]
-					+ "\" ON Estabelecimento (tipoDoEstabelecimento)");
-			dbConnection.commit();
-			activeIndexes[1] = true;
-			break;
+			boolean exists = false;
+			for (String name : indexInTable) {
+				if (name.equals(INDEX_NAMES[index]))
+					exists = true;
+			}
 
-		case 2:
-			// Insert index on user column
-			dbConnection.executeUpdate("CREATE INDEX \"" + INDEX_NAMES[2]
-					+ "\" ON Estabelecimento (email)");
-			dbConnection.commit();
-			activeIndexes[2] = true;
-			break;
+			if (!exists) {
+				switch (index) {
+				case 0:
+					// Insert index on establishment type column
+					dbConnection
+							.execute("CREATE INDEX \""
+									+ INDEX_NAMES[index]
+									+ "\" ON Estabelecimento (tipoDoEstabelecimento) IN \"system\"");
+					dbConnection.commit();
+					break;
 
-		case 3:
-			// Insert index on zone column
-			dbConnection.executeUpdate("CREATE INDEX \"" + INDEX_NAMES[3]
-					+ "\" ON Estabelecimento (idZona)");
-			dbConnection.commit();
-			activeIndexes[3] = true;
-			break;
+				case 1:
+					// Insert index on user column
+					dbConnection.execute("CREATE INDEX \"" + INDEX_NAMES[index]
+							+ "\" ON Estabelecimento (email) IN \"system\"");
+					dbConnection.commit();
+					break;
 
-		default:
-			throw new IllegalArgumentException("Invalid index!");
+				case 2:
+					// Insert index on zone column
+					dbConnection.execute("CREATE INDEX \"" + INDEX_NAMES[index]
+							+ "\" ON Estabelecimento (idZona) IN \"system\"");
+					dbConnection.commit();
+					break;
+
+				default:
+					throw new IllegalArgumentException("Invalid index!");
+				}
+
+				System.out.println("Added " + INDEX_NAMES[index] + " index!");
+				activeIndexes[index] = true;
+			} else {
+				System.out
+						.println("The requested index already exixts in the database!");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
 	public void removeIndices(boolean force) {
 		for (int i = 0; i < activeIndexes.length; i++) {
 			if (activeIndexes[i] || force) {
-				dbConnection.executeQuery("DROP INDEX " + INDEX_NAMES[i]);
+				dbConnection.execute("DROP INDEX " + INDEX_NAMES[i]
+						+ " IN sys.sysindexes");
 				dbConnection.commit();
+
+				activeIndexes[i] = false;
+				System.out.println("Removed " + INDEX_NAMES[i] + " index!");
 			}
 		}
+	}
+
+	public void removeAllDataFromDatabase() {
+		dbConnection.executeUpdate("DELETE FROM Estabelecimento");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM Utilizador");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM Fotografia");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM TipoDeEstabelecimento");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM Zona");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM Cidade");
+		dbConnection.commit();
+		
+		System.out.println("Information removed from database with success!");
 	}
 
 	// Database information insert/create functions
@@ -222,9 +280,9 @@ public class DBActions {
 		ResultSet rs = dbConnection
 				.executeQuery("SELECT FIRST idZona FROM Zona ORDER BY idZona DESC");
 
-		int currentZoneID;
+		int maxZoneID;
 		if (rs.next()) {
-			currentZoneID = rs.getInt(1);
+			maxZoneID = rs.getInt(1);
 		} else {
 			throw new NullPointerException("No zones in the zones table");
 		}
@@ -238,7 +296,7 @@ public class DBActions {
 			int idPhoto = createUserPhoto();
 
 			dbConnection
-					.executeUpdate("INSERT INTO Utilizador(email,idFotografia,nome,escola,senha,idZona) VALUES ('"
+					.execute("INSERT INTO Utilizador(email,idFotografia,nome,escola,senha,idZona) VALUES ('"
 							+ email
 							+ "','"
 							+ idPhoto
@@ -249,7 +307,7 @@ public class DBActions {
 							+ "','"
 							+ password
 							+ "','"
-							+ random.nextInt(currentZoneID) + "')");
+							+ random.nextInt(maxZoneID) + "')");
 
 			dbConnection.commit();
 			addEmailToPhoto(email, idPhoto);
@@ -279,6 +337,7 @@ public class DBActions {
 		dbConnection
 				.executeUpdate("INSERT INTO Fotografia(idFotografia) VALUES ('"
 						+ currentID + "')");
+
 		dbConnection.commit();
 		return currentID;
 	}
@@ -310,7 +369,7 @@ public class DBActions {
 		ArrayList<String> waysToPlaceList = parser
 				.plainTextFileParser(PROVERB_LIST);
 		ArrayList<String> restaurantList = parser
-				.plainTextFileParser(RESTAURANT_LIST);
+				.plainTextFileParserWithEscape(RESTAURANT_LIST);
 
 		Random random = new Random();
 		SecureRandom secureRandom = new SecureRandom();
@@ -361,37 +420,47 @@ public class DBActions {
 			schedule = schedule.trim();
 			schedule = schedule.substring(0, 20);
 
-			// System.out.println("Horario=" + schedule);
-			// System.out.println("Forma de Chegar=" + wayToPlace);
-			// System.out.println("Coordenadas=" + coordinates);
-			// System.out.println("Morada=" + address);
-			// System.out.println("ID=" + currentEstablishemntID);
-			// System.out.println("Email=" + email);
-			// System.out.println("idZona=" + zone);
-			// System.out.println("Tipo de estab=" + establishmentType);
-			// System.out.println("Design=" + restaurantName);
-			// System.out.println("Rating=" + rating);
+			try {
+				dbConnection
+						.executeUpdate2("INSERT INTO Estabelecimento(informacoesHorario,formaDeLaChegar,coordenadasGps,morada,idEstabelecimento,email,idZona,tipoDoEstabelecimento,designacao,rating) VALUES "
+								+ "('"
+								+ schedule
+								+ "','"
+								+ wayToPlace
+								+ "','"
+								+ coordinates
+								+ "','"
+								+ address
+								+ "','"
+								+ currentEstablishemntID
+								+ "','"
+								+ email
+								+ "','"
+								+ zone
+								+ "','"
+								+ establishmentType
+								+ "','"
+								+ restaurantName
+								+ "','"
+								+ rating
+								+ "')");
 
-			dbConnection
-					.executeUpdate("INSERT INTO Estabelecimento(informacoesHorario,formaDeLaChegar,coordenadasGps,morada,idEstabelecimento,email,idZona,tipoDoEstabelecimento,designacao,rating) VALUES "
-							+ "('"
-							+ schedule
-							+ "','"
-							+ wayToPlace
-							+ "','"
-							+ coordinates
-							+ "','"
-							+ address
-							+ "','"
-							+ currentEstablishemntID
-							+ "','"
-							+ email
-							+ "','"
-							+ zone
-							+ "','"
-							+ establishmentType
-							+ "','"
-							+ restaurantName + "','" + rating + "')");
+			} catch (SQLException e) {
+				System.err.println("\n");
+				System.err.println("Horario=" + schedule);
+				System.err.println("Forma de Chegar=" + wayToPlace);
+				System.err.println("Coordenadas=" + coordinates);
+				System.err.println("Morada=" + address);
+				System.err.println("ID=" + currentEstablishemntID);
+				System.err.println("Email=" + email);
+				System.err.println("idZona=" + zone);
+				System.err.println("Tipo de estab=" + establishmentType);
+				System.err.println("Design=" + restaurantName);
+				System.err.println("Rating=" + rating);
+				System.err.println("\n");
+
+				e.printStackTrace();
+			}
 
 			currentEstablishemntID++;
 		}
@@ -504,5 +573,20 @@ public class DBActions {
 			cityNames.add(rs.getString(1));
 		}
 		return cityNames;
+	}
+
+	private ArrayList<String> getIndicesInTable(String tableName)
+			throws SQLException {
+		ResultSet rs = dbConnection
+				.executeQuery("SELECT index_name FROM sysindex WHERE table_id=(SELECT table_id FROM systable WHERE table_name='"
+						+ tableName + "')");
+
+		ArrayList<String> result = new ArrayList<>();
+
+		while (rs.next()) {
+			result.add(rs.getString(1));
+		}
+
+		return result;
 	}
 }
