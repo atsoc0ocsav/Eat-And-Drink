@@ -14,21 +14,29 @@ public class DBActions {
 	private static final String ZONES_LIST = "./dataSource/Geographical/Lista de Freguesias.csv";
 	private static final String ESTABLISHMENT_TYPE_LIST = "./dataSource/Types/Tipos de Estabelecimento.txt";
 	private static final String PROVERB_LIST = "./dataSource/Random Theme/Lista de Ditados Populares.txt";
-	private static final String FAMILY_NAMES = "./dataSource/User/Family Names.txt";
-	private static final String FIRST_NAMES = "./dataSource/User/First Names.txt";
-	private static final String EMAIL_ALIAS = "./dataSource/User/Emails Alias.txt";
-	private static final String UNIVESITY_LIST = "./dataSource/User/Lista de Universidades.txt";
 	private static final String MANTRA_LIST = "./dataSource/Random Theme/Lista de Mantras.txt";
 	private static final String RESTAURANT_LIST = "./dataSource/Random Theme/Lista de Restaurantes.txt";
 
-	private FileParser parser = new FileParser();
+	private FileParser parser;
 	private DBConnection dbConnection;
+
+	private boolean[] activeIndexes;
+	private static final String[] INDEX_NAMES = { "PK_ESTABELECIMENTO",
+			"FK_ESTABELE_TIPODOEST_TIPODEES", "FK_ESTABELE_SUGESTAO_UTILIZAD",
+			"FK_ESTABELE_LOCALDOES_ZONA" };
 
 	/**
 	 * Default constructor which also creates a connection to the database
 	 */
 	public DBActions() {
 		this.dbConnection = new DBConnection();
+
+		parser = new FileParser();
+		activeIndexes = new boolean[INDEX_NAMES.length];
+
+		for (int i = 0; i < activeIndexes.length; i++) {
+			activeIndexes[i] = false;
+		}
 	}
 
 	/**
@@ -44,20 +52,58 @@ public class DBActions {
 		dbConnection.commit();
 
 		dbConnection
-				.executeUpdate("ALTER TABLE Utilizador ADD CONSTRAINT \"FK_UTILIZADOR_ZONA\" NOT NULL FOREIGN KEY (\"idZona\" ASC ) REFERENCES Zona (\"idZona\") ON UPDATE CASCADE;");
+				.executeUpdate("ALTER TABLE Utilizador ADD CONSTRAINT \"FK_UTILIZADOR_ZONA\" NOT NULL FOREIGN KEY (\"idZona\" ASC ) "
+						+ "REFERENCES Zona (\"idZona\") ON UPDATE CASCADE;");
 		dbConnection.commit();
 
 		System.out.println("Changes to the database made with sucess");
 	}
 
-	public void addIndices(int indicesQuantity) {
-		// TODO Auto-generated method stub
+	public void addIndices(int index) {
+		switch (index) {
+		case 0:
+			dbConnection.executeUpdate("CREATE INDEX \"" + INDEX_NAMES[0]
+					+ "\" ON Estabelecimento (idEstabelecimento)");
+			dbConnection.commit();
+			activeIndexes[0] = true;
+			break;
 
+		case 1:
+			// Insert index on establishment type column
+			dbConnection.executeUpdate("CREATE INDEX \"" + INDEX_NAMES[1]
+					+ "\" ON Estabelecimento (tipoDoEstabelecimento)");
+			dbConnection.commit();
+			activeIndexes[1] = true;
+			break;
+
+		case 2:
+			// Insert index on user column
+			dbConnection.executeUpdate("CREATE INDEX \"" + INDEX_NAMES[2]
+					+ "\" ON Estabelecimento (email)");
+			dbConnection.commit();
+			activeIndexes[2] = true;
+			break;
+
+		case 3:
+			// Insert index on zone column
+			dbConnection.executeUpdate("CREATE INDEX \"" + INDEX_NAMES[3]
+					+ "\" ON Estabelecimento (idZona)");
+			dbConnection.commit();
+			activeIndexes[3] = true;
+			break;
+
+		default:
+			throw new IllegalArgumentException("Invalid index!");
+		}
 	}
 
-	public void removeIndices() {
-		// TODO Auto-generated method stub
-
+	public void removeIndices(boolean force) {
+		for (int i = 0; i < activeIndexes.length; i++) {
+			if (activeIndexes[i] || force) {
+				dbConnection.executeQuery("DROP INDEX " + INDEX_NAMES[i]);
+				dbConnection.commit();
+			}
+		}
 	}
 
 	// Database information insert/create functions
@@ -171,23 +217,11 @@ public class DBActions {
 	 */
 	public void addUsersToDB(int usersQnt) throws NoSuchAlgorithmException,
 			SQLException {
-		ArrayList<String[]> firstNames = parser.cvsFileParser(FIRST_NAMES, " ");
-		ArrayList<String> familyNames = parser
-				.plainTextFileParser(FAMILY_NAMES);
-		ArrayList<String> emailAlias = parser.plainTextFileParser(EMAIL_ALIAS);
-		ArrayList<String> universities = parser
-				.plainTextFileParser(UNIVESITY_LIST);
-
-		int maxFirstName = firstNames.size() - 1;
-		int maxFamilyName = familyNames.size() - 1;
-		int maxEmailAlias = emailAlias.size() - 1;
-		int maxUniversities = universities.size() - 1;
-
 		Random random = new Random();
-		SecureRandom secureRandom = new SecureRandom();
 
 		ResultSet rs = dbConnection
 				.executeQuery("SELECT FIRST idZona FROM Zona ORDER BY idZona DESC");
+
 		int currentZoneID;
 		if (rs.next()) {
 			currentZoneID = rs.getInt(1);
@@ -196,30 +230,10 @@ public class DBActions {
 		}
 
 		for (int i = 0; i < usersQnt; i++) {
-			// String username = new BigInteger(130, secureRandom).toString(30);
-			// username = username.trim();
-			// username = username.substring(0, 10);
-
-			StringBuilder firstName = new StringBuilder(firstNames.get(random
-					.nextInt(maxFirstName))[0]);
-			for (int index = 1; index < firstName.length(); index++) {
-				char c = firstName.charAt(index);
-				firstName.setCharAt(index, Character.toLowerCase(c));
-			}
-			String familyName = familyNames.get(random.nextInt(maxFamilyName));
-
-			// String email = username
-			// + emailAlias.get(random.nextInt(maxEmailAlias));
-			String email = firstName.toString() + "_" + familyName
-					+ emailAlias.get(random.nextInt(maxEmailAlias));
-			String name = firstName.toString() + " " + familyName;
-
-			String password = new BigInteger(130, secureRandom).toString(15);
-			password = password.trim();
-			password = password.substring(0, 14);
-
-			String university = universities.get(random
-					.nextInt(maxUniversities));
+			String name = "EPRV_" + i;
+			String email = name + "@iscte.pt";
+			String password = Integer.toString(random.nextInt(100000000));
+			String university = "ISCTE";
 
 			int idPhoto = createUserPhoto();
 
