@@ -84,6 +84,16 @@ public class MainClass {
 	}
 
 	public void deleteAllDataFromDatabase() {
+		long time = System.currentTimeMillis();
 		dbAction.removeAllDataFromDatabase();
+
+		long milliseconds = System.currentTimeMillis() - time;
+
+		int seconds = (int) (milliseconds / 1000) % 60;
+		int minutes = (int) ((milliseconds / (1000 * 60)) % 60);
+		int hours = (int) ((milliseconds / (1000 * 60 * 60)) % 24);
+
+		System.err.println("--->Delete Duration Time: " + hours + "h" + minutes
+				+ "m" + seconds + "s");
 	}
 }
