@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
@@ -24,6 +25,7 @@ public class DBActions {
 	private static final String UNIVESITY_LIST = "./dataSource/User/Lista de Universidades.txt";
 	private static final String MANTRA_LIST = "./dataSource/Random Theme/Lista de Mantras.txt";
 	private static final String RESTAURANT_LIST = "./dataSource/Random Theme/Lista de Restaurantes.txt";
+	private static final String EVENTS_NAMES = "./dataSource/Random Theme/Nomes de Eventos.txt";
 
 	private FileParser parser = new FileParser();
 	private DBConnection dbConnection;
@@ -32,19 +34,100 @@ public class DBActions {
 	 * Creates the missing Zone column in user table and creates the foreign key
 	 */
 	public void createZoneFieldInUserTable() {
-		dbConnection
-				.executeUpdate("ALTER TABLE Utilizador ADD newcol INTEGER NOT NULL");
+		try {
+			ResultSet rs = dbConnection
+					.executeQuery("select column_name from syscolumn where table_id=(select table_id  from systable where table_name='Utilizador')");
+
+			boolean exists = false;
+			while (rs.next()) {
+				if (rs.getString(1).equals("idZona"))
+					exists = true;
+			}
+
+			if (!exists) {
+				dbConnection
+						.execute("ALTER TABLE Utilizador ADD \"newcol\" INTEGER NOT NULL");
+				dbConnection.commit();
+
+				dbConnection
+						.execute("ALTER TABLE Utilizador RENAME \"newcol\" TO \"idZona\"");
+				dbConnection.commit();
+
+				dbConnection
+						.execute("ALTER TABLE Utilizador ADD CONSTRAINT \"FK_UTILIZADOR_ZONA\" NOT NULL FOREIGN KEY (\"idZona\" ASC ) "
+								+ "REFERENCES Zona (\"idZona\") ON UPDATE CASCADE;");
+				dbConnection.commit();
+
+				System.out.println("Changes to the database made with sucess!");
+			} else {
+				System.out
+						.println("No Changes needed to be made to the database!");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void removeAllDataFromDatabase() {
+		dbConnection.executeUpdate("DELETE FROM follow");
 		dbConnection.commit();
 
-		dbConnection
-				.executeUpdate("ALTER TABLE Utilizador RENAME newcol TO idZona");
+		dbConnection.executeUpdate("DELETE FROM pratoRecomendado");
 		dbConnection.commit();
 
-		dbConnection
-				.executeUpdate("ALTER TABLE Utilizador ADD CONSTRAINT \"FK_UTILIZADOR_ZONA\" NOT NULL FOREIGN KEY (\"idZona\" ASC ) REFERENCES Zona (\"idZona\") ON UPDATE CASCADE;");
+		dbConnection.executeUpdate("DELETE FROM menuDoEstabelecimento");
 		dbConnection.commit();
 
-		System.out.println("Changes to the database made with sucess");
+		dbConnection.executeUpdate("DELETE FROM ComentarioAoEstabelecimento");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM ComentarioAoPrato");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM HorarioEstabelecimento");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM ReservaDeBilhetes");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM eventoOferecido");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM DiaSemana");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM TipoDePrato");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM TipoDeEvento");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM Estabelecimento");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM TipoDeEstabelecimento");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM Utilizador");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM Fotografia");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM Zona");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM Cidade");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM Prato");
+		dbConnection.commit();
+
+		dbConnection.executeUpdate("DELETE FROM LogPrato");
+		dbConnection.commit();
+
+		System.out.println("Information from database removed with success!");
 	}
 
 	/**
@@ -99,7 +182,7 @@ public class DBActions {
 		for (String[] zone : zones) {
 			try {
 				StringBuilder zoneName = new StringBuilder(zone[1]);
-				
+
 				zoneName.setCharAt(0, zone[1].charAt(0));
 
 				for (int index = 1; index < zone[1].length(); index++) {
@@ -120,16 +203,15 @@ public class DBActions {
 								+ currentID
 								+ "','"
 								+ cityName.toString()
-								+ "','"
-								+ zoneName.toString() + "')");
+								+ "','" + zoneName.toString() + "')");
 				currentID++;
 			} catch (ArrayIndexOutOfBoundsException e) {
 				e.printStackTrace();
-				System.err.println("Zone[0]:"+zone[0]);
-				
+				System.err.println("Zone[0]:" + zone[0]);
+
 				System.exit(1);
 			}
-			
+
 		}
 
 		dbConnection.commit();
@@ -177,15 +259,7 @@ public class DBActions {
 	public void addEventTypeToDB() throws SQLException {
 		ArrayList<String> types = parser.plainTextFileParser(EVENT_TYPE_LIST);
 
-		ResultSet rs = dbConnection
-				.executeQuery("SELECT FIRST tipoDoEvento FROM TipoDeEvento ORDER BY tipoDoEvento DESC");
-
-		int currentID;
-		if (rs.next()) {
-			currentID = rs.getInt(1) + 1;
-		} else {
-			currentID = 0;
-		}
+		int currentID = getEventTypeMaxID() + 1;
 
 		for (String type : types) {
 			dbConnection
@@ -327,10 +401,8 @@ public class DBActions {
 			}
 			String familyName = familyNames.get(random.nextInt(maxFamilyName));
 
-			// String email = username
-			// + emailAlias.get(random.nextInt(maxEmailAlias));
 			String email = firstName.toString() + "_" + familyName
-					+ emailAlias.get(random.nextInt(maxEmailAlias));
+					+Integer.toString(random.nextInt(1000000))+emailAlias.get(random.nextInt(maxEmailAlias));
 			String name = firstName.toString() + " " + familyName;
 
 			String password = new BigInteger(130, secureRandom).toString(15);
@@ -429,7 +501,7 @@ public class DBActions {
 		ArrayList<String> waysToPlaceList = parser
 				.plainTextFileParser(PROVERB_LIST);
 		ArrayList<String> restaurantList = parser
-				.plainTextFileParser(RESTAURANT_LIST);
+				.plainTextFileParserWithEscape(RESTAURANT_LIST);
 
 		Random random = new Random();
 		SecureRandom secureRandom = new SecureRandom();
@@ -479,17 +551,6 @@ public class DBActions {
 			String schedule = new BigInteger(130, secureRandom).toString(15);
 			schedule = schedule.trim();
 			schedule = schedule.substring(0, 20);
-
-			// System.out.println("Horario=" + schedule);
-			// System.out.println("Forma de Chegar=" + wayToPlace);
-			// System.out.println("Coordenadas=" + coordinates);
-			// System.out.println("Morada=" + address);
-			// System.out.println("ID=" + currentEstablishemntID);
-			// System.out.println("Email=" + email);
-			// System.out.println("idZona=" + zone);
-			// System.out.println("Tipo de estab=" + establishmentType);
-			// System.out.println("Design=" + restaurantName);
-			// System.out.println("Rating=" + rating);
 
 			dbConnection
 					.executeUpdate("INSERT INTO Estabelecimento(informacoesHorario,formaDeLaChegar,coordenadasGps,morada,idEstabelecimento,email,idZona,tipoDoEstabelecimento,designacao,rating) VALUES "
@@ -551,31 +612,6 @@ public class DBActions {
 	}
 
 	/**
-	 * Add available events for random establishment, to Database
-	 * 
-	 * @param eventQnt
-	 * @throws SQLException
-	 */
-	public void addAvailableEventsToDB(int eventQnt) throws SQLException {
-		ArrayList<String> eventTypes = getEventTypes();
-		ArrayList<String> establishmentIDs = getEstablishmentsIDs();
-		Random random = new Random();
-
-		for (int i = 0; i < eventQnt; i++) {
-			String type = eventTypes.get(random.nextInt(eventTypes.size()));
-			String establishmentID = establishmentIDs.get(random
-					.nextInt(establishmentIDs.size()));
-
-			dbConnection
-					.executeUpdate("INSERT INTO eventoOferecido(idEstabelecimento,tipoDoEvento) VALUES ('"
-							+ establishmentID + "','" + type + "')");
-		}
-		dbConnection.commit();
-		System.out.println(eventQnt
-				+ " Establishment Events Added with success to database");
-	}
-
-	/**
 	 * Add the schedule of each establishment (all possible week days per each)
 	 * to Database
 	 * 
@@ -583,18 +619,18 @@ public class DBActions {
 	 */
 	@SuppressWarnings("deprecation")
 	public void addEstablishmentScheduleToDB() throws SQLException {
-		ArrayList<String> establishmentIDs = getEstablishmentsIDs();
+		ArrayList<Integer> establishmentIDs = getEstablishmentsIDs();
 		ArrayList<String> weekDays = getWeekDays();
 
 		Random random = new Random();
 		Time openHour;
 		Time closeHour;
-		for (String establishmentID : establishmentIDs) {
+		for (int establishmentID : establishmentIDs) {
 			for (String weekDay : weekDays) {
 				do {
-					openHour = new Time(random.nextInt(24), random.nextInt(59),
+					openHour = new Time(random.nextInt(23), random.nextInt(59),
 							random.nextInt(59));
-					closeHour = new Time(random.nextInt(24),
+					closeHour = new Time(random.nextInt(23),
 							random.nextInt(59), random.nextInt(59));
 				} while (openHour.after(closeHour)
 						|| openHour.equals(closeHour));
@@ -622,11 +658,11 @@ public class DBActions {
 	 * @throws SQLException
 	 */
 	public void addEstablishmentMenusToDB(int dishQnt) throws SQLException {
-		ArrayList<String> establishmentIDs = getEstablishmentsIDs();
+		ArrayList<Integer> establishmentIDs = getEstablishmentsIDs();
 		ArrayList<String> dishesList = getMealsList();
 		Random random = new Random();
 
-		for (String establishmentID : establishmentIDs) {
+		for (int establishmentID : establishmentIDs) {
 			for (int i = 0; i < dishQnt; i++) {
 				String dish = dishesList.get(random.nextInt(dishesList.size()));
 
@@ -712,7 +748,7 @@ public class DBActions {
 			throws SQLException {
 		ArrayList<String> commentsList = parser
 				.plainTextFileParser(PROVERB_LIST);
-		ArrayList<String> establishmentIDs = getEstablishmentsIDs();
+		ArrayList<Integer> establishmentIDs = getEstablishmentsIDs();
 		ArrayList<String> usersEmails = getUserEmails();
 		Random random = new Random();
 
@@ -720,7 +756,7 @@ public class DBActions {
 			String email = usersEmails.get(random.nextInt(usersEmails.size()));
 			String comment = commentsList.get(random.nextInt(commentsList
 					.size()));
-			String establishmentID = establishmentIDs.get(random
+			int establishmentID = establishmentIDs.get(random
 					.nextInt(establishmentIDs.size()));
 			int grade = random.nextInt(100);
 			int status = random.nextInt(10);
@@ -747,7 +783,7 @@ public class DBActions {
 	 * @throws SQLException
 	 */
 	public void addMealsPhotographies(int photographsQnt) throws SQLException {
-		ArrayList<String> establishmentIDs = getEstablishmentsIDs();
+		ArrayList<Integer> establishmentIDs = getEstablishmentsIDs();
 		ArrayList<String> usersEmails = getUserEmails();
 		ArrayList<String> mealsList = getMealsList();
 
@@ -764,7 +800,7 @@ public class DBActions {
 		}
 
 		for (int i = 0; i < photographsQnt; i++) {
-			String establishmentID = establishmentIDs.get(random
+			int establishmentID = establishmentIDs.get(random
 					.nextInt(establishmentIDs.size()));
 			String email = usersEmails.get(random.nextInt(usersEmails.size()));
 			String meal = mealsList.get(random.nextInt(mealsList.size()));
@@ -783,6 +819,84 @@ public class DBActions {
 		dbConnection.commit();
 		System.out.println(photographsQnt
 				+ " Photographs Added with success to database");
+	}
+
+	/**
+	 * Add available events for random establishment, to Database
+	 * 
+	 * @param eventQnt
+	 * @throws SQLException
+	 */
+	@SuppressWarnings("deprecation")
+	public void addAvailableEventsToDB(int eventQnt) throws SQLException {
+		ArrayList<String> eventTypes = getEventTypes();
+		ArrayList<Integer> establishmentIDs = getEstablishmentsIDs();
+		ArrayList<String> eventsNames = parser
+				.plainTextFileParserWithEscape(EVENTS_NAMES);
+
+		Random random = new Random();
+		int currentID = getEventTypeMaxID() + 1;
+
+		for (int i = 0; i < eventQnt; i++) {
+			String type = eventTypes.get(random.nextInt(eventTypes.size()));
+			int establishmentID = establishmentIDs.get(random
+					.nextInt(establishmentIDs.size()));
+			String eventName = eventsNames.get(random.nextInt(eventsNames
+					.size()));
+
+			Date date = new Date(2013 + random.nextInt(5),
+					random.nextInt(11) + 1, random.nextInt(27) + 1);
+			Time time = new Time(random.nextInt(23), random.nextInt(59),
+					random.nextInt(59));
+
+			dbConnection
+					.executeUpdate("INSERT INTO eventoOferecido(idEstabelecimento,tipoDoEvento,nomeEvento,Data,Hora,idEvento) VALUES ('"
+							+ establishmentID
+							+ "','"
+							+ type
+							+ "','"
+							+ eventName
+							+ "','"
+							+ date
+							+ "','"
+							+ time
+							+ "','"
+							+ currentID + "')");
+
+			currentID++;
+		}
+		dbConnection.commit();
+		System.out.println(eventQnt
+				+ " Establishment Events Added with success to database");
+	}
+
+	public void addTicketsToDB() throws SQLException {
+		ArrayList<String> types = parser.plainTextFileParser(EVENT_TYPE_LIST);
+		ArrayList<Integer> establishmentIDs = getEstablishmentsIDs();
+
+		Random random = new Random();
+
+		for (int establishmentID : establishmentIDs) {
+			ArrayList<Integer> establishmentEvents = getEstablishmentEvents(establishmentID);
+
+			for (int eventID : establishmentEvents) {
+				int capacity = random.nextInt(10) + 1;
+
+				for (int i = 1; i < capacity + 1; i++) {
+					dbConnection
+							.executeUpdate("INSERT INTO ReservaDeBilhetes(numeroLugar,estado,idEstabelecimento,idEvento) VALUES ('"
+									+ i
+									+ "','Livre','"
+									+ establishmentID
+									+ "','" + eventID + "')");
+					dbConnection.commit();
+				}
+			}
+		}
+
+		dbConnection.commit();
+		System.out.println(types.size()
+				+ " Event Types Added with success to database");
 	}
 
 	// Auxiliary Database Getters
@@ -806,12 +920,12 @@ public class DBActions {
 		return usersEmails;
 	}
 
-	private ArrayList<String> getEstablishmentsIDs() throws SQLException {
+	private ArrayList<Integer> getEstablishmentsIDs() throws SQLException {
 		ResultSet rs = dbConnection
 				.executeQuery("SELECT idEstabelecimento FROM Estabelecimento");
-		ArrayList<String> establishmentIDs = new ArrayList<>();
+		ArrayList<Integer> establishmentIDs = new ArrayList<>();
 		while (rs.next()) {
-			establishmentIDs.add(rs.getString(1));
+			establishmentIDs.add(rs.getInt(1));
 		}
 		return establishmentIDs;
 	}
@@ -854,5 +968,31 @@ public class DBActions {
 			cityNames.add(rs.getString(1));
 		}
 		return cityNames;
+	}
+
+	private int getEventTypeMaxID() throws SQLException {
+		ResultSet rs = dbConnection
+				.executeQuery("SELECT FIRST tipoDoEvento FROM TipoDeEvento ORDER BY tipoDoEvento DESC");
+
+		int currentID;
+		if (rs.next()) {
+			currentID = rs.getInt(1);
+		} else {
+			currentID = 0;
+		}
+		return currentID;
+	}
+
+	private ArrayList<Integer> getEstablishmentEvents(int establishmentID)
+			throws SQLException {
+		ResultSet rs = dbConnection
+				.executeQuery("SELECT idEvento FROM eventoOferecido WHERE idEstabelecimento="
+						+ establishmentID);
+		ArrayList<Integer> events = new ArrayList<>();
+		while (rs.next()) {
+			events.add(rs.getInt(1));
+		}
+		return events;
+
 	}
 }
