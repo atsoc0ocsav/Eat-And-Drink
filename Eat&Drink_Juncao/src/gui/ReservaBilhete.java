@@ -1,24 +1,19 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-
 import java.awt.Font;
 import java.util.ArrayList;
 
-import javax.swing.JComboBox;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 import controlo.GestorReservaBilhete;
-import dados.BilheteEvento;
-import dados.Cidade;
-import dados.TipoDeEvento;
+import dados.Evento;
 
 public class ReservaBilhete extends JFrame {
 
@@ -29,7 +24,7 @@ public class ReservaBilhete extends JFrame {
 	private JComboBox comboBoxLugar;
 	private GestorReservaBilhete ctrReservaBilhete;
 	
-	private ArrayList<BilheteEvento> reservaDeBilhete;
+	private ArrayList<Evento> eventoOferecido;
 
 	public ReservaBilhete() {
 		ctrReservaBilhete = new GestorReservaBilhete();
@@ -107,11 +102,11 @@ public class ReservaBilhete extends JFrame {
 	}
 
 	private void preencheComboBox() {
-		this.reservaDeBilhete = ctrReservaBilhete.getBilheteEvento();
+		this.eventoOferecido = ctrReservaBilhete.getEvento();
 
 		comboBoxEvento.insertItemAt(" ", 0);
-		for (BilheteEvento bilhete : reservaDeBilhete) {			
-			comboBoxEvento.insertItemAt(bilhete.getEvento(),
+		for (Evento evento : eventoOferecido) {			
+			comboBoxEvento.insertItemAt(evento.getDescricao(),
 					comboBoxEvento.getItemCount());			
 		}
 		
