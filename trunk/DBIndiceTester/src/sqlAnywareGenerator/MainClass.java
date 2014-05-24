@@ -2,29 +2,34 @@ package sqlAnywareGenerator;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.Random;
 
 public class MainClass {
-	private static final int USERS_TO_ADD = 1000;
+	private static final int USERS_TO_ADD = 5;
 	private static final int ESTABLISHMENTS_TO_ADD = 10000;
+	private static final int INDEX_QUANTITY = 1;
 	private DBActions dbAction;
 
 	public static void main(String[] args) {
+		MainClass main = new MainClass();
 		try {
-			MainClass main = new MainClass();
+
 			main.initialyConfigureDatabase();
+			main.addIndex(INDEX_QUANTITY);
+			
+			main.deleteAllDataFromDatabase();
 
-			for (int i = 0; i < 3; i++) {
-				System.out.println("#######################################");
-				System.out.println("####### Teste com " + i
-						+ " indices #######");
+			System.out
+					.println("\n##############################################################################");
+			System.out.println("############### Test with " + INDEX_QUANTITY
+					+ " index, " + ESTABLISHMENTS_TO_ADD
+					+ " establishments ######################");
 
-				main.addIndex(i);
-				main.doInsertTest();
+			main.doInsertTest();
 
-				main.doSelectTest();
-
-				main.removeIndex();
-			}
+			main.doSelectTest();
+			// main.removeIndex();
+			main.deleteAllDataFromDatabase();
 
 		} catch (NoSuchAlgorithmException | SQLException e) {
 			e.printStackTrace();
@@ -37,7 +42,7 @@ public class MainClass {
 
 	public void initialyConfigureDatabase() {
 		dbAction.createZoneFieldInUserTable();
-		dbAction.removeIndices(true);
+		// dbAction.removeIndices(true);
 	}
 
 	public void addIndex(int indexQnt) {
@@ -52,9 +57,6 @@ public class MainClass {
 
 	public void doInsertTest() throws SQLException, NoSuchAlgorithmException {
 		long time = System.currentTimeMillis();
-		System.out.println("Teste de Inserção - " + USERS_TO_ADD
-				+ " utilizadores e " + ESTABLISHMENTS_TO_ADD
-				+ " estabelecimentos");
 
 		// insert the data
 		dbAction.addCitiesToDB();
@@ -63,20 +65,24 @@ public class MainClass {
 		dbAction.addUsersToDB(USERS_TO_ADD);
 		dbAction.addEstablishmentsToDB(ESTABLISHMENTS_TO_ADD);
 
-		System.out.println("Duração: " + (System.currentTimeMillis() - time)
-				+ " ms\n");
+		System.out.println("---> Duration Time: "
+				+ (System.currentTimeMillis() - time) + " ms\n");
 	}
 
 	public void doSelectTest() throws SQLException, NoSuchAlgorithmException {
 		long time = System.currentTimeMillis();
-		System.out.println("Teste de Select:");
+		System.out.println("############### Select Test with " + INDEX_QUANTITY
+				+ " index, " + ESTABLISHMENTS_TO_ADD
+				+ " establishments ###############");
 
-		// TODO
-		// dbAction.selectEstablishmentByTypeAndUserAndZone(type, userEmail, 1);
+		dbAction.selectEstablishmentByTypeAndUserAndZone("Snack-Bar",
+				("EPRV_" + new Random().nextInt(USERS_TO_ADD)), 1);
 
-		System.out.println("Duração: " + (System.currentTimeMillis() - time)
-				+ " ms\n");
+		System.out.println("---> Duration Time: "
+				+ (System.currentTimeMillis() - time) + " ms\n");
+	}
 
-		dbAction.removeIndices(false);
+	public void deleteAllDataFromDatabase() {
+		dbAction.removeAllDataFromDatabase();
 	}
 }

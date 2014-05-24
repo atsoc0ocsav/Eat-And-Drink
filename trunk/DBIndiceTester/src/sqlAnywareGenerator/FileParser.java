@@ -59,4 +59,32 @@ public class FileParser {
 		}
 		return data;
 	}
+
+	public ArrayList<String> plainTextFileParserWithEscape(String fileName) {
+		ArrayList<String> data = new ArrayList<>();
+		if (fileName != null) {
+			BufferedReader in = null;
+			try {
+				String sCurrentLine;
+				in = new BufferedReader(new FileReader(fileName));
+				while ((sCurrentLine = in.readLine()) != null) {
+					if (!sCurrentLine.contains("#") && !sCurrentLine.isEmpty()
+							&& !sCurrentLine.contains("'")) {
+						data.add(sCurrentLine);
+					}
+				}
+			} catch (IOException e) {
+				System.err.println("File \"" + fileName + "\" Not Found");
+			} finally {
+				try {
+					if (in != null)
+						in.close();
+				} catch (IOException ex) {
+					System.err.println("Error closing \"" + fileName + "\"");
+				}
+			}
+		}
+		return data;
+	}
+
 }
