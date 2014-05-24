@@ -7,10 +7,18 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+
 import java.awt.Font;
+import java.util.ArrayList;
+
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+
+import controlo.GestorReservaBilhete;
+import dados.BilheteEvento;
+import dados.Cidade;
+import dados.TipoDeEvento;
 
 public class ReservaBilhete extends JFrame {
 
@@ -19,8 +27,13 @@ public class ReservaBilhete extends JFrame {
 	private JTextField textFieldHora;
 	private JComboBox comboBoxEvento;
 	private JComboBox comboBoxLugar;
+	private GestorReservaBilhete ctrReservaBilhete;
+	
+	private ArrayList<BilheteEvento> reservaDeBilhete;
 
 	public ReservaBilhete() {
+		ctrReservaBilhete = new GestorReservaBilhete();
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 463, 479);
 		contentPane = new JPanel();
@@ -87,7 +100,20 @@ public class ReservaBilhete extends JFrame {
 		lblHora.setBounds(208, 119, 46, 19);
 		panelInterno.add(lblHora);
 		
+		preencheComboBox();
+		
 		this.setResizable(false);
 		this.setVisible(true);
+	}
+
+	private void preencheComboBox() {
+		this.reservaDeBilhete = ctrReservaBilhete.getBilheteEvento();
+
+		comboBoxEvento.insertItemAt(" ", 0);
+		for (BilheteEvento bilhete : reservaDeBilhete) {			
+			comboBoxEvento.insertItemAt(bilhete.getEvento(),
+					comboBoxEvento.getItemCount());			
+		}
+		
 	}
 }
