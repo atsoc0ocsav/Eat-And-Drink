@@ -1,23 +1,22 @@
 package controlo;
 
-import gui.ReservaBilhete;
-
 import java.util.ArrayList;
 
-import dados.BilheteEvento;
+import dados.Evento;
+
 
 public class GestorReservaBilhete {
 
-	private BilheteEvento bilhete;
+	private Evento evento;
 
 	public GestorReservaBilhete() {
-		this.bilhete = new BilheteEvento();
+		this.evento = new Evento();
 	}
 
-	public ArrayList<BilheteEvento> getBilheteEvento() {
-		ArrayList<BilheteEvento> array = new ArrayList<>();
+	public ArrayList<Evento> getEvento() {
+		ArrayList<Evento> array = new ArrayList<>();
 
-		array = bilhete.select();
+		array = evento.selectEventoOferecido();
 
 		return array;
 	}
