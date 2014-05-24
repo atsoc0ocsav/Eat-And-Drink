@@ -9,7 +9,7 @@ import java.sql.Statement;
 public class DBConnection {
 
 	// Connection Parameters
-	private static final DEBUG_MODE DMODE = DEBUG_MODE.BOTH;
+	private static final DEBUG_MODE DMODE = DEBUG_MODE.SQL;
 	private static final String DBNAME = "eatdrink";
 	private static final String USER = "dba";
 	private static final String PASSWORD = "sql";
@@ -190,10 +190,10 @@ public class DBConnection {
 	public int executeUpdate2(String query) throws SQLException {
 		releaseResources();
 		int i = -1;
-		
+
 		stmt = connection.createStatement();
 		i = stmt.executeUpdate(query);
-		
+
 		return i;
 	}
 
