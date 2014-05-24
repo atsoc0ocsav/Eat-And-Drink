@@ -187,16 +187,6 @@ public class DBConnection {
 		return i;
 	}
 
-	public int executeUpdate2(String query) throws SQLException {
-		releaseResources();
-		int i = -1;
-
-		stmt = connection.createStatement();
-		i = stmt.executeUpdate(query);
-
-		return i;
-	}
-
 	/**
 	 * Commits the changes made to the Database
 	 */

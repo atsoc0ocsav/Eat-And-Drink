@@ -420,47 +420,26 @@ public class DBActions {
 			schedule = schedule.trim();
 			schedule = schedule.substring(0, 20);
 
-			try {
-				dbConnection
-						.executeUpdate2("INSERT INTO Estabelecimento(informacoesHorario,formaDeLaChegar,coordenadasGps,morada,idEstabelecimento,email,idZona,tipoDoEstabelecimento,designacao,rating) VALUES "
-								+ "('"
-								+ schedule
-								+ "','"
-								+ wayToPlace
-								+ "','"
-								+ coordinates
-								+ "','"
-								+ address
-								+ "','"
-								+ currentEstablishemntID
-								+ "','"
-								+ email
-								+ "','"
-								+ zone
-								+ "','"
-								+ establishmentType
-								+ "','"
-								+ restaurantName
-								+ "','"
-								+ rating
-								+ "')");
-
-			} catch (SQLException e) {
-				System.err.println("\n");
-				System.err.println("Horario=" + schedule);
-				System.err.println("Forma de Chegar=" + wayToPlace);
-				System.err.println("Coordenadas=" + coordinates);
-				System.err.println("Morada=" + address);
-				System.err.println("ID=" + currentEstablishemntID);
-				System.err.println("Email=" + email);
-				System.err.println("idZona=" + zone);
-				System.err.println("Tipo de estab=" + establishmentType);
-				System.err.println("Design=" + restaurantName);
-				System.err.println("Rating=" + rating);
-				System.err.println("\n");
-
-				e.printStackTrace();
-			}
+			dbConnection
+					.executeUpdate("INSERT INTO Estabelecimento(informacoesHorario,formaDeLaChegar,coordenadasGps,morada,idEstabelecimento,email,idZona,tipoDoEstabelecimento,designacao,rating) VALUES "
+							+ "('"
+							+ schedule
+							+ "','"
+							+ wayToPlace
+							+ "','"
+							+ coordinates
+							+ "','"
+							+ address
+							+ "','"
+							+ currentEstablishemntID
+							+ "','"
+							+ email
+							+ "','"
+							+ zone
+							+ "','"
+							+ establishmentType
+							+ "','"
+							+ restaurantName + "','" + rating + "')");
 
 			currentEstablishemntID++;
 		}
