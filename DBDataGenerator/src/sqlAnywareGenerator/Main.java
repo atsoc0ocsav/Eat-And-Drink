@@ -9,10 +9,12 @@ public class Main {
 			DBActions dbAction = new DBActions();
 
 			long time = System.currentTimeMillis();
-			System.out.println("Adding data to database!");
-			System.out.println("---------------------------------------");
-
+			
 			dbAction.createZoneFieldInUserTable();
+			dbAction.removeAllDataFromDatabase();
+			
+			System.out.println("\nAdding data to database!");
+			System.out.println("---------------------------------------");
 
 			dbAction.addCitiesToDB();
 			dbAction.addZonesToDB();
@@ -21,21 +23,28 @@ public class Main {
 			dbAction.addEventTypeToDB();
 			dbAction.addMealTypeToDB();
 			dbAction.addMealsToDB(2500);
-			dbAction.addUsersToDB(10000);
+			dbAction.addUsersToDB(1000);
 			dbAction.addEstablishmentsToDB(1000);
-			dbAction.addFollowersToDB(750);
+			dbAction.addFollowersToDB(500);
 			dbAction.addAvailableEventsToDB(3000);
 			dbAction.addEstablishmentScheduleToDB();
-			dbAction.addEstablishmentMenusToDB(15);
-			dbAction.addRecomendedMealsToDB(500);
+			dbAction.addEstablishmentMenusToDB(10);
+			dbAction.addRecomendedMealsToDB(5);
 			dbAction.addMealsCommentsToDB(750);
 			dbAction.addEstablishmentCommentsToDB(750);
 			dbAction.addMealsPhotographies(1000);
+			dbAction.addTicketsToDB();
 
-			System.out.println("\n---------------------------------------");
-			System.out.println("Task Duration: "
-					+ (System.currentTimeMillis() - time) + " ms");
-		} catch (SQLException | NoSuchAlgorithmException  e) {
+			long milliseconds = System.currentTimeMillis() - time;
+
+			int seconds = (int) (milliseconds / 1000) % 60;
+			int minutes = (int) ((milliseconds / (1000 * 60)) % 60);
+			int hours = (int) ((milliseconds / (1000 * 60 * 60)) % 24);
+
+			System.err.println("--->Duration Time: " + hours + "h" + minutes
+					+ "m" + seconds + "s");
+
+		} catch (SQLException | NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
 	}

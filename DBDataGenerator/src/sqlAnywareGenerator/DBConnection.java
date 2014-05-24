@@ -9,7 +9,8 @@ import java.sql.Statement;
 public class DBConnection {
 
 	// Connection Parameters
-	private static final boolean DEBUG_MODE = false;
+	// Connection Parameters
+	private static final DEBUG_MODE DMODE = DEBUG_MODE.NONE;
 	private static final String DBNAME = "eatdrink";
 	private static final String USER = "dba";
 	private static final String PASSWORD = "sql";
@@ -20,6 +21,10 @@ public class DBConnection {
 			+ PORT + "?eng=" + DBNAME;
 	private Connection connection = null;
 	private Statement stmt = null;
+
+	private enum DEBUG_MODE {
+		NONE, JAVA, SQL, BOTH
+	};
 
 	/**
 	 * Make the connection to the DB
@@ -43,7 +48,7 @@ public class DBConnection {
 			System.err.println("SQL Exception: " + e.getMessage());
 			System.err.println("SQL State: " + e.getSQLState());
 			System.err.println("Error Code: " + e.getErrorCode());
-			
+
 			System.exit(1);
 		}
 	}
@@ -73,17 +78,48 @@ public class DBConnection {
 	 * @param exception
 	 */
 	public void printSQLException(SQLException e) {
-		if (DEBUG_MODE) {
-			System.err.println("\n---------------------------------------------------------");
+		switch (DMODE) {
+		case JAVA:
+			e.printStackTrace();
+			break;
+
+		case SQL:
+			System.err
+					.println("\n---------------------------------------------------------");
 			System.err.println("SQLException: " + e.getMessage());
 			System.err.println("SQLState: " + e.getSQLState());
 			System.err.println("VendorError: " + e.getErrorCode());
+
 			if (e.getCause() != null) {
 				System.err.println("Cause: " + e.getCause().toString());
 			} else {
 				System.err.println("Cause: null");
 			}
-			System.err.println("---------------------------------------------------------");
+
+			System.err
+					.println("---------------------------------------------------------");
+			break;
+
+		case BOTH:
+			e.printStackTrace();
+
+			System.err
+					.println("\n---------------------------------------------------------");
+			System.err.println("SQLException: " + e.getMessage());
+			System.err.println("SQLState: " + e.getSQLState());
+			System.err.println("VendorError: " + e.getErrorCode());
+
+			if (e.getCause() != null) {
+				System.err.println("Cause: " + e.getCause().toString());
+			} else {
+				System.err.println("Cause: null");
+			}
+
+			System.err
+					.println("---------------------------------------------------------");
+			break;
+		case NONE:
+			break;
 		}
 	}
 
@@ -128,12 +164,24 @@ public class DBConnection {
 	 * @return either (1) the row count for SQL Data Manipulation Language (DML)
 	 *         statements or (2) 0 for SQL statements that return nothing
 	 */
-	public boolean executeUpdate(String query) {
+	public boolean execute(String query) {
 		releaseResources();
 		boolean i = false;
 		try {
 			stmt = connection.createStatement();
 			i = stmt.execute(query);
+		} catch (SQLException e) {
+			printSQLException(e);
+		}
+		return i;
+	}
+
+	public int executeUpdate(String query) {
+		releaseResources();
+		int i = -1;
+		try {
+			stmt = connection.createStatement();
+			i = stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			printSQLException(e);
 		}
