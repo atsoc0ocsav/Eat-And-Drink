@@ -16,7 +16,7 @@ public class ReservaDeBilhetes {
 	private DBConnection dbConnection;
 
 	public ReservaDeBilhetes() {
-
+		this.dbConnection = new DBConnection();
 	}
 
 	public ReservaDeBilhetes(int numeroLugar, String estado,
@@ -34,11 +34,8 @@ public class ReservaDeBilhetes {
 
 		String sqlExpression = "SELECT * " + "FROM ReservaDeBilhetes "
 				+ "WHERE idEvento = " + idEvento + " AND estado = 'Livre'";
-
-		System.out.println(sqlExpression); //.. Debug
-		
+	
 		ResultSet resultSet = dbConnection.select(sqlExpression);
-
 		ArrayList<ReservaDeBilhetes> bilhetes = prepareResult(resultSet);
 
 		dbConnection.closeDBConnection();
@@ -72,12 +69,11 @@ public class ReservaDeBilhetes {
 	}
 
 	public void updateEstado(int idEvento, int numeroLugar, String estado) {
-		String sqlExpression = "UPDATE ReservaDeBilhetes SET estado = "
-				+ estado + "WHERE " + "idEvento = " + idEvento
-				+ "AND numeroLugar = " + numeroLugar;
+		String sqlExpression = "UPDATE ReservaDeBilhetes SET estado = '"
+				+ estado + "' WHERE " + "idEvento = " + idEvento
+				+ " AND numeroLugar = " + numeroLugar;
 
 		dbConnection.insert(sqlExpression);
-
 		dbConnection.closeDBConnection();
 
 	}
