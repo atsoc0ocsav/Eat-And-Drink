@@ -155,16 +155,20 @@ public class ReservaBilhete extends JFrame {
 					if (eventoOferecido.get(i).getDescricao().equals(evento))
 						idEvento = eventoOferecido.get(i).getIdEvento();
 				}
-				if (idEvento != -1)
-					ctrReservaBilhete
-							.confirmarBilhete(idEvento, lugar, "Livre");
-				JOptionPane.showMessageDialog(null,
-						"Bilhete cancelado com sucesso!");
+				if (idEvento != -1) {
+					boolean cancela = verificaSePodeCancelar(idEvento, lugar);
+					if (cancela) {
+						ctrReservaBilhete.confirmarBilhete(idEvento, lugar,
+								"Livre");
+						editaBilhete(idEvento, lugar, "Livre");
 
-				// .. else
-				// .. diz algo ???
+						showJOption(1);
+					} else
+						showJOption(2);
+				}
 			}
-		}
+		} else
+			showJOption(4);
 	}
 
 	private void confirmarBilhete() {
@@ -181,12 +185,54 @@ public class ReservaBilhete extends JFrame {
 				if (idEvento != -1)
 					ctrReservaBilhete.confirmarBilhete(idEvento, lugar,
 							"Reservado");
-				JOptionPane.showMessageDialog(null,
-						"Bilhete reservado com sucesso!");
+				editaBilhete(idEvento, lugar, "Reservado");
 
-				// .. else
-				// .. diz algo ???
+				showJOption(3);
 			}
+		} else
+			showJOption(4);
+	}
+
+	private void showJOption(int escolha) {
+		switch (escolha) {
+		case 1:
+			JOptionPane.showMessageDialog(null,
+					"Bilhete cancelado com sucesso!");
+			break;
+		case 2:
+			JOptionPane.showMessageDialog(null,
+					"Não pode cancelar. O Bilhete já se encontra livre!");
+			break;
+		case 3:
+			JOptionPane.showMessageDialog(null,
+					"Bilhete reservado com sucesso!");
+			break;
+		case 4:
+			JOptionPane.showMessageDialog(null,
+					"Tem de escolher um evento e um lugar!");
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	private boolean verificaSePodeCancelar(int idEvento, int lugar) {
+		for (int i = 0; i < bilhetes.size(); i++) {
+			if (bilhetes.get(i).getIDEvento() == idEvento
+					&& bilhetes.get(i).getNumeroLugar() == lugar
+					&& bilhetes.get(i).getEstado().equals("Reservado")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void editaBilhete(int idEvento, int lugar, String estado) {
+		for (int i = 0; i < bilhetes.size(); i++) {
+			if (bilhetes.get(i).getIDEvento() == idEvento
+					&& bilhetes.get(i).getNumeroLugar() == lugar)
+				bilhetes.get(i).setEstado(estado);
 		}
 	}
 
@@ -203,8 +249,8 @@ public class ReservaBilhete extends JFrame {
 	}
 
 	private void corresponderLugaresAEvento() {
+		comboBoxLugar.removeAllItems();
 		if (!comboBoxEvento.getSelectedItem().equals("")) {
-			comboBoxLugar.removeAllItems();
 			String evento = (String) comboBoxEvento.getSelectedItem();
 			int id = -1;
 			for (int i = 0; i < eventoOferecido.size(); i++) {
