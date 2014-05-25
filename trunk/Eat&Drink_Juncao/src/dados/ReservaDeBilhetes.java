@@ -64,10 +64,6 @@ public class ReservaDeBilhetes {
 		return array;
 	}
 
-	public int getNumeroLugar() {
-		return numeroLugar;
-	}
-
 	public void updateEstado(int idEvento, int numeroLugar, String estado) {
 		String sqlExpression = "UPDATE ReservaDeBilhetes SET estado = '"
 				+ estado + "' WHERE " + "idEvento = " + idEvento
@@ -76,6 +72,22 @@ public class ReservaDeBilhetes {
 		dbConnection.insert(sqlExpression);
 		dbConnection.closeDBConnection();
 
+	}
+	
+	public int getNumeroLugar() {
+		return numeroLugar;
+	}
+	
+	public String getEstado(){
+		return estado;
+	}
+	
+	public int getIDEvento(){
+		return idEvento;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;		
 	}
 
 }
