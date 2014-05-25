@@ -62,11 +62,11 @@ public class ReservaBilhete extends JFrame {
 		comboBoxLugar.setBounds(182, 212, 111, 23);
 		panelInterno.add(comboBoxLugar);
 
-		buttonConfirme = new JButton("Confirme");
-		buttonConfirme.setBounds(97, 312, 89, 23);
+		buttonConfirme = new JButton("Confirmar");
+		buttonConfirme.setBounds(88, 312, 98, 23);
 		panelInterno.add(buttonConfirme);
 
-		buttonCancele = new JButton("Cancele");
+		buttonCancele = new JButton("Cancelar");
 		buttonCancele.setBounds(248, 312, 89, 23);
 		panelInterno.add(buttonCancele);
 
