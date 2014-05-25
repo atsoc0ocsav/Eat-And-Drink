@@ -85,7 +85,7 @@ public class Evento {
 					String hora = resultSet.getString("hora");
 
 					Evento evento = new Evento(idEvento, descricao, data,
-							hora);
+							hora);		
 					eventos.add(evento);
 				}
 
