@@ -17,7 +17,6 @@ import javax.swing.border.EmptyBorder;
 import controlo.GestorReservaBilhete;
 import dados.Evento;
 import dados.ReservaDeBilhetes;
-import dados.Zona;
 
 public class ReservaBilhete extends JFrame {
 
@@ -187,6 +186,8 @@ public class ReservaBilhete extends JFrame {
 	}
 
 	private void montarHoraEData() {
+		textFieldDia.setText("");
+		textFieldHora.setText("");
 		String evento = (String) comboBoxEvento.getSelectedItem();
 		for (int i = 0; i < eventoOferecido.size(); i++) {
 			if (eventoOferecido.get(i).getDescricao().equals(evento)) {
@@ -197,20 +198,22 @@ public class ReservaBilhete extends JFrame {
 	}
 
 	private void corresponderLugaresAEvento() {
-		comboBoxLugar.removeAllItems();
-		String evento = (String) comboBoxEvento.getSelectedItem();
-		int id = -1;
-		for (int i = 0; i < eventoOferecido.size(); i++) {
-			if (eventoOferecido.get(i).getDescricao().equals(evento))
-				id = eventoOferecido.get(i).getIdEvento();
-		}
-		if (id != -1)
-			this.bilhetes = ctrReservaBilhete.getLugares(id);
+		if (!comboBoxEvento.getSelectedItem().equals("")) {
+			comboBoxLugar.removeAllItems();
+			String evento = (String) comboBoxEvento.getSelectedItem();
+			int id = -1;
+			for (int i = 0; i < eventoOferecido.size(); i++) {
+				if (eventoOferecido.get(i).getDescricao().equals(evento))
+					id = eventoOferecido.get(i).getIdEvento();
+			}
+			if (id != -1)
+				this.bilhetes = ctrReservaBilhete.getLugares(id);
 
-		comboBoxLugar.insertItemAt("", 0);
-		for (ReservaDeBilhetes bilhete : bilhetes) {
-			comboBoxLugar.insertItemAt(bilhete.getNumeroLugar(),
-					comboBoxLugar.getItemCount());
+			comboBoxLugar.insertItemAt("", 0);
+			for (ReservaDeBilhetes bilhete : bilhetes) {
+				comboBoxLugar.insertItemAt(bilhete.getNumeroLugar(),
+						comboBoxLugar.getItemCount());
+			}
 		}
 
 	}
