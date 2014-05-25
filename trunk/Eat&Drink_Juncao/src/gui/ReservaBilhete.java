@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -36,7 +37,7 @@ public class ReservaBilhete extends JFrame {
 		ctrReservaBilhete = new GestorReservaBilhete();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 463, 479);
+		setBounds(450, 100, 463, 479);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -157,6 +158,8 @@ public class ReservaBilhete extends JFrame {
 				if (idEvento != -1)
 					ctrReservaBilhete
 							.confirmarBilhete(idEvento, lugar, "Livre");
+				JOptionPane.showMessageDialog(null,
+						"Bilhete cancelado com sucesso!");
 
 				// .. else
 				// .. diz algo ???
@@ -178,6 +181,8 @@ public class ReservaBilhete extends JFrame {
 				if (idEvento != -1)
 					ctrReservaBilhete.confirmarBilhete(idEvento, lugar,
 							"Reservado");
+				JOptionPane.showMessageDialog(null,
+						"Bilhete reservado com sucesso!");
 
 				// .. else
 				// .. diz algo ???
