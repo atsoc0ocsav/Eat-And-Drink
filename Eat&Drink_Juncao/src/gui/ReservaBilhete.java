@@ -153,7 +153,7 @@ public class ReservaBilhete extends JFrame {
 				idEvento = eventoOferecido.get(i).getIdEvento();			
 		}
 		if(idEvento != -1)
-		ctrReservaBilhete.confirmarBilhete(idEvento, lugar, "Disponivel");
+		ctrReservaBilhete.confirmarBilhete(idEvento, lugar, "Livre");
 		
 		//.. else
 			//.. diz algo ???

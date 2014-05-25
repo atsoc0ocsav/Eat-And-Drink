@@ -33,8 +33,10 @@ public class ReservaDeBilhetes {
 	public ArrayList<ReservaDeBilhetes> selectLugares(int idEvento) {
 
 		String sqlExpression = "SELECT * " + "FROM ReservaDeBilhetes "
-				+ "WHERE idEvento = " + idEvento + "AND estado = 'Disponivel'";
+				+ "WHERE idEvento = " + idEvento + " AND estado = 'Livre'";
 
+		System.out.println(sqlExpression); //.. Debug
+		
 		ResultSet resultSet = dbConnection.select(sqlExpression);
 
 		ArrayList<ReservaDeBilhetes> bilhetes = prepareResult(resultSet);
