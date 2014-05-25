@@ -402,7 +402,8 @@ public class DBActions {
 			String familyName = familyNames.get(random.nextInt(maxFamilyName));
 
 			String email = firstName.toString() + "_" + familyName
-					+Integer.toString(random.nextInt(1000000))+emailAlias.get(random.nextInt(maxEmailAlias));
+					+ Integer.toString(random.nextInt(1000000))
+					+ emailAlias.get(random.nextInt(maxEmailAlias));
 			String name = firstName.toString() + " " + familyName;
 
 			String password = new BigInteger(130, secureRandom).toString(15);
@@ -836,6 +837,7 @@ public class DBActions {
 
 		Random random = new Random();
 		int currentID = getEventTypeMaxID() + 1;
+		long eventsQuantity = 0;
 
 		for (int i = 0; i < eventQnt; i++) {
 			String type = eventTypes.get(random.nextInt(eventTypes.size()));
@@ -844,8 +846,8 @@ public class DBActions {
 			String eventName = eventsNames.get(random.nextInt(eventsNames
 					.size()));
 
-			Date date = new Date(2013 + random.nextInt(5),
-					random.nextInt(11) + 1, random.nextInt(27) + 1);
+			Date date = new Date(random.nextInt(5), random.nextInt(11) + 1,
+					random.nextInt(27) + 1);
 			Time time = new Time(random.nextInt(23), random.nextInt(59),
 					random.nextInt(59));
 
@@ -864,23 +866,24 @@ public class DBActions {
 							+ currentID + "')");
 
 			currentID++;
+			eventsQuantity++;
 		}
 		dbConnection.commit();
-		System.out.println(eventQnt
+		System.out.println(eventsQuantity
 				+ " Establishment Events Added with success to database");
 	}
 
 	public void addTicketsToDB() throws SQLException {
-		ArrayList<String> types = parser.plainTextFileParser(EVENT_TYPE_LIST);
 		ArrayList<Integer> establishmentIDs = getEstablishmentsIDs();
 
 		Random random = new Random();
+		long ticketNumber = 0;
 
 		for (int establishmentID : establishmentIDs) {
 			ArrayList<Integer> establishmentEvents = getEstablishmentEvents(establishmentID);
 
 			for (int eventID : establishmentEvents) {
-				int capacity = random.nextInt(10) + 1;
+				int capacity = random.nextInt(10) + 10;
 
 				for (int i = 1; i < capacity + 1; i++) {
 					dbConnection
@@ -890,13 +893,14 @@ public class DBActions {
 									+ establishmentID
 									+ "','" + eventID + "')");
 					dbConnection.commit();
+					ticketNumber++;
 				}
 			}
 		}
 
 		dbConnection.commit();
-		System.out.println(types.size()
-				+ " Event Types Added with success to database");
+		System.out.println(ticketNumber
+				+ " Tickets Added with success to database");
 	}
 
 	// Auxiliary Database Getters
