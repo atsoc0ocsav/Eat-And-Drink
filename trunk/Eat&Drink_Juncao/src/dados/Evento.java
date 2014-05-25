@@ -79,12 +79,12 @@ public class Evento {
 		} else if (escolha == 2) {
 			try {
 				while (resultSet.next()) {
-					String descricao = resultSet.getString("descricao");
-					int tipoDoEvento = resultSet.getInt("tipoDoEvento");
+					String descricao = resultSet.getString("nomeEvento");
+					int idEvento = resultSet.getInt("idEvento");
 					String data = resultSet.getString("data");
 					String hora = resultSet.getString("hora");
 
-					Evento evento = new Evento(tipoDoEvento, descricao, data,
+					Evento evento = new Evento(idEvento, descricao, data,
 							hora);
 					eventos.add(evento);
 				}
