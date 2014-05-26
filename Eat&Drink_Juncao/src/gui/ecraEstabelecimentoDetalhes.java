@@ -8,6 +8,9 @@ import java.awt.Font;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -251,6 +254,22 @@ public class ecraEstabelecimentoDetalhes {
 				frame.dispose();
 			}
 		});
+		
+		JButton btn_Export = new JButton("Export");
+		btn_Export.setBounds(653, 537, 110, 23);
+		contentPane.add(btn_Export);
+		
+		btn_Export.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				ctrDetalhesEstabelecimento.exportPratoLog();
+				JOptionPane.showMessageDialog(null, "Export efectuado!");
+				
+			}
+		});
+		
+		
 	}
 
 	/**
