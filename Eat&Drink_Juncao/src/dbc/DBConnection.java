@@ -52,6 +52,23 @@ public class DBConnection {
 
 		return resultSet;
 	}
+	
+	public ResultSet selectConcorrencia(String sql) {
+		// possível chamada a uma função que prepara o commando select apenas
+		// recebendo os seus argumentos
+
+		ResultSet resultSet = null;
+
+		try {
+
+			PreparedStatement prepStat = conn.prepareStatement(sql);
+			resultSet = prepStat.executeQuery();
+		} catch (SQLException e) {
+			printSQLException(e);
+		} 
+
+		return resultSet;
+	}
 
 	// No relatorio e void mas devia retornar um int...
 	public void insert(String sql) {
@@ -126,5 +143,19 @@ public class DBConnection {
 				conn = null;
 			}
 		}
+	}
+
+	public void setIsolationLevel(int i) {
+		
+		try {
+			doConnections();
+			
+			PreparedStatement prepStat = conn.prepareStatement("SET TEMPORARY OPTION isolation_level = "+ Integer.toString(i) + ";");
+			prepStat.executeUpdate();
+			
+		} catch (SQLException e) {
+			printSQLException(e);
+		}
+		
 	}
 }
