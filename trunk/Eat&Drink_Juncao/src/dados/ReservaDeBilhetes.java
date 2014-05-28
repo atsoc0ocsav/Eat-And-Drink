@@ -30,7 +30,7 @@ public class ReservaDeBilhetes {
 		this.dbConnection = new DBConnection();
 	}
 
-	public ArrayList<ReservaDeBilhetes> selectLugares(int idEvento) {
+	public ArrayList<ReservaDeBilhetes> selectLugaresOptimista(int idEvento) {
 
 		String sqlExpression = "SELECT * " + "FROM ReservaDeBilhetes "
 				+ "WHERE idEvento = " + idEvento + " AND estado = 'Livre'";
@@ -38,7 +38,21 @@ public class ReservaDeBilhetes {
 		ResultSet resultSet = dbConnection.select(sqlExpression);
 		ArrayList<ReservaDeBilhetes> bilhetes = prepareResult(resultSet);
 
-		dbConnection.closeDBConnection();
+//		dbConnection.closeDBConnection();
+
+		return bilhetes;
+	}
+	
+	public ArrayList<ReservaDeBilhetes> selectLugaresPessimista(int idEvento) {
+		dbConnection.setIsolationLevel(3);
+		
+		String sqlExpression = "SELECT * " + "FROM ReservaDeBilhetes "
+				+ "WHERE idEvento = " + idEvento + " AND estado = 'Livre' FOR UPDATE;";
+	
+		ResultSet resultSet = dbConnection.selectConcorrencia(sqlExpression);
+		ArrayList<ReservaDeBilhetes> bilhetes = prepareResult(resultSet);
+
+//		dbConnection.closeDBConnection();
 
 		return bilhetes;
 	}

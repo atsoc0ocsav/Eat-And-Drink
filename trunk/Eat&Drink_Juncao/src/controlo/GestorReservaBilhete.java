@@ -27,7 +27,7 @@ public class GestorReservaBilhete {
 	public ArrayList<ReservaDeBilhetes> getLugares(int id) {
 		ArrayList<ReservaDeBilhetes> array = new ArrayList<>();
 
-		array = bilhete.selectLugares(id);
+		array = bilhete.selectLugaresPessimista(id);
 
 		return array;
 	}
