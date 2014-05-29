@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -12,12 +13,18 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import controlo.GestorReservaBilhete;
 import dados.Evento;
 import dados.ReservaDeBilhetes;
+
+import java.awt.SystemColor;
+import java.awt.Color;
+
+import static controlo.GestorReservaBilhete.ConcorrencyLevel;
 
 public class ReservaBilhete extends JFrame {
 
@@ -32,6 +39,7 @@ public class ReservaBilhete extends JFrame {
 	private GestorReservaBilhete ctrReservaBilhete;
 	private ArrayList<Evento> eventoOferecido;
 	private ArrayList<ReservaDeBilhetes> bilhetes;
+	private JTextArea textMensagemConc;
 
 	public ReservaBilhete() {
 		ctrReservaBilhete = new GestorReservaBilhete();
@@ -104,6 +112,18 @@ public class ReservaBilhete extends JFrame {
 		lblHora.setBounds(208, 119, 46, 19);
 		panelInterno.add(lblHora);
 
+		textMensagemConc = new JTextArea();
+		textMensagemConc.setBorder(javax.swing.BorderFactory
+				.createEmptyBorder());
+		textMensagemConc.setEditable(false);
+		textMensagemConc.setBackground(new Color(240, 240, 240));
+		textMensagemConc.setBounds(47, 243, 307, 41);
+		panelInterno.add(textMensagemConc);
+		textMensagemConc.setColumns(10);
+		textMensagemConc.setLineWrap(true);
+		textMensagemConc.setWrapStyleWord(true);
+		
+
 		preencheComboBoxEventos();
 		addListener();
 
@@ -158,8 +178,13 @@ public class ReservaBilhete extends JFrame {
 				if (idEvento != -1) {
 					boolean cancela = verificaSePodeCancelar(idEvento, lugar);
 					if (cancela) {
-						ctrReservaBilhete.confirmarBilhete(idEvento, lugar,
-								"Livre");
+						try {
+							ctrReservaBilhete.confirmarBilhete(idEvento, lugar,
+									"Livre");
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						editaBilhete(idEvento, lugar, "Livre");
 
 						showJOption(1);
@@ -183,8 +208,15 @@ public class ReservaBilhete extends JFrame {
 						idEvento = eventoOferecido.get(i).getIdEvento();
 				}
 				if (idEvento != -1)
-					ctrReservaBilhete.confirmarBilhete(idEvento, lugar,
-							"Reservado");
+					try {
+						ctrReservaBilhete.confirmarBilhete(idEvento, lugar,
+								"Reservado");
+					} catch (SQLException e) {
+						if (ctrReservaBilhete.getCONCORRENCY_STATE() == ConcorrencyLevel.OPTIMIST) {
+							textMensagemConc
+									.setText("Pedimos desculpa mas entretanto o lugar deixou de estar disponível.");
+						}
+					}
 				editaBilhete(idEvento, lugar, "Reservado");
 
 				showJOption(3);
@@ -258,12 +290,22 @@ public class ReservaBilhete extends JFrame {
 					id = eventoOferecido.get(i).getIdEvento();
 			}
 			if (id != -1)
-				this.bilhetes = ctrReservaBilhete.getLugares(id);
+				try {
+					this.bilhetes = ctrReservaBilhete.getLugares(id);
+				} catch (SQLException e) {
+					if (ctrReservaBilhete.getCONCORRENCY_STATE() == ConcorrencyLevel.PESSIMIST) {
+						textMensagemConc
+								.setText("Pedimos desculpa mas existe um utilizador a seleccionar lugares para este evento.");
+						e.printStackTrace();
+					}
+				}
 
 			comboBoxLugar.insertItemAt("", 0);
-			for (ReservaDeBilhetes bilhete : bilhetes) {
-				comboBoxLugar.insertItemAt(bilhete.getNumeroLugar(),
-						comboBoxLugar.getItemCount());
+			if (bilhetes != null) {
+				for (ReservaDeBilhetes bilhete : bilhetes) {
+					comboBoxLugar.insertItemAt(bilhete.getNumeroLugar(),
+							comboBoxLugar.getItemCount());
+				}
 			}
 		}
 

@@ -30,29 +30,29 @@ public class ReservaDeBilhetes {
 		this.dbConnection = new DBConnection();
 	}
 
-	public ArrayList<ReservaDeBilhetes> selectLugaresOptimista(int idEvento) {
+	public ArrayList<ReservaDeBilhetes> selectLugaresOptimista(int idEvento) throws SQLException {
 
 		String sqlExpression = "SELECT * " + "FROM ReservaDeBilhetes "
 				+ "WHERE idEvento = " + idEvento + " AND estado = 'Livre'";
-	
-		ResultSet resultSet = dbConnection.select(sqlExpression);
-		ArrayList<ReservaDeBilhetes> bilhetes = prepareResult(resultSet);
 
-//		dbConnection.closeDBConnection();
-
-		return bilhetes;
-	}
-	
-	public ArrayList<ReservaDeBilhetes> selectLugaresPessimista(int idEvento) {
-		dbConnection.setIsolationLevel(3);
-		
-		String sqlExpression = "SELECT * " + "FROM ReservaDeBilhetes "
-				+ "WHERE idEvento = " + idEvento + " AND estado = 'Livre' FOR UPDATE;";
-	
 		ResultSet resultSet = dbConnection.selectConcorrencia(sqlExpression);
 		ArrayList<ReservaDeBilhetes> bilhetes = prepareResult(resultSet);
 
-//		dbConnection.closeDBConnection();
+		return bilhetes;
+	}
+
+	public ArrayList<ReservaDeBilhetes> selectLugaresPessimista(int idEvento)
+			throws SQLException {
+		dbConnection.setIsolationLevel(3);
+		
+		dbConnection.begin();
+
+		String sqlExpression = "SELECT * " + "FROM ReservaDeBilhetes "
+				+ "WHERE idEvento = " + idEvento
+				+ " AND estado = 'Livre' FOR UPDATE BY LOCK";
+
+		ResultSet resultSet = dbConnection.selectConcorrencia(sqlExpression);
+		ArrayList<ReservaDeBilhetes> bilhetes = prepareResult(resultSet);
 
 		return bilhetes;
 	}
@@ -78,30 +78,30 @@ public class ReservaDeBilhetes {
 		return array;
 	}
 
-	public void updateEstado(int idEvento, int numeroLugar, String estado) {
+	public void updateEstado(int idEvento, int numeroLugar, String estado) throws SQLException {
 		String sqlExpression = "UPDATE ReservaDeBilhetes SET estado = '"
 				+ estado + "' WHERE " + "idEvento = " + idEvento
-				+ " AND numeroLugar = " + numeroLugar;
+				+ " AND numeroLugar = " + numeroLugar + "AND estado = 'Livre'";
 
-		dbConnection.insert(sqlExpression);
+		dbConnection.insertConcorrencia(sqlExpression);
 		dbConnection.closeDBConnection();
 
 	}
-	
+
 	public int getNumeroLugar() {
 		return numeroLugar;
 	}
-	
-	public String getEstado(){
+
+	public String getEstado() {
 		return estado;
 	}
-	
-	public int getIDEvento(){
+
+	public int getIDEvento() {
 		return idEvento;
 	}
 
 	public void setEstado(String estado) {
-		this.estado = estado;		
+		this.estado = estado;
 	}
 
 }
