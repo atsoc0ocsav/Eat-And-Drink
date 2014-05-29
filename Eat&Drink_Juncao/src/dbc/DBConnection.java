@@ -26,7 +26,8 @@ public class DBConnection {
 			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			conn.setAutoCommit(false);
 		} catch (SQLException e) {
-			System.err.println("Erro ao estabelecer a ligação à base de dados\n");
+			System.err
+					.println("Erro ao estabelecer a ligação à base de dados\n");
 			printSQLException(e);
 		}
 	}
@@ -48,24 +49,19 @@ public class DBConnection {
 			resultSet = prepStat.executeQuery();
 		} catch (SQLException e) {
 			printSQLException(e);
-		} 
+		}
 
 		return resultSet;
 	}
-	
-	public ResultSet selectConcorrencia(String sql) {
+
+	public ResultSet selectConcorrencia(String sql) throws SQLException {
 		// possível chamada a uma função que prepara o commando select apenas
 		// recebendo os seus argumentos
 
 		ResultSet resultSet = null;
-
-		try {
-
-			PreparedStatement prepStat = conn.prepareStatement(sql);
-			resultSet = prepStat.executeQuery();
-		} catch (SQLException e) {
-			printSQLException(e);
-		} 
+		PreparedStatement prepStat = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, 
+				  ResultSet.CONCUR_UPDATABLE);
+		resultSet = prepStat.executeQuery();
 
 		return resultSet;
 	}
@@ -86,6 +82,16 @@ public class DBConnection {
 			printSQLException(e);
 		}
 
+	}
+
+	public void insertConcorrencia(String sql) throws SQLException {
+		// possível chamada a uma função que prepara o commando insert apenas
+		// recebendo os seus argumentos
+
+		PreparedStatement prepStat = conn.prepareStatement(sql);
+		prepStat.executeUpdate();
+
+		commit();
 	}
 
 	// No relatorio e void mas devia retornar um int...
@@ -146,16 +152,31 @@ public class DBConnection {
 	}
 
 	public void setIsolationLevel(int i) {
-		
+
 		try {
 			doConnections();
-			
-			PreparedStatement prepStat = conn.prepareStatement("SET TEMPORARY OPTION isolation_level = "+ Integer.toString(i) + ";");
-			prepStat.executeUpdate();
-			
+
+			PreparedStatement prepStat = conn
+					.prepareStatement("SET TEMPORARY OPTION isolation_level = "
+							+ Integer.toString(i) + ";");
+			prepStat.execute();
+
 		} catch (SQLException e) {
 			printSQLException(e);
 		}
-		
+
+	}
+
+	public void begin() {
+
+		try {
+			PreparedStatement prepStat;
+			prepStat = conn.prepareStatement("BEGIN TRANSACTION");
+			prepStat.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }
