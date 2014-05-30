@@ -37,6 +37,10 @@ public class ctrlDetalhesEstabelecimento {
 		new Prato().remove(idPrato);
 	}
 
+	
+	/**
+	 * Método que chama a classe PratoLOG para exportar dados dos Logs
+	 */
 	public void exportPratoLog() {
 		ArrayList<PratoLOG> pratoLOGg = pratoLOG.select();
 		try

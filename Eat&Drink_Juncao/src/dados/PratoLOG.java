@@ -7,6 +7,13 @@ import java.util.Date;
 
 import dbc.DBConnection;
 
+/**
+ * 
+ * Esta classe de dados permitirá para desenvolvimento futuro, efectuar o export
+ * da tabela dos logs para um ficheiro .csv
+ * 
+ */
+
 public class PratoLOG {
 
 	private String nome;
@@ -24,8 +31,8 @@ public class PratoLOG {
 		dbConnection = new DBConnection();
 	}
 
-	public PratoLOG(double prec, int idPrato, String descricao, int tipoDePrato, 
-			Date data, String tipoDeOperacao, String utilizador) {
+	public PratoLOG(double prec, int idPrato, String descricao,
+			int tipoDePrato, Date data, String tipoDeOperacao, String utilizador) {
 		dbConnection = new DBConnection();
 
 		this.preco = prec;
@@ -62,8 +69,8 @@ public class PratoLOG {
 				String tipoDeOperacao = resultSet.getString("operacao");
 				String utilizador = resultSet.getString("utilizador");
 
-				PratoLOG prato = new PratoLOG(preco, idPrato, descricao, tipoDePrato,
-						data, tipoDeOperacao, utilizador);
+				PratoLOG prato = new PratoLOG(preco, idPrato, descricao,
+						tipoDePrato, data, tipoDeOperacao, utilizador);
 				pratos.add(prato);
 			}
 
@@ -108,7 +115,5 @@ public class PratoLOG {
 	public DBConnection getDbConnection() {
 		return dbConnection;
 	}
-
-	
 
 }

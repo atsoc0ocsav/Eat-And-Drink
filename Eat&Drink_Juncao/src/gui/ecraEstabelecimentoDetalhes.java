@@ -65,7 +65,6 @@ public class ecraEstabelecimentoDetalhes {
 	private ArrayList<Prato> pratos = new ArrayList<>();
 	private FotografiasEComentarios moduloFotosEComentarios = new FotografiasEComentarios();
 
-	
 	/**
 	 * Launch only this GUI (for debug purpose)
 	 * 
@@ -254,22 +253,6 @@ public class ecraEstabelecimentoDetalhes {
 				frame.dispose();
 			}
 		});
-		
-		JButton btn_Export = new JButton("Export");
-		btn_Export.setBounds(653, 537, 110, 23);
-		contentPane.add(btn_Export);
-		
-		btn_Export.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				ctrDetalhesEstabelecimento.exportPratoLog();
-				JOptionPane.showMessageDialog(null, "Export efectuado!");
-				
-			}
-		});
-		
-		
 	}
 
 	/**
@@ -647,18 +630,22 @@ public class ecraEstabelecimentoDetalhes {
 				String tipoDePrato = tiposDePrato.get(prato.getTipoDePrato())
 						.getDescricao();
 
-				int resposta = JOptionPane.showConfirmDialog(null,
-						"Adicionou este prato?\nDescrição: "+descricao+"\nTipo de Prato: "+tipoDePrato+"\nPreço: "+preco, "Confirmar Remoção de Prato",
-						JOptionPane.YES_NO_OPTION);
-				
+				int resposta = JOptionPane
+						.showConfirmDialog(null,
+								"Adicionou este prato?\nDescrição: "
+										+ descricao + "\nTipo de Prato: "
+										+ tipoDePrato + "\nPreço: " + preco,
+								"Confirmar Remoção de Prato",
+								JOptionPane.YES_NO_OPTION);
+
 				if (resposta == JOptionPane.YES_OPTION) {
 					ctrDetalhesEstabelecimento.removePrato(prato.getIdPrato());
-					
+
 					pratos = new Prato().select(e.getIdEstabelecimento());
 					showPratos();
 				} else {
-					JOptionPane
-					.showMessageDialog(null, "Nenhum prato removido!");
+					JOptionPane.showMessageDialog(null,
+							"Nenhum prato removido!");
 				}
 			} else {
 				JOptionPane
