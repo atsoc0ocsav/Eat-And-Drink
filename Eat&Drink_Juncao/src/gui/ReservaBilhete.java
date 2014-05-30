@@ -155,6 +155,22 @@ public class ReservaBilhete extends JFrame {
 			}
 
 		});
+		
+		comboBoxEvento.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				textMensagemConc.setText("");
+			}
+		});
+		
+		comboBoxLugar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				textMensagemConc.setText("");
+			}
+		});
 	}
 
 	@SuppressWarnings("unused")
@@ -190,6 +206,7 @@ public class ReservaBilhete extends JFrame {
 	}
 
 	private void confirmarBilhete() {
+
 		if (comboBoxEvento.getSelectedItem() != null
 				&& comboBoxLugar.getSelectedItem() != null) {
 			String evento = (String) comboBoxEvento.getSelectedItem();
@@ -200,22 +217,27 @@ public class ReservaBilhete extends JFrame {
 					if (eventoOferecido.get(i).getDescricao().equals(evento))
 						idEvento = eventoOferecido.get(i).getIdEvento();
 				}
+				int i = 0;
 				if (idEvento != -1)
 					try {
-						ctrReservaBilhete.confirmarBilhete(idEvento, lugar,
+						i = ctrReservaBilhete.confirmarBilhete(idEvento, lugar,
 								"Reservado");
 					} catch (SQLException e) {
-						if (ctrReservaBilhete.getCONCORRENCY_STATE() == ConcorrencyLevel.OPTIMIST) {
-							textMensagemConc
-									.setText("Pedimos desculpa mas o lugar deixou de estar disponível.");
-						}
+						e.printStackTrace();
 					}
-				editaBilhete(idEvento, lugar, "Reservado");
 
-				showJOption(3);
+				if (i == 0) {
+					textMensagemConc
+							.setText("Pedimos desculpa mas o bilhete que seleccionou já foi reservado.");
+				} else {
+					editaBilhete(idEvento, lugar, "Reservado");
+
+					showJOption(3);
+				}
+			} else {
+				showJOption(4);
 			}
-		} else
-			showJOption(4);
+		}
 	}
 
 	private void showJOption(int escolha) {
@@ -287,10 +309,8 @@ public class ReservaBilhete extends JFrame {
 					this.bilhetes = ctrReservaBilhete.getLugares(id);
 				} catch (SQLException e) {
 					if (ctrReservaBilhete.getCONCORRENCY_STATE() == ConcorrencyLevel.PESSIMIST) {
-//						textMensagemConc
-//								.setText("Pedimos desculpa mas existe um utilizador a seleccionar lugares para este evento.");
 						textMensagemConc
-						.setText("Pedimos desculpa mas a sua sessão de reserva expirou");
+								.setText("Pedimos desculpa mas existe um utilizador a seleccionar lugares para este evento.");
 						e.printStackTrace();
 					}
 				}

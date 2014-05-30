@@ -6,7 +6,7 @@ import controlo.GestorReservaBilhete.ConcorrencyLevel;
 public class MainReservaDeBilhetes {
 
 	public static void main(String[] args) {
-		new ReservaBilhete(ConcorrencyLevel.PESSIMIST);
+		new ReservaBilhete(ConcorrencyLevel.OPTIMIST);
 	}
 
 }
