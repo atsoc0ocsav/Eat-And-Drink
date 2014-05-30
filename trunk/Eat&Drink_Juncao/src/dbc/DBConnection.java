@@ -170,6 +170,7 @@ public class DBConnection {
 	public void begin() {
 
 		try {
+			//conn.commit();
 			PreparedStatement prepStat;
 			prepStat = conn.prepareStatement("BEGIN TRANSACTION");
 			prepStat.execute();

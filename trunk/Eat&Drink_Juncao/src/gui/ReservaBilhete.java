@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,14 +19,11 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import controlo.GestorReservaBilhete;
+import controlo.GestorReservaBilhete.ConcorrencyLevel;
 import dados.Evento;
 import dados.ReservaDeBilhetes;
 
-import java.awt.SystemColor;
-import java.awt.Color;
-
-import static controlo.GestorReservaBilhete.ConcorrencyLevel;
-
+@SuppressWarnings({ "unchecked", "rawtypes", "serial" })
 public class ReservaBilhete extends JFrame {
 
 	private JPanel contentPane;
@@ -34,15 +32,15 @@ public class ReservaBilhete extends JFrame {
 	private JComboBox comboBoxEvento;
 	private JComboBox comboBoxLugar;
 	private JButton buttonConfirme;
-	private JButton buttonCancele;
+	private JButton buttonCancel;
 
 	private GestorReservaBilhete ctrReservaBilhete;
 	private ArrayList<Evento> eventoOferecido;
 	private ArrayList<ReservaDeBilhetes> bilhetes;
 	private JTextArea textMensagemConc;
 
-	public ReservaBilhete() {
-		ctrReservaBilhete = new GestorReservaBilhete();
+	public ReservaBilhete(ConcorrencyLevel concurrenceLevel) {
+		ctrReservaBilhete = new GestorReservaBilhete(concurrenceLevel);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(450, 100, 463, 479);
@@ -74,9 +72,9 @@ public class ReservaBilhete extends JFrame {
 		buttonConfirme.setBounds(88, 312, 98, 23);
 		panelInterno.add(buttonConfirme);
 
-		buttonCancele = new JButton("Cancelar");
-		buttonCancele.setBounds(248, 312, 89, 23);
-		panelInterno.add(buttonCancele);
+		buttonCancel = new JButton("Cancelar");
+		buttonCancel.setBounds(248, 312, 89, 23);
+		panelInterno.add(buttonCancel);
 
 		JLabel lblEvento = new JLabel("Evento:");
 		lblEvento.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -122,7 +120,6 @@ public class ReservaBilhete extends JFrame {
 		textMensagemConc.setColumns(10);
 		textMensagemConc.setLineWrap(true);
 		textMensagemConc.setWrapStyleWord(true);
-		
 
 		preencheComboBoxEventos();
 		addListener();
@@ -138,7 +135,6 @@ public class ReservaBilhete extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				montarHoraEData();
 				corresponderLugaresAEvento();
-
 			}
 		});
 
@@ -147,23 +143,21 @@ public class ReservaBilhete extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				confirmarBilhete();
-
 			}
 
 		});
 
-		buttonCancele.addActionListener(new ActionListener() {
+		buttonCancel.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				desmarcarBilhete();
-
+				disposeFrame();
 			}
 
 		});
-
 	}
 
+	@SuppressWarnings("unused")
 	private void desmarcarBilhete() {
 		if (comboBoxEvento.getSelectedItem() != null
 				&& comboBoxLugar.getSelectedItem() != null) {
@@ -182,7 +176,6 @@ public class ReservaBilhete extends JFrame {
 							ctrReservaBilhete.confirmarBilhete(idEvento, lugar,
 									"Livre");
 						} catch (SQLException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						editaBilhete(idEvento, lugar, "Livre");
@@ -214,7 +207,7 @@ public class ReservaBilhete extends JFrame {
 					} catch (SQLException e) {
 						if (ctrReservaBilhete.getCONCORRENCY_STATE() == ConcorrencyLevel.OPTIMIST) {
 							textMensagemConc
-									.setText("Pedimos desculpa mas entretanto o lugar deixou de estar disponível.");
+									.setText("Pedimos desculpa mas o lugar deixou de estar disponível.");
 						}
 					}
 				editaBilhete(idEvento, lugar, "Reservado");
@@ -294,8 +287,10 @@ public class ReservaBilhete extends JFrame {
 					this.bilhetes = ctrReservaBilhete.getLugares(id);
 				} catch (SQLException e) {
 					if (ctrReservaBilhete.getCONCORRENCY_STATE() == ConcorrencyLevel.PESSIMIST) {
+//						textMensagemConc
+//								.setText("Pedimos desculpa mas existe um utilizador a seleccionar lugares para este evento.");
 						textMensagemConc
-								.setText("Pedimos desculpa mas existe um utilizador a seleccionar lugares para este evento.");
+						.setText("Pedimos desculpa mas a sua sessão de reserva expirou");
 						e.printStackTrace();
 					}
 				}
@@ -320,5 +315,9 @@ public class ReservaBilhete extends JFrame {
 					comboBoxEvento.getItemCount());
 		}
 
+	}
+
+	private void disposeFrame() {
+		this.dispose();
 	}
 }

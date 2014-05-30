@@ -11,15 +11,16 @@ public class GestorReservaBilhete {
 	private Evento evento;
 	private ReservaDeBilhetes bilhete;
 
-	public enum ConcorrencyLevel {
+	public static enum ConcorrencyLevel {
 		OPTIMIST, PESSIMIST
 	};
 
-	private final ConcorrencyLevel CONCORRENCY_STATE = ConcorrencyLevel.PESSIMIST;
+	private ConcorrencyLevel CONCORRENCY_STATE = ConcorrencyLevel.PESSIMIST;
 
-	public GestorReservaBilhete() {
+	public GestorReservaBilhete(ConcorrencyLevel concurrenceLevel) {
 		this.evento = new Evento();
 		this.bilhete = new ReservaDeBilhetes();
+		this.CONCORRENCY_STATE = concurrenceLevel;
 	}
 
 	public ArrayList<Evento> getEvento() {
@@ -33,10 +34,10 @@ public class GestorReservaBilhete {
 	public ArrayList<ReservaDeBilhetes> getLugares(int id) throws SQLException {
 		ArrayList<ReservaDeBilhetes> array = new ArrayList<>();
 
-		if (CONCORRENCY_STATE == CONCORRENCY_STATE.PESSIMIST) {
+		if (CONCORRENCY_STATE == ConcorrencyLevel.PESSIMIST) {
 			array = bilhete.selectLugaresPessimista(id);
 		} else {
-			if (CONCORRENCY_STATE == CONCORRENCY_STATE.OPTIMIST) {
+			if (CONCORRENCY_STATE == ConcorrencyLevel.OPTIMIST) {
 				array = bilhete.selectLugaresOptimista(id);
 			}
 		}
