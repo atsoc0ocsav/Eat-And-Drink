@@ -21,7 +21,8 @@ public class DBConnection {
 	 * Creates a new connection to the database, using the parameters specified
 	 * has constants
 	 */
-	private void doConnections() {
+	public void doConnections() {
+		if(conn == null){
 		try {
 			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			conn.setAutoCommit(false);
@@ -29,6 +30,7 @@ public class DBConnection {
 			System.err
 					.println("Erro ao estabelecer a ligação à base de dados\n");
 			printSQLException(e);
+		}
 		}
 	}
 
@@ -54,13 +56,26 @@ public class DBConnection {
 		return resultSet;
 	}
 
-	public ResultSet selectConcorrencia(String sql) throws SQLException {
+	public ResultSet selectConcorrenciaPessimista(String sql) throws SQLException {
 		// possível chamada a uma função que prepara o commando select apenas
 		// recebendo os seus argumentos
 
 		ResultSet resultSet = null;
-		PreparedStatement prepStat = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, 
-				  ResultSet.CONCUR_UPDATABLE);
+		PreparedStatement prepStat = conn.prepareStatement(sql,
+				ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		resultSet = prepStat.executeQuery();
+
+		return resultSet;
+	}
+	
+	public ResultSet selectConcorrenciaOptimista(String sql) throws SQLException {
+		// possível chamada a uma função que prepara o commando select apenas
+		// recebendo os seus argumentos
+
+		doConnections();
+		
+		ResultSet resultSet = null;
+		PreparedStatement prepStat = conn.prepareStatement(sql);
 		resultSet = prepStat.executeQuery();
 
 		return resultSet;
@@ -84,14 +99,17 @@ public class DBConnection {
 
 	}
 
-	public void insertConcorrencia(String sql) throws SQLException {
+	public int insertConcorrencia(String sql) throws SQLException {
 		// possível chamada a uma função que prepara o commando insert apenas
 		// recebendo os seus argumentos
-
+		doConnections();
+		
 		PreparedStatement prepStat = conn.prepareStatement(sql);
-		prepStat.executeUpdate();
+		int updRows = prepStat.executeUpdate();
 
 		commit();
+		
+		return updRows;
 	}
 
 	// No relatorio e void mas devia retornar um int...
@@ -170,7 +188,7 @@ public class DBConnection {
 	public void begin() {
 
 		try {
-			//conn.commit();
+			// conn.commit();
 			PreparedStatement prepStat;
 			prepStat = conn.prepareStatement("BEGIN TRANSACTION");
 			prepStat.execute();
@@ -179,5 +197,19 @@ public class DBConnection {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void setTemporaryLockTimeout(int i) {
+		try {
+			// conn.commit();
+			PreparedStatement prepStat;
+			prepStat = conn
+					.prepareStatement("SET TEMPORARY OPTION blocking_timeout = "
+							+ Integer.toString(i) + ";");
+			prepStat.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

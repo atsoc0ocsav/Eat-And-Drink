@@ -45,10 +45,11 @@ public class GestorReservaBilhete {
 		return array;
 	}
 
-	public void confirmarBilhete(int idEvento, int lugar, String estado)
+	public int confirmarBilhete(int idEvento, int lugar, String estado)
 			throws SQLException {
-		bilhete.updateEstado(idEvento, lugar, estado);
+		int updRows = bilhete.updateEstado(idEvento, lugar, estado);
 
+		return updRows;
 	}
 
 	public ConcorrencyLevel getCONCORRENCY_STATE() {
