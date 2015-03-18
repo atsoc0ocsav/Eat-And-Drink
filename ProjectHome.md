@@ -1,0 +1,2 @@
+The Eat & Drink portal pretends to share the information about restaurant establishments between university students, namely for students coming from different cities.
+The main goal is to offer a simple interface where the users can check suggested establishments, by their collages.
